@@ -63,17 +63,89 @@ $slbl_format_ymd_date = function (string $ymd): string {
     return wp_date('j M Y', $date->getTimestamp());
 };
 
-$slbl_get_event_date_ymd = function (int $post_id): string {
+$slbl_parse_event_date_to_ymd = function ($value): string {
+    if (is_array($value)) {
+        if (!empty($value['Ymd'])) {
+            $value = $value['Ymd'];
+        } else {
+            $value = reset($value);
+        }
+    }
+
+    $value = trim((string) $value);
+
+    if ($value === '') {
+        return '';
+    }
+
+    $digits = preg_replace('/\D/', '', $value);
+
+    if (strlen($digits) === 8) {
+        $as_ymd = DateTime::createFromFormat('Ymd', $digits);
+
+        if ($as_ymd instanceof DateTime) {
+            return $as_ymd->format('Ymd');
+        }
+
+        $as_dmy = DateTime::createFromFormat('dmY', $digits);
+
+        if ($as_dmy instanceof DateTime) {
+            return $as_dmy->format('Ymd');
+        }
+    }
+
+    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})/', $value, $matches)) {
+        return $matches[1] . $matches[2] . $matches[3];
+    }
+
+    if (preg_match('#^(\d{1,2})/(\d{1,2})/(\d{4})$#', $value, $matches)) {
+        $candidates = array(
+            sprintf('%02d/%02d/%s', (int) $matches[1], (int) $matches[2], $matches[3]),
+            sprintf('%02d/%02d/%s', (int) $matches[2], (int) $matches[1], $matches[3]),
+        );
+
+        foreach (array('d/m/Y', 'm/d/Y') as $format) {
+            foreach ($candidates as $candidate) {
+                $parsed = DateTime::createFromFormat($format, $candidate);
+
+                if ($parsed instanceof DateTime) {
+                    return $parsed->format('Ymd');
+                }
+            }
+        }
+    }
+
+    $timestamp = strtotime($value);
+
+    if ($timestamp !== false) {
+        return wp_date('Ymd', $timestamp);
+    }
+
+    return '';
+};
+
+$slbl_get_event_date_ymd = function (int $post_id) use ($slbl_parse_event_date_to_ymd): string {
     if (function_exists('get_field')) {
+        $raw = get_field('date_of_event', $post_id, false);
+        $ymd = $slbl_parse_event_date_to_ymd($raw);
+
+        if ($ymd !== '') {
+            return $ymd;
+        }
+
         $value = get_field('date_of_event', $post_id);
     } else {
         $value = get_post_meta($post_id, 'date_of_event', true);
     }
 
-    return preg_replace('/\D/', '', (string) $value);
+    return $slbl_parse_event_date_to_ymd($value);
 };
 
-$slbl_post_to_card = function ($post, string $tag_label, string $date_override = '') {
+$slbl_get_event_display_date = function (int $post_id) use ($slbl_get_event_date_ymd, $slbl_format_ymd_date): string {
+    return $slbl_format_ymd_date($slbl_get_event_date_ymd($post_id));
+};
+
+$slbl_post_to_card = function ($post, string $tag_label, string $date_override = '') use ($slbl_get_event_display_date) {
     if (!$post instanceof WP_Post) {
         return null;
     }
@@ -86,6 +158,10 @@ $slbl_post_to_card = function ($post, string $tag_label, string $date_override =
     }
 
     $date = $date_override;
+
+    if ($date === '' && $post->post_type === 'event') {
+        $date = $slbl_get_event_display_date((int) $post->ID);
+    }
 
     if ($date === '') {
         $date = get_the_date('j M Y', $post);
@@ -158,8 +234,7 @@ $cards_from_wp = function () use (
     $settings,
     $taxonomy,
     $slbl_get_tax_query,
-    $slbl_format_ymd_date,
-    $slbl_get_event_date_ymd,
+    $slbl_get_event_display_date,
     $slbl_post_to_card
 ): array {
     if (!function_exists('wp_date')) {
@@ -199,7 +274,7 @@ $cards_from_wp = function () use (
         $event_query->the_post();
         $event_post = get_post();
         $event_id = $event_post instanceof WP_Post ? (int) $event_post->ID : 0;
-        $event_date = $slbl_format_ymd_date($slbl_get_event_date_ymd($event_id));
+        $event_date = $slbl_get_event_display_date($event_id);
         $event_label = (string)($settings['slot_1_tag_label'] ?? 'Next Event');
         $event_card = $slbl_post_to_card($event_post, $event_label, $event_date);
 

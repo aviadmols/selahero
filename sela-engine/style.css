@@ -1,9 +1,5 @@
-.engine {
-    background: var(--engine-bg, var(--bg-ee, #eef5ff));
-    padding: var(--engine-pad-y, 50px) 0 0;
-    position: relative;
-    overflow: visible;
-    font-family: "Lexend", Sans-serif;
+.hero-section--sela-engine .engine {
+    background: #fff;
     --engine-second-overlap-y: 0px;
     --engine-sticky-progress: 0;
     --engine-logos-opacity: 0;
@@ -25,7 +21,11 @@
 }
 
 .engine__top-pin {
+    background: var(--engine-bg, var(--bg-ee, #eef5ff));
+    padding: var(--engine-pad-y, 50px) 0 0;
     position: relative;
+    overflow: visible;
+    font-family: "Lexend", Sans-serif;
     width: 100%;
 }
 
@@ -413,7 +413,7 @@
 }
 
 @media (max-width: 768px) {
-    .engine {
+    .engine__top-pin {
         padding: var(--engine-pad-y, 64px) 0;
     }
 
@@ -423,7 +423,7 @@
         transform: none;
     }
 
-  .engine{padding:60px 0}
+  .engine__top-pin{padding:60px 0}
   .engine__title{font-size:26px}
   .engine__layout{display:flex;flex-direction:column;gap:32px}
   .engine__center{display:flex;order:1;align-items:center}
