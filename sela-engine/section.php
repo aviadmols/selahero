@@ -186,12 +186,12 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 </style>
 
 <section class="engine" id="<?php echo $uid; ?>">
-    <?php if ($wave_image !== '') : ?>
-        <img class="engine__wave" src="<?php echo esc_url($wave_image); ?>" alt="" aria-hidden="true">
-    <?php endif; ?>
+    <div class="engine__top">
+        <?php if ($wave_image !== '') : ?>
+            <img class="engine__wave engine__wave--top" src="<?php echo esc_url($wave_image); ?>" alt="" aria-hidden="true">
+        <?php endif; ?>
 
-    <div class="wrap">
-        <div class="engine__top">
+        <div class="wrap">
             <<?php echo $title_tag; ?> class="engine__title"><?php echo wp_kses_post($title); ?></<?php echo $title_tag; ?>>
 
             <?php if ($subtitle !== '') : ?>
@@ -270,15 +270,17 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="engine__second">
-            <?php if ($wave_image !== '') : ?>
-                <img class="engine__wave engine__wave--second" src="<?php echo esc_url($wave_image); ?>" alt="" aria-hidden="true">
-            <?php endif; ?>
-            <?php if ($robot_image !== '') : ?>
-                <img class="engine__robot" src="<?php echo esc_url($robot_image); ?>" alt="" aria-hidden="true">
-            <?php endif; ?>
+    <div class="engine__second">
+        <?php if ($wave_image !== '') : ?>
+            <img class="engine__wave" src="<?php echo esc_url($wave_image); ?>" alt="" aria-hidden="true">
+        <?php endif; ?>
+        <?php if ($robot_image !== '') : ?>
+            <img class="engine__robot" src="<?php echo esc_url($robot_image); ?>" alt="" aria-hidden="true">
+        <?php endif; ?>
 
+        <div class="wrap">
             <div class="experts__inner">
                 <div class="experts__left">
                     <h3 class="experts__title">Our tech experts,<br>your scale.</h3>
@@ -310,23 +312,25 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         return;
     }
 
-    const wave = section.querySelector('.engine__wave');
-    const secondWave = section.querySelector('.engine__wave--second');
+    const topArea = section.querySelector('.engine__top');
+    const secondArea = section.querySelector('.engine__second');
     const robot = section.querySelector('.engine__robot');
     const chipsArea = section.querySelector('.experts__chips-area');
     const chips = Array.from(section.querySelectorAll('.experts__chips .chip'));
+    const hasChips = Boolean(chipsArea && chips.length);
 
-    if (!wave || !secondWave || !chipsArea || !chips.length) {
+    if (!topArea || !secondArea) {
         return;
     }
 
     let ticking = false;
+    let overlapTicking = false;
     let mouseX = 0;
     let mouseY = 0;
     let targetMouseX = 0;
     let targetMouseY = 0;
 
-    const chipStates = chips.map(function(chip) {
+    const chipStates = hasChips ? chips.map(function(chip) {
         return {
             chip: chip,
             phaseX: Math.random() * Math.PI * 2,
@@ -341,7 +345,28 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             mouseStrengthX: 2.5 + Math.random() * 2.5,
             mouseStrengthY: 2 + Math.random() * 2.5
         };
-    });
+    }) : [];
+
+    function updateSecondTakeover() {
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const secondRect = secondArea.getBoundingClientRect();
+        const maxLift = window.matchMedia('(max-width: 768px)').matches ? 110 : 220;
+        const triggerStart = viewportHeight * 0.92;
+        const triggerEnd = viewportHeight * 0.30;
+        const rawProgress = (triggerStart - secondRect.top) / (triggerStart - triggerEnd);
+        const progress = Math.max(0, Math.min(1, rawProgress));
+        const lift = -maxLift * progress;
+
+        section.style.setProperty('--engine-second-overlap-y', lift.toFixed(2) + 'px');
+        overlapTicking = false;
+    }
+
+    function requestSecondTakeoverUpdate() {
+        if (!overlapTicking) {
+            window.requestAnimationFrame(updateSecondTakeover);
+            overlapTicking = true;
+        }
+    }
 
     function updateWaveParallax() {
         const rect = section.getBoundingClientRect();
@@ -373,17 +398,24 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     }
 
     updateWaveParallax();
-    chipsArea.addEventListener('mousemove', function(event) {
-        const rect = chipsArea.getBoundingClientRect();
-        targetMouseX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-        targetMouseY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-    });
-    chipsArea.addEventListener('mouseleave', function() {
-        targetMouseX = 0;
-        targetMouseY = 0;
-    });
+    updateSecondTakeover();
+
+    if (hasChips) {
+        chipsArea.addEventListener('mousemove', function(event) {
+            const rect = chipsArea.getBoundingClientRect();
+            targetMouseX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+            targetMouseY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+        });
+        chipsArea.addEventListener('mouseleave', function() {
+            targetMouseX = 0;
+            targetMouseY = 0;
+        });
+    }
 
     function animateChips(time) {
+        if (!hasChips) {
+            return;
+        }
         mouseX += (targetMouseX - mouseX) * 0.045;
         mouseY += (targetMouseY - mouseY) * 0.045;
 
@@ -406,6 +438,11 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
     window.addEventListener('scroll', requestWaveParallaxUpdate, { passive: true });
     window.addEventListener('resize', requestWaveParallaxUpdate);
-    window.requestAnimationFrame(animateChips);
+    window.addEventListener('scroll', requestSecondTakeoverUpdate, { passive: true });
+    window.addEventListener('resize', requestSecondTakeoverUpdate);
+
+    if (hasChips) {
+        window.requestAnimationFrame(animateChips);
+    }
 })();
 </script>

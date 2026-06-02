@@ -1,9 +1,10 @@
 .engine {
     background: var(--engine-bg, var(--bg-ee, #eef5ff));
-    padding: var(--engine-pad-y, 50px) 0; /* reduced 50% per design comment #43 */
+    padding: var(--engine-pad-y, 50px) 0 0;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     font-family: "Lexend", Sans-serif;
+    --engine-second-overlap-y: 0px;
 }
 
 .hero-section--sela-engine {
@@ -13,62 +14,62 @@
 
 .hero-section--sela-engine + .hero-section--sela-experts { display: none; }
 
-.wrap {
+.engine .wrap {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-}
-
-.engine__wave {
-    position: absolute;
-    bottom: -482px;
-    left: 50%;
-    transform: translate3d(-50%, var(--engine-wave-parallax-y, 0px), 0);
-    width: 1761px;
-    height: 682px;
-    pointer-events: none;
-    z-index: 0;
-    will-change: transform;
-}
-
-.engine__col-icon img {
-    width: 66px;
-    height: auto;
-    object-fit: contain;
-}
-
-.engine__wave {
-    position: absolute;
-    bottom: -482px;
-    left: 50%;
-
-    width: 1761px;
-    height: 682px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.engine .wrap {
     position: relative;
     z-index: 2;
 }
 
-.engine__top { position: relative; z-index: 1; }
-
+.engine__top,
 .engine__second {
     position: relative;
-    z-index: 3;
     width: 100%;
-    margin-top: 0;
-    padding-top: 60px;
-    background: #fff;
 }
 
-.engine__wave--second {
+.engine__top {
+    z-index: 1;
+    position: sticky;
+    top: 0;
+    padding-bottom: 120px;
+    overflow: hidden;
+}
+
+.engine__wave {
+    position: absolute;
+    left: 50%;
+    width: 1761px;
+    height: 682px;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.engine__wave--top {
+    bottom: -482px;
+    transform: translate3d(-50%, var(--engine-wave-parallax-y, 0px), 0);
+    z-index: 2;
+}
+
+.engine__second {
+    z-index: 5;
+    margin-top: -220px;
+    padding-top: calc(60px + 140px);
+    padding-bottom: var(--engine-pad-y, 50px);
+    background: #fff;
+    transform: translate3d(0, var(--engine-second-overlap-y, 0px), 0);
+    will-change: transform;
+}
+
+.engine__second > .engine__wave {
     bottom: auto;
     top: -240px;
     transform: translate3d(-50%, var(--engine-second-wave-y, 0px), 0);
-    z-index: 1;
+    z-index: 4;
+}
+
+.engine__second > .wrap {
+    z-index: 2;
 }
 
 .engine__robot {
@@ -78,9 +79,15 @@
     width: 210px;
     height: auto;
     pointer-events: none;
-    z-index: 4;
+    z-index: 6;
     transform: translate3d(0, var(--engine-robot-y, 0px), 0);
     will-change: transform;
+}
+
+.engine__col-icon img {
+    width: 66px;
+    height: auto;
+    object-fit: contain;
 }
 
 .engine__second .experts__inner {
@@ -89,11 +96,8 @@
     gap: 80px;
     align-items: start;
     position: relative;
-    z-index: 3;
+    z-index: 1;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 40px;
 }
 
 .engine__second .experts__title {
@@ -465,10 +469,11 @@
     }
 
     .engine__second {
-        padding-top: 36px;
+        margin-top: -120px;
+        padding-top: calc(36px + 90px);
     }
 
-    .engine__wave--second {
+    .engine__second > .engine__wave {
         top: -170px;
     }
 
@@ -482,7 +487,6 @@
     .engine__second .experts__inner {
         grid-template-columns: 1fr;
         gap: 24px;
-        padding: 0 20px;
     }
 
     .engine__second .experts__title {
@@ -519,7 +523,7 @@
 }
 
 @media (max-width: 1200px) {
-    .wrap {
+    .engine .wrap {
         padding: 0 40px;
     }
 }
