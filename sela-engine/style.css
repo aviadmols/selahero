@@ -30,10 +30,15 @@
 
 .engine__top {
     z-index: 1;
-    position: sticky;
-    top: 0;
+    position: relative;
+    top: auto;
     padding-bottom: 120px;
     overflow: hidden;
+}
+
+.engine--overlap-complete .engine__top {
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .engine__wave {
@@ -45,15 +50,9 @@
     will-change: transform;
 }
 
-.engine__wave--top {
-    bottom: -482px;
-    transform: translate3d(-50%, var(--engine-wave-parallax-y, 0px), 0);
-    z-index: 2;
-}
-
 .engine__second {
     z-index: 5;
-    margin-top: -220px;
+    margin-top: -120px;
     padding-top: calc(60px + 140px);
     padding-bottom: var(--engine-pad-y, 50px);
     background: #fff;
@@ -65,7 +64,17 @@
     bottom: auto;
     top: -240px;
     transform: translate3d(-50%, var(--engine-second-wave-y, 0px), 0);
-    z-index: 4;
+    z-index: 1;
+}
+
+@media (min-width: 769px) {
+    .hero-section--sela-engine .engine__second {
+        margin-top: 220px;
+    }
+
+    .hero-section--sela-engine .engine__second > .engine__wave {
+        z-index: 1;
+    }
 }
 
 .engine__second > .wrap {
@@ -372,12 +381,6 @@
         padding: var(--engine-pad-y, 64px) 0;
     }
 	
-	
-	.engine__wave {
-    --engine-wave-parallax-y: 0px;
-}
-	
-	
   .engine{padding:60px 0}
   .engine__title{font-size:26px}
   .engine__layout{display:flex;flex-direction:column;gap:32px}
@@ -462,19 +465,15 @@
         margin-top: 0;
     }
 
-  .engine__wave {
+    .engine__second > .engine__wave {
         width: 1200px;
         height: auto;
-        bottom: -220px;
+        top: -170px;
     }
 
     .engine__second {
         margin-top: -120px;
         padding-top: calc(36px + 90px);
-    }
-
-    .engine__second > .engine__wave {
-        top: -170px;
     }
 
     .engine__robot {

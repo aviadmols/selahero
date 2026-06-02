@@ -187,10 +187,6 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
 <section class="engine" id="<?php echo $uid; ?>">
     <div class="engine__top">
-        <?php if ($wave_image !== '') : ?>
-            <img class="engine__wave engine__wave--top" src="<?php echo esc_url($wave_image); ?>" alt="" aria-hidden="true">
-        <?php endif; ?>
-
         <div class="wrap">
             <<?php echo $title_tag; ?> class="engine__title"><?php echo wp_kses_post($title); ?></<?php echo $title_tag; ?>>
 
@@ -358,6 +354,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         const lift = -maxLift * progress;
 
         section.style.setProperty('--engine-second-overlap-y', lift.toFixed(2) + 'px');
+        section.classList.toggle('engine--overlap-complete', progress >= 1);
         overlapTicking = false;
     }
 
@@ -378,11 +375,9 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         }
 
         const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
-        const movement = (progress - 0.5) * 120;
         const waveMovement = (progress - 0.52) * 80;
         const robotMovement = (0.5 - progress) * 28;
 
-        section.style.setProperty('--engine-wave-parallax-y', movement + 'px');
         section.style.setProperty('--engine-second-wave-y', waveMovement + 'px');
         if (robot) {
             section.style.setProperty('--engine-robot-y', robotMovement + 'px');
