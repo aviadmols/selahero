@@ -1,0 +1,64 @@
+/* Sela — Case Study (text left). Slug: sela-case1, prefix: slc1- */
+
+.slc1-section {
+    background: var(--slc1-bg, #f9f9f9);
+    padding: var(--slc1-pad-y, 56px) 0; /* reduced 30% per design comment #18 */
+    position: relative;
+    overflow: hidden;
+}
+.slc1-cloud { position: absolute; pointer-events: none; opacity: .5; }
+.slc1-cloud--1 { right: -20px; top: 60px; width: 115px; height: auto; }
+.slc1-cloud--2 { left: 30px; bottom: 80px; width: 70px; height: auto; }
+.slc1-wrap { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 120px; position: relative; z-index: 2; }
+.slc1-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+.slc1-text { font-family: "Lexend", Sans-serif; }
+.slc1-label {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--slc1-label, #0071f6);
+    text-transform: capitalize;
+    margin-bottom: 14px;
+}
+.slc1-title {
+    font-size: var(--slc1-fz-title, 38px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--slc1-title, #1c1c1c);
+    margin: 0 0 24px;
+}
+.slc1-desc {
+    font-size: var(--slc1-fz-desc, 17px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--slc1-desc, #717171);
+    margin: 0 0 28px;
+}
+.slc1-more {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--slc1-cta, #1c1c1c);
+    text-decoration: underline;
+}
+.slc1-img-wrap img {
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid #1c1c1c;
+    object-fit: cover;
+    aspect-ratio: 16/10;
+    display: block;
+}
+
+@media (max-width: 1200px) { .slc1-wrap { padding: 0 40px; } }
+@media (max-width: 768px) {
+    .slc1-wrap { padding: 0 20px; }
+    .slc1-row { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* Comment #17: Hide LEARN MORE link */
+.slc1-more { display: none; }

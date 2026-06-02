@@ -1,0 +1,134 @@
+/* Sela — Stats. Slug: sela-stats, prefix: slst- */
+
+.slst-badge {
+    position: absolute;
+    right: 120px;
+    bottom: -60%;
+    transform: translateY(-50%) rotate(25deg);
+    width: 230px;
+    z-index: 1;
+}
+
+.slst-badge {
+    position: absolute;
+    right: 120px;
+    bottom: -60%;
+    width: 230px;
+    z-index: 1;
+    pointer-events: none;
+    transform:
+        translate3d(
+            var(--slst-badge-x, 0px),
+            calc(-50% + var(--slst-badge-y, 0px)),
+            0
+        )
+        rotate(calc(0deg + var(--slst-badge-rotate, 0deg)));
+    transform-origin: center center;
+    will-change: transform;
+}
+
+.slst-badge img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.slst-section {
+    background: var(--slst-bg, #1c1c1c);
+    padding: var(--slst-pad-y, 56px) 0; /* reduced 30% per design comment #13 */
+    position: relative;
+}
+.slst-wrap {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 120px;
+    position: relative;
+    z-index: 2;
+}
+.slst-title {
+    font-family: "Lexend", Sans-serif;
+    font-size: var(--slst-fz-title, 38px);
+    font-weight: var(--slst-fw-title, 300);
+    color: var(--slst-text, #fff);
+    text-align: center;
+    letter-spacing: 1.14px;
+    margin: 0 0 60px;
+}
+.slst-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.slst-item { text-align: center; flex: 1; }
+.slst-num {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    font-family: "Lexend", Sans-serif;
+    font-size: var(--slst-fz-num, 78px); /* reduced 2px per design comment #37 */
+    font-weight: 400;
+    color: var(--slst-text, #fff);
+    line-height: 1;
+    font-variant-numeric: lining-nums proportional-nums;
+}
+.slst-sym { font-size: inherit; line-height: 1; }
+.slst-unit { font-size: inherit; font-weight: 400; }
+.slst-label {
+    font-family: "Lexend", Sans-serif;
+    font-size: 18px; /* reduced 2px per design comment #37 */
+    font-weight: 300;
+    color: var(--slst-text, #fff);
+    margin: 16px 0 0;
+    text-transform: capitalize;
+}
+.slst-sep {
+    display: block;
+    width: 2px;
+    height: 124px;
+    background: rgba(255,255,255,.2);
+    flex-shrink: 0;
+    margin: 0 8px;
+    position: relative;
+}
+.slst-sep::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--slst-dot, #00dbe9);
+}
+
+@media (max-width: 1200px) { .slst-wrap { padding: 0 40px; } }
+@media (max-width: 768px) {
+	.hero-section--sela-stats .slst-badge {
+          position: absolute;
+        right: 0px;
+        bottom: -12%;
+        transform: none;
+        width: 190px;
+        z-index: 1;
+}
+	
+	slst-section {
+    padding-bottom: 126px;
+    margin-bottom: 50px;
+	}
+
+ .slst-label {
+    margin: 10px 0 0;
+	}
+	
+    .slst-wrap { padding: 0 20px; }
+    .slst-row { flex-direction: column; gap: 32px; }
+    .slst-sep {
+        width: 200px;
+        height: 2px;
+        margin: 0;
+    }
+}

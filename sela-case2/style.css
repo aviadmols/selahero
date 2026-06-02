@@ -1,0 +1,24 @@
+/* Sela — Case Study (image left). Slug: sela-case2, prefix: slc2- */
+
+.slc2-section { background: var(--slc2-bg, #fff); padding: var(--slc2-pad-y, 56px) 0; /* reduced 30% per design comment #18 */ position: relative; overflow: hidden; }
+.slc2-wrap { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 120px; }
+.slc2-row { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.slc2-text { font-family: "Lexend", Sans-serif; }
+.slc2-label { display: block; font-size: 18px; font-weight: 600; color: var(--slc2-label, #0071f6); text-transform: capitalize; margin-bottom: 14px; }
+.slc2-title { font-size: var(--slc2-fz-title, 38px); font-weight: 300; line-height: 1.2; color: var(--slc2-title, #1c1c1c); margin: 0 0 24px; }
+.slc2-desc  { font-size: var(--slc2-fz-desc, 17px); font-weight: 300; line-height: 1.5; color: var(--slc2-desc, #717171); margin: 0 0 28px; }
+.slc2-more  { font-size: 15px; font-weight: 400; color: var(--slc2-cta, #1c1c1c); text-decoration: underline; }
+.slc2-img-wrap img {
+    width: 100%; border-radius: 20px; border: 1px solid #1c1c1c;
+    object-fit: cover; aspect-ratio: 16/10; display: block;
+}
+
+@media (max-width: 1200px) { .slc2-wrap { padding: 0 40px; } }
+@media (max-width: 768px) {
+    .slc2-wrap { padding: 0 20px; }
+    .slc2-row { grid-template-columns: 1fr; gap: 32px; }
+    .slc2-row .slc2-text { order: -1; }
+}
+
+/* Comment #19: Hide LEARN MORE link */
+.slc2-cta { display: none; }

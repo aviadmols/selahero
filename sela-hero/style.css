@@ -1,0 +1,308 @@
+/* ============================================================
+ * Sela Hero — HERO plugin section
+ * Slug: sela-hero    CSS prefix: slhe-
+ * Source: 27.4.2026-0-7-items.archive (file:///…/index.html)
+ * Breakpoint: 768px (mobile-first overrides at the bottom)
+ * ============================================================ */
+
+/* ----- Section wrapper ----- */
+.slhe-section {
+    position: relative;
+}
+
+.slhe-inline {
+    position: relative;
+    background: var(--slhe-bg, #f9f9f9);
+    min-height: 600px;
+    display: flex;
+    align-items: flex-start;
+    overflow: hidden;
+}
+
+/* ----- Orbs (decorative gradient blobs) ----- */
+.slhe-orb {
+    position: absolute;
+    pointer-events: none;
+}
+
+.slhe-orb-shape {
+    border-radius: 500px;
+}
+
+.slhe-orb-ellipse {
+    position: absolute;
+    bottom: -10%;
+    left: 0%;
+    width: 115px;
+    height: 115px;
+    z-index: 1111;
+    mix-blend-mode: multiply;
+}
+
+.slhe-orb--cyan {
+    width: 352px;
+    height: 355px;
+    top: 0%;
+    right: 16%;
+    transform: rotate(-135deg);
+}
+.slhe-orb--cyan .slhe-orb-shape {
+    width: 117px;
+    height: 383px;
+}
+
+.slhe-orb--green {
+    width: 322px;
+    height: 324px;
+    top: 284px;
+    left: 11px;
+    transform: rotate(-135deg);
+}
+.slhe-orb--green .slhe-orb-shape {
+    width: 107px;
+    height: 350px;
+}
+.slhe-orb--green .slhe-orb-ellipse {
+    bottom: -8%;
+    width: 105px;
+    height: 105px;
+}
+
+.slhe-orb--blue {
+    width: 347px;
+    height: 349px;
+    bottom: -15%;
+    right: 18%;
+    transform: rotate(-135deg);
+}
+.slhe-orb--blue .slhe-orb-shape {
+    width: 115px;
+    height: 377px;
+}
+.slhe-orb--blue .slhe-orb-ellipse {
+    bottom: -8%;
+    width: 113px;
+    height: 113px;
+}
+
+.slhe-orb--pink {
+    width: 347px;
+    height: 349px;
+    top: 436px;
+    left: -56px;
+    transform: rotate(-135deg);
+}
+.slhe-orb--pink .slhe-orb-shape {
+    width: 115px;
+    height: 377px;
+}
+.slhe-orb--pink .slhe-orb-ellipse {
+    bottom: -8%;
+    width: 113px;
+    height: 113px;
+}
+
+/* ----- Stars ----- */
+.slhe-star {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    pointer-events: none;
+}
+.slhe-star--l {
+    left: 164px;
+    top: 210px;
+}
+.slhe-star--r {
+    left: 15%;
+    z-index: 11111;
+    transform: rotate(135deg);
+    bottom: 6%;
+    right: 99px;
+}
+
+/* ----- Cloud decorations ----- */
+.slhe-cloud {
+    position: absolute;
+    pointer-events: none;
+    z-index: 2;
+}
+.slhe-cloud--1 { left: 97px;  top: 227px; width: 87px; height: auto; }
+.slhe-cloud--2 { left: 150px; top: 280px; width: 49px; height: auto; }
+.slhe-cloud--3 { left: 224px; top: 523px; width: 87px; height: auto; }
+.slhe-cloud--4 {
+    writing-mode: lr;
+    left: -5%;
+    z-index: 11111;
+    transform: rotate(135deg);
+    bottom: 6%;
+    width: 73px;
+    height: 36px;
+}
+.slhe-cloud--5 {
+    right: 24%;
+    bottom: -4%;
+    width: 87px;
+    height: 44px;
+}
+.slhe-cloud--6 {
+    right: 27%;
+    bottom: 5%;
+    width: 54px;
+    height: 25px;
+}
+
+/* ----- Content ----- */
+.slhe-content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 123px; /* reduced 20% per design comment #1 */
+    padding-bottom: 70px; /* reduced 30% per design comment #3 */
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding-left: 120px;
+    padding-right: 120px;
+}
+
+.slhe-title {
+    font-family: "Lexend", Sans-serif;
+    font-size: var(--slhe-fz-title, 44px); /* reduced to fit 2 lines per design comment #2 */
+    font-weight: var(--slhe-fw-title, 300);
+    line-height: var(--slhe-lh-title, 1.11);
+    letter-spacing: var(--slhe-ls-title, 0);
+    color: var(--slhe-color-title, #1c1c1c);
+    max-width: 671px;
+    margin-bottom: 24px;
+}
+
+.slhe-sub {
+    font-family: "Lexend", Sans-serif;
+    font-size: var(--slhe-fz-sub, 16px);
+    font-weight: var(--slhe-fw-sub, 300);
+    line-height: var(--slhe-lh-sub, 1.58);
+    color: var(--slhe-color-sub, #585858);
+    max-width: 541px;
+    margin-bottom: 36px;
+}
+
+/* ----- CTA button ----- */
+.slhe-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--slhe-color-btn, #1c1c1c);
+    border-radius: 80px;
+    height: 47px;
+    padding: 0 28px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--slhe-color-btn, #1c1c1c);
+    text-decoration: none;
+    transition: opacity .2s, transform .15s;
+    background: transparent;
+    cursor: pointer;
+}
+.slhe-btn:hover {
+    opacity: .7;
+    transform: translateY(-1px);
+}
+.slhe-arrow {
+    display: block;
+    flex-shrink: 0;
+}
+
+/* ----- Robot mascot ----- */
+.slhe-robot {
+    position: absolute;
+    top: 0px;
+    right: 17%;
+    width: 241px;
+    pointer-events: none;
+    z-index: 2;
+}
+.slhe-robot img {
+    transform: scaleX(-1);
+    position: absolute;
+    top: 178px;
+    height: 342px;
+    right: 17%;
+    width: 241px;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@media (max-width: 1440px) and (min-width: 1150px) {
+    .slhe-robot {
+        position: absolute;
+        top: 0px;
+        right: 4%;
+    }
+}
+
+@media (max-width: 1150px) and (min-width: 768px) {
+    .slhe-robot {
+        position: absolute;
+        top: 0px;
+        right: 0%;
+    }
+}
+
+/* ============================================================
+ * Mobile (≤ 768px)
+ * ============================================================ */
+@media (max-width: 768px) {
+    .slhe-section { min-height: 555px; }
+
+    .slhe-content {
+        padding: 80px 20px 60px;
+    }
+
+    .slhe-title { font-size: var(--slhe-fz-title, 30px); }
+    .slhe-sub   { font-size: var(--slhe-fz-sub, 14px); }
+
+    /* Hide stars and clouds on mobile to keep things tidy */
+    .slhe-star  { display: none; }
+    .slhe-cloud { display: none; }
+
+    /* Orbs scale down */
+    .slhe-orb--cyan,
+    .slhe-orb--green,
+    .slhe-orb--blue,
+    .slhe-orb--pink {
+        transform: rotate(-135deg) scale(0.4);
+    }
+    .slhe-orb { opacity: .6; }
+
+    .slhe-orb--green { left: 22%; }
+    .slhe-orb--pink  { left: -50%; }
+    .slhe-orb--blue {
+        width: 347px;
+        height: 349px;
+        bottom: -20%;
+        right: -7%;
+    }
+
+    /* Robot reposition */
+    .slhe-robot {
+        display: block;
+        top: 343px;
+        left: 261px;
+        right: auto;
+        width: 147px;
+    }
+    .slhe-robot img {
+        top: 5%;
+        height: 342px;
+        right: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .slhe-title { font-size: 26px; }
+}

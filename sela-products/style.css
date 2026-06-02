@@ -1,0 +1,97 @@
+/* Sela — Products. Slug: sela-products, prefix: slpr- */
+
+.slpr-section { background: var(--slpr-bg, #fff); padding: var(--slpr-pad-y, 80px) 0; } /* reduced 20% per design comment #12 */
+.slpr-wrap { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 120px; }
+.slpr-headline {
+    font-family: "Lexend", Sans-serif;
+    font-size: var(--slpr-fz-h, 38px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--slpr-text, #1c1c1c);
+    text-align: center;
+    margin: 0 0 20px;
+}
+.slpr-sub {
+    font-family: "Lexend", Sans-serif;
+    font-size: var(--slpr-fz-sub, 18px);
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--slpr-sub, #676767);
+    text-align: center;
+    max-width: 651px;
+    margin: 0 auto 60px;
+}
+.slpr-grid {
+    display: flex;
+    gap: 80px;
+    align-items: start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.slpr-card {
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+    align-items: center;
+    text-align: center;
+    width: 335px;
+}
+.slpr-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+.slpr-icon { width: 33px; height: 43px; object-fit: contain; }
+.slpr-name {
+    font-family: "Lexend", Sans-serif;
+    font-size: var(--slpr-fz-name, 28px);
+    font-weight: 400;
+    line-height: 1.32;
+    text-transform: lowercase;
+    margin: 0;
+}
+.slpr-name--blue  { color: #0071f6; }
+.slpr-name--green { color: #00dd95; }
+.slpr-name--cyan  { color: #00dbe9; }
+.slpr-name--pink  { color: #f191a1; }
+.slpr-name--dark  { color: #1c1c1c; }
+.slpr-desc {
+    font-family: "Lexend", Sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--slpr-sub, #676767);
+    margin: 0;
+}
+.slpr-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: .5px solid var(--slpr-text, #1c1c1c);
+    border-radius: 80px;
+    height: 47px;
+    width: 157px;
+    font-family: "Lexend", Sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--slpr-text, #1c1c1c);
+    text-decoration: none;
+    transition: opacity .2s;
+}
+.slpr-cta:hover { opacity: .7; }
+
+@media (max-width: 1200px) { .slpr-wrap { padding: 0 40px; } .slpr-grid { gap: 40px; } }
+@media (max-width: 768px)  { 
+.slpr-card {
+    gap: 25px;
+	}
+
+	.slpr-wrap { padding: 0 20px; } .slpr-grid { flex-direction: column; align-items: center; } }
+
+/* Comment #20: Uniform button width */
+.slpr-cta {
+  min-width: 160px;
+  justify-content: center;
+}

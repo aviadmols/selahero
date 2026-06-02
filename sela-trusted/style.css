@@ -1,0 +1,59 @@
+/* ============================================================
+ * Sela — Trusted By
+ * Slug: sela-trusted   CSS prefix: sltr-
+ * ============================================================ */
+
+.sltr-section {
+    background: var(--sltr-bg, #fff);
+    padding: var(--sltr-pad, 51px) 0; /* reduced 15% per design comment #4 */
+}
+.sltr-wrap {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 120px;
+}
+.sltr-headline {
+    font-family: "Lexend", Sans-serif;
+    font-size: var(--sltr-fz, 20px);
+    font-weight: var(--sltr-fw, 300);
+    line-height: var(--sltr-lh, 1.32);
+    text-align: center;
+    color: var(--sltr-h-color, #1c1c1c);
+    margin: 0 0 36px;
+}
+.sltr-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px 34px; /* reduced 30% per design comment #42 */
+    margin-bottom: 31px; /* reduced 30% per design comment #42 */
+}
+.sltr-logos img {
+    height: var(--sltr-logo-h, 27px);
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+.sltr-badges {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.sltr-badges img {
+    height: var(--sltr-badge-h, 107px);
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+@media (max-width: 1200px) {
+    .sltr-wrap { padding: 0 40px; }
+}
+@media (max-width: 768px) {
+    .sltr-wrap { padding: 0 20px; }
+    .sltr-logos { gap: 16px 28px; }
+}

@@ -1,0 +1,175 @@
+<?php
+defined( 'ABSPATH' ) || exit;
+
+$show_cloud = ! empty( $settings['show_cloud'] );
+
+$media_base = '';
+if ( ( $section['source'] ?? '' ) === 'uploads' ) {
+    $u = wp_upload_dir();
+    $media_base = trailingslashit( $u['baseurl'] ) . 'hero/sections/' . sanitize_key( (string) ( $section['type'] ?? 'sela-testimonials' ) ) . '/media/';
+}
+$get_img = function ( string $key, string $fallback ) use ( $settings, $media_base ): string {
+    $v = (string) ( $settings[ $key ] ?? '' );
+    if ( $v !== '' ) return esc_url( $v );
+    return $media_base ? esc_url( $media_base . ltrim( $fallback, '/' ) ) : '';
+};
+$get_media = function ( string $fallback ) use ( $media_base ): string {
+    if ( $media_base !== '' ) {
+        return esc_url( $media_base . ltrim( $fallback, '/' ) );
+    }
+    return esc_url( 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/' . ltrim( $fallback, '/' ) );
+};
+
+$uid = 'slte-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
+
+$tabs = [];
+foreach ( ( $blocks ?? [] ) as $block ) {
+    if ( (string) ( $block['type'] ?? '' ) !== 'testimonial-tab' ) {
+        continue;
+    }
+
+    $block_settings = (array) ( $block['settings'] ?? [] );
+    $name = (string) ( $block_settings['name'] ?? '' );
+
+    if ( $name === '' ) {
+        continue;
+    }
+
+    $tabs[] = [
+        'name'   => $name,
+        'logo'   => (string) ( $block_settings['logo'] ?? '' ) ?: $get_media( 'tab-etoro.png' ),
+        'plogo'  => (string) ( $block_settings['panel_logo'] ?? '' ) ?: $get_media( 'testi-logo-etoro.png' ),
+        'video'  => (string) ( $block_settings['video'] ?? 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0' ),
+        'text'   => (string) ( $block_settings['text'] ?? '' ),
+        'author' => (string) ( $block_settings['author'] ?? '' ),
+    ];
+}
+
+if ( empty( $tabs ) ) {
+    for ( $i = 1; $i <= 4; $i++ ) {
+        $name = (string) ( $settings["tab_{$i}_name"] ?? '' );
+
+        if ( $name === '' ) {
+            continue;
+        }
+
+        $tabs[] = [
+            'name'  => $name,
+            'logo'  => $get_img( "tab_{$i}_logo",       'tab-etoro.png' ) ?: $get_media( 'tab-etoro.png' ),
+            'plogo' => $get_img( "tab_{$i}_panel_logo", 'testi-logo-etoro.png' ) ?: $get_media( 'testi-logo-etoro.png' ),
+            'video' => (string) ( $settings["tab_{$i}_video"]  ?? 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0' ),
+            'text'  => (string) ( $settings["tab_{$i}_text"]   ?? '' ),
+            'author'=> (string) ( $settings["tab_{$i}_author"] ?? '' ),
+        ];
+    }
+}
+
+if ( empty( $tabs ) ) {
+    $tabs = [
+        [
+            'name' => 'eToro',
+            'logo' => $get_media( 'tab-etoro.png' ),
+            'plogo' => $get_media( 'testi-logo-etoro.png' ),
+            'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+            'text' => 'Over 6 million traders in 140 countries use the eToro Social Trading Network to invest.',
+            'author' => 'Jasmine Lee, Creative Director',
+        ],
+        [
+            'name' => 'WIZ',
+            'logo' => $get_media( 'tab-wiz.png' ),
+            'plogo' => $get_media( 'tab-wiz.png' ),
+            'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+            'text' => 'Wiz partnered with Sela to accelerate cloud security posture management across multi-cloud environments.',
+            'author' => 'Dan Cohen, CISO, Wiz',
+        ],
+    ];
+}
+?>
+<style>
+#<?php echo $uid; ?> {
+    --slte-bg: <?php echo esc_attr( $settings['bg_color']     ?? '#f9f9f9' ); ?>;
+    --slte-text: <?php echo esc_attr( $settings['text_color']   ?? '#717171' ); ?>;
+    --slte-author: <?php echo esc_attr( $settings['author_color'] ?? '#1c1c1c' ); ?>;
+    --slte-tab-active: <?php echo esc_attr( $settings['tab_active_bg']?? '#d9f3f5' ); ?>;
+    --slte-ff: <?php echo (string) ( $settings['ff'] ?? "'Lexend', sans-serif" ); ?>;
+    --slte-fz-text: <?php echo (int) ( $settings['fz_text_d'] ?? 18 ); ?>px;
+    --slte-pad-y: <?php echo (int) ( $settings['pad_y'] ?? 80 ); ?>px;
+}
+@media (max-width: 768px) {
+    #<?php echo $uid; ?> {
+        --slte-fz-text: <?php echo (int) ( $settings['fz_text_m'] ?? 15 ); ?>px;
+        --slte-pad-y: 50px;
+    }
+}
+</style>
+
+<section class="slte-section" id="<?php echo $uid; ?>">
+    <?php if ( $show_cloud ) : ?>
+        <img class="slte-cloud" src="<?php echo $get_img( 'image_cloud', 'cloud-hero-1.svg' ) ?: $get_media( 'cloud-hero-1.svg' ); ?>" alt="" aria-hidden="true">
+    <?php endif; ?>
+    <div class="slte-wrap">
+        <div class="slte-tabs">
+            <?php foreach ( $tabs as $i => $t ) : ?>
+                <button class="slte-tab<?php echo $i === 0 ? ' slte-tab--active' : ''; ?>" data-tab="<?php echo $i; ?>" type="button">
+                    <img src="<?php echo $t['logo']; ?>" alt="<?php echo esc_attr( $t['name'] ); ?>">
+                </button>
+            <?php endforeach; ?>
+        </div>
+        <div class="slte-main">
+            <div class="slte-panels">
+                <?php foreach ( $tabs as $i => $t ) : ?>
+                    <div class="slte-panel<?php echo $i === 0 ? ' slte-panel--active' : ''; ?>"
+                         data-panel="<?php echo $i; ?>" data-video="<?php echo esc_url( $t['video'] ); ?>">
+                        <?php if ( $t['plogo'] ) : ?>
+                            <img src="<?php echo $t['plogo']; ?>" alt="<?php echo esc_attr( $t['name'] ); ?>" class="slte-panel-logo">
+                        <?php endif; ?>
+                        <p class="slte-panel-text"><?php echo wp_kses_post( $t['text'] ); ?></p>
+                        <p class="slte-panel-author"><?php echo esc_html( $t['author'] ); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="slte-video">
+                <img src="<?php echo $get_img( 'image_video', 'testi-video.jpg' ); ?>" alt="" class="slte-video-thumb">
+                <button class="slte-play" aria-label="Play" type="button">
+                    <img src="<?php echo $get_img( 'image_play_btn', 'play-btn.svg' ); ?>" alt="">
+                </button>
+                <iframe class="slte-iframe" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function () {
+    var section = document.getElementById('<?php echo $uid; ?>');
+    if (!section) return;
+    var tabs   = section.querySelectorAll('.slte-tab');
+    var panels = section.querySelectorAll('.slte-panel');
+    var video  = section.querySelector('.slte-video');
+    var iframe = section.querySelector('.slte-iframe');
+
+    tabs.forEach(function (btn, idx) {
+        btn.addEventListener('click', function () {
+            tabs.forEach(function (t) { t.classList.remove('slte-tab--active'); });
+            btn.classList.add('slte-tab--active');
+            panels.forEach(function (p) { p.classList.remove('slte-panel--active'); });
+            var p = section.querySelector('.slte-panel[data-panel="' + idx + '"]');
+            if (p) p.classList.add('slte-panel--active');
+            if (video) video.classList.remove('slte-video--playing');
+            if (iframe) iframe.src = '';
+        });
+    });
+
+    var play = section.querySelector('.slte-play');
+    if (play && video && iframe) {
+        play.addEventListener('click', function () {
+            var active = section.querySelector('.slte-panel--active');
+            var src = active ? active.getAttribute('data-video') : '';
+            if (src) {
+                iframe.src = src;
+                video.classList.add('slte-video--playing');
+            }
+        });
+    }
+}());
+</script>

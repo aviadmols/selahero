@@ -1,0 +1,21 @@
+{
+    "type": "sela-hero",
+    "label": "Sela Hero",
+    "category": "hero",
+    "contexts": ["page"],
+    "plugin_compatible": true,
+    "has_script": false,
+    "version": "1.0.0",
+    "css_prefix": "slhe-",
+    "media_files": [
+        "hero-graphic.png",
+        "star.gif",
+        "ellipse-cyan.svg",
+        "ellipse-green.svg",
+        "ellipse-blue.svg",
+        "ellipse-pink.svg",
+        "cloud-hero-1.svg",
+        "cloud-hero-2.svg"
+    ],
+    "external_assets_note": "The original markup also referenced 3 figma.com asset URLs for clouds 4/5/6. The bundled section.php falls back to cloud-hero-2.svg/cloud-hero-1.svg for those slots; admins can override per slot via image_cloud_4 / image_cloud_5 / image_cloud_6 in the WP admin."
+}

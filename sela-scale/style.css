@@ -1,0 +1,61 @@
+/* Sela — Scale & Win. Slug: sela-scale, prefix: slsc- */
+
+.slsc-section { padding: var(--slsc-pad-y, 56px) 0; }
+.slsc-wrap { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 120px; }
+.slsc-box {
+    background: var(--slsc-box-bg, #f9f9f9);
+    border-radius: 30px;
+    padding: 60px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 66px;
+    align-items: center;
+    max-width: 1252px;
+    margin: 0 auto;
+    font-family: "Lexend", Sans-serif;
+}
+.slsc-text { text-align: center; }
+.slsc-find { font-size: var(--slsc-fz-find, 22px); font-weight: 300; color: var(--slsc-find, #1c1c1c); margin: 0 0 4px; }
+.slsc-title { font-size: var(--slsc-fz-title, 50px); /* reduced 2px per design comment #39 */ font-weight: 400; color: var(--slsc-title, #1c1c1c); line-height: 1.1; margin: 0 0 43px; }
+.slsc-btn {
+    margin: 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--slsc-cta-bg, #00dbe9);
+    border: .5px solid #1c1c1c;
+    border-radius: 80px;
+    height: 47px;
+    padding: 0 0 0 24px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--slsc-cta, #1c1c1c);
+    text-decoration: none;
+    transition: opacity .2s;
+}
+.slsc-btn:hover { opacity: .8; }
+.slsc-btn-circle {
+    width: 47px; height: 47px; border-radius: 50%;
+    background: #D9D9D9;
+mix-blend-mode: multiply;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+.slsc-faces { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.slsc-face { width: 82px; height: 82px; object-fit: contain; flex-shrink: 0; }
+.slsc-face--border { border: .9px solid #1c1c1c; border-radius: 50%; }
+.slsc-face--wide   { width: 238px; height: 82px; border-radius: 10px; border: .9px solid #1c1c1c; }
+
+@media (max-width: 1200px) { .slsc-wrap { padding: 0 40px; } }
+@media (max-width: 768px) {
+	.hero-section--sela-scale .slsc-find {
+    font-size: 20px;
+	}
+
+    .slsc-wrap { padding: 0 20px; }
+    .slsc-box { padding: 40px 20px; border-radius: 20px;  gap: 40px;}
+    .slsc-faces { gap: 4px; }
+    .slsc-face { width: 40px; height: 40px; }
+    .slsc-face--wide { width: 117px; height: 54px; }
+}

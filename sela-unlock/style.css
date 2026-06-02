@@ -1,0 +1,72 @@
+/* Sela — Unlock / Contact Form. Slug: sela-unlock, prefix: slun- */
+
+.slun-section {
+    background: var(--slun-bg, #fff);
+    padding: var(--slun-pad-y, 100px) 0;
+    font-family: "Lexend", Sans-serif;
+}
+.slun-wrap { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 120px; }
+.slun-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.slun-dots { display: flex; gap: 8px; margin-bottom: 28px; }
+.slun-dot { width: 15px; height: 15px; border-radius: 50%; display: block; }
+.slun-dot--1 { background: var(--slun-dot-1, #3dba7e); }
+.slun-dot--2 { background: var(--slun-dot-2, #f191a1); }
+.slun-dot--3 { background: var(--slun-dot-3, #00dbe9); }
+.slun-dot--4 { background: var(--slun-dot-4, #0071f6); }
+.slun-title { font-size: var(--slun-fz-title, 45px); font-weight: 300; line-height: 1.33; color: var(--slun-title, #1c1c1c); margin: 0 0 24px; }
+.slun-sub   { font-size: var(--slun-fz-sub, 25px); font-weight: 300; line-height: 1.6; color: var(--slun-sub, #1c1c1c); margin: 0; }
+.slun-right { background: #fff; border-radius: 20px; padding: 36px 40px; }
+.slun-form  { display: flex; flex-direction: column; gap: 14px; }
+.slun-row   { display: flex; gap: 14px; }
+.slun-input {
+    flex: 1; min-height: 50px;
+    border: 1.5px solid var(--slun-input-border, #e5e5e5);
+    border-radius: 50px; padding: 0 22px;
+    font-family: "Lexend", Sans-serif; font-size: 15px; font-weight: 300;
+    color: #1c1c1c; background: #fff; outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+.slun-input:focus { border-color: #00dbe9; box-shadow: 0 0 0 3px rgba(0,219,233,.12); }
+.slun-input::placeholder { color: #aaa; text-transform: capitalize; }
+.slun-btn {
+    height: 50px; background: var(--slun-btn-bg, #00dbe9);
+    border: none; border-radius: 50px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    font-family: "Lexend", Sans-serif; font-size: 16px; font-weight: 500;
+    color: var(--slun-btn, #1c1c1c); cursor: pointer;
+    transition: opacity .2s, transform .15s, box-shadow .2s;
+}
+.slun-btn:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,219,233,.45); }
+.slun-privacy { font-size: 11px; font-weight: 300; color: #aaa; text-align: center; line-height: 1.6; margin: 0; }
+.slun-privacy a { text-decoration: underline; color: #aaa; }
+
+@media (max-width: 1200px) { .slun-wrap { padding: 0 40px; } }
+@media (max-width: 900px)  { .slun-inner { grid-template-columns: 1fr; gap: 32px; } }
+@media (max-width: 768px) {
+	.hero-section--sela-unlock .slun-input {
+    min-height: 44px;
+	}
+
+	 .slun-dots {
+
+    margin-bottom: 13px;
+}
+
+ .slun-title {
+      margin: 0 0 10px;
+    width: 303px;
+}
+
+	.hero-section--sela-unlock .slun-btn {
+    height: 48px;
+	}
+
+ .slun-section {
+padding-bottom: 100px;
+	 padding-top: 32px;
+	}
+    .slun-wrap { padding: 0 20px; }
+    .slun-right { padding: 0; background: none; }
+    .slun-row { flex-direction: column; gap: 8px; }
+    .slun-sub { display: none; }
+}

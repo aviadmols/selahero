@@ -1,0 +1,258 @@
+<?php
+defined('ABSPATH') || exit;
+
+return array(
+    'type' => 'sela-blog',
+    'label' => 'Sela — Blog Insights',
+    'category' => 'content',
+    'contexts' => array(
+        'page',
+    ),
+    'settings' => array(
+        array(
+            'id' => 'title',
+            'type' => 'text',
+            'label' => 'Title',
+            'default' => 'Latest Insights and News',
+        ),
+        array(
+            'id' => 'title_tag',
+            'type' => 'select',
+            'label' => 'Title tag',
+            'default' => 'h2',
+            'options' => array(
+                array(
+                    'value' => 'h1',
+                    'label' => 'H1',
+                ),
+                array(
+                    'value' => 'h2',
+                    'label' => 'H2',
+                ),
+                array(
+                    'value' => 'h3',
+                    'label' => 'H3',
+                ),
+            ),
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'bg_section',
+            'type' => 'color',
+            'label' => 'Section background',
+            'default' => '#ffffff',
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'color_title',
+            'type' => 'color',
+            'label' => 'Title color',
+            'default' => '#1c1c1c',
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'color_card_border',
+            'type' => 'color',
+            'label' => 'Card border color',
+            'default' => '#2f2f2f',
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'color_tag',
+            'type' => 'color',
+            'label' => 'Tag color',
+            'default' => '#777777',
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'color_dot',
+            'type' => 'color',
+            'label' => 'Tag dot color',
+            'default' => '#00dbe9',
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'color_text',
+            'type' => 'color',
+            'label' => 'Text color',
+            'default' => '#1c1c1c',
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'color_slider_dot',
+            'type' => 'color',
+            'label' => 'Slider dot color',
+            'default' => '#1c1c1c',
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'ff_base',
+            'type' => 'select',
+            'label' => 'Font',
+            'default' => '\'Lexend\', sans-serif',
+            'options' => array(
+                array(
+                    'value' => '\'Lexend\', sans-serif',
+                    'label' => 'Lexend',
+                ),
+                array(
+                    'value' => '\'Inter\', sans-serif',
+                    'label' => 'Inter',
+                ),
+                array(
+                    'value' => '\'Roboto\', sans-serif',
+                    'label' => 'Roboto',
+                ),
+                array(
+                    'value' => 'system-ui, sans-serif',
+                    'label' => 'System UI',
+                ),
+            ),
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'pad_y_d',
+            'type' => 'range',
+            'label' => 'Section padding — desktop',
+            'default' => 80,
+            'min' => 0,
+            'max' => 200,
+            'step' => 1,
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'pad_y_m',
+            'type' => 'range',
+            'label' => 'Section padding — mobile',
+            'default' => 56,
+            'min' => 0,
+            'max' => 160,
+            'step' => 1,
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'fz_title_d',
+            'type' => 'range',
+            'label' => 'Title size — desktop',
+            'default' => 38,
+            'min' => 20,
+            'max' => 80,
+            'step' => 1,
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'fz_title_m',
+            'type' => 'range',
+            'label' => 'Title size — mobile',
+            'default' => 30,
+            'min' => 18,
+            'max' => 56,
+            'step' => 1,
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'card_width',
+            'type' => 'range',
+            'label' => 'Card width',
+            'default' => 380,
+            'min' => 260,
+            'max' => 520,
+            'step' => 1,
+        ),
+        array(
+            'tab' => 'style',
+            'id' => 'image_height',
+            'type' => 'range',
+            'label' => 'Image height',
+            'default' => 231,
+            'min' => 120,
+            'max' => 420,
+            'step' => 1,
+        ),
+    ),
+    'blocks' => array(
+        'allowed' => array(
+            'blog-card',
+        ),
+        'min' => 0,
+        'max' => 12,
+    ),
+    'block_types' => array(
+        'blog-card' => array(
+            'label' => 'Blog card',
+            'settings' => array(
+                array(
+                    'id' => 'image',
+                    'type' => 'image',
+                    'label' => 'Image',
+                    'default' => '',
+                ),
+                array(
+                    'id' => 'image_alt',
+                    'type' => 'text',
+                    'label' => 'Image alt',
+                    'default' => '',
+                ),
+                array(
+                    'id' => 'tag',
+                    'type' => 'text',
+                    'label' => 'Tag',
+                    'default' => 'Next Event',
+                ),
+                array(
+                    'id' => 'title',
+                    'type' => 'textarea',
+                    'label' => 'Title',
+                    'default' => 'Driving Tomorrow\'s Success 2025',
+                ),
+                array(
+                    'id' => 'date',
+                    'type' => 'text',
+                    'label' => 'Date',
+                    'default' => '15 Jul 2025',
+                ),
+                array(
+                    'id' => 'url',
+                    'type' => 'url',
+                    'label' => 'Card link',
+                    'default' => '',
+                ),
+            ),
+        ),
+    ),
+    'default_blocks' => array(
+        array(
+            'type' => 'blog-card',
+            'settings' => array(
+                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-blog/media/blog-img1.jpg',
+                'image_alt' => 'Event',
+                'tag' => 'Next Event',
+                'title' => 'Driving Tomorrow\'s Success 2025',
+                'date' => '15 Jul 2025',
+                'url' => '#',
+            ),
+        ),
+        array(
+            'type' => 'blog-card',
+            'settings' => array(
+                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-blog/media/blog-img2.jpg',
+                'image_alt' => 'SaaS Journey',
+                'tag' => 'Media and News',
+                'title' => 'From Code to Cloud: the SaaS Journey by Sela Cloud Experts',
+                'date' => '15 Jul 2025',
+                'url' => '#',
+            ),
+        ),
+        array(
+            'type' => 'blog-card',
+            'settings' => array(
+                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-blog/media/blog-img3.jpg',
+                'image_alt' => 'Google Cloud',
+                'tag' => 'Next Event',
+                'title' => 'From Code to Cloud: the SaaS Journey by Sela and Google Cloud Experts',
+                'date' => '15 Jul 2025',
+                'url' => '#',
+            ),
+        ),
+    ),
+);
