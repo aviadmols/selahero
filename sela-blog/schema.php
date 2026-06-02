@@ -36,6 +36,64 @@ return array(
             ),
         ),
         array(
+            'id' => 'source_mode',
+            'type' => 'select',
+            'label' => 'Content source',
+            'default' => 'auto',
+            'options' => array(
+                array(
+                    'value' => 'auto',
+                    'label' => 'WordPress posts (auto)',
+                ),
+                array(
+                    'value' => 'manual',
+                    'label' => 'Manual cards only',
+                ),
+            ),
+        ),
+        array(
+            'id' => 'taxonomy',
+            'type' => 'text',
+            'label' => 'Tag taxonomy slug',
+            'default' => 'post_tag',
+        ),
+        array(
+            'id' => 'slot_1_tag',
+            'type' => 'text',
+            'label' => 'Slot 1 (event) — tag slug',
+            'default' => '',
+        ),
+        array(
+            'id' => 'slot_1_tag_label',
+            'type' => 'text',
+            'label' => 'Slot 1 (event) — tag label',
+            'default' => 'Next Event',
+        ),
+        array(
+            'id' => 'slot_2_tag',
+            'type' => 'text',
+            'label' => 'Slot 2 (media-news) — tag slug',
+            'default' => '',
+        ),
+        array(
+            'id' => 'slot_2_tag_label',
+            'type' => 'text',
+            'label' => 'Slot 2 (media-news) — tag label',
+            'default' => 'Media and News',
+        ),
+        array(
+            'id' => 'slot_3_tag',
+            'type' => 'text',
+            'label' => 'Slot 3 (media-news) — tag slug',
+            'default' => '',
+        ),
+        array(
+            'id' => 'slot_3_tag_label',
+            'type' => 'text',
+            'label' => 'Slot 3 (media-news) — tag label',
+            'default' => 'Media and News',
+        ),
+        array(
             'tab' => 'style',
             'id' => 'bg_section',
             'type' => 'color',

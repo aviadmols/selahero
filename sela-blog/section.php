@@ -24,28 +24,109 @@ $get_media = function (string $fallback) use ($media_base): string {
     return esc_url('https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-blog/media/' . ltrim($fallback, '/'));
 };
 
-$cards = array();
+$source_mode = (string)($settings['source_mode'] ?? 'auto');
+$taxonomy = sanitize_key((string)($settings['taxonomy'] ?? 'post_tag'));
 
-foreach (($blocks ?? array()) as $block) {
-    $block_type = (string)($block['type'] ?? '');
-    $block_settings = (array)($block['settings'] ?? []);
-
-    if ($block_type !== 'blog-card') {
-        continue;
-    }
-
-    $cards[] = array(
-        'image' => (string)($block_settings['image'] ?? ''),
-        'image_alt' => (string)($block_settings['image_alt'] ?? ''),
-        'tag' => (string)($block_settings['tag'] ?? ''),
-        'title' => (string)($block_settings['title'] ?? ''),
-        'date' => (string)($block_settings['date'] ?? ''),
-        'url' => (string)($block_settings['url'] ?? ''),
-    );
+if ($taxonomy === '') {
+    $taxonomy = 'post_tag';
 }
 
-if (empty($cards)) {
-    $cards = array(
+$slbl_get_tax_query = function (string $tag_slug, string $taxonomy_name): array {
+    $tag_slug = sanitize_title($tag_slug);
+
+    if ($tag_slug === '') {
+        return array();
+    }
+
+    return array(
+        array(
+            'taxonomy' => $taxonomy_name,
+            'field' => 'slug',
+            'terms' => array($tag_slug),
+        ),
+    );
+};
+
+$slbl_format_ymd_date = function (string $ymd): string {
+    $ymd = preg_replace('/\D/', '', $ymd);
+
+    if (strlen($ymd) !== 8) {
+        return '';
+    }
+
+    $date = DateTime::createFromFormat('Ymd', $ymd);
+
+    if (!$date instanceof DateTime) {
+        return '';
+    }
+
+    return wp_date('j M Y', $date->getTimestamp());
+};
+
+$slbl_get_event_date_ymd = function (int $post_id): string {
+    if (function_exists('get_field')) {
+        $value = get_field('date_of_event', $post_id);
+    } else {
+        $value = get_post_meta($post_id, 'date_of_event', true);
+    }
+
+    return preg_replace('/\D/', '', (string) $value);
+};
+
+$slbl_post_to_card = function ($post, string $tag_label, string $date_override = '') {
+    if (!$post instanceof WP_Post) {
+        return null;
+    }
+
+    $image = get_the_post_thumbnail_url($post, 'large');
+    $alt = (string) get_post_meta($post->ID, '_wp_attachment_image_alt', true);
+
+    if ($alt === '') {
+        $alt = $post->post_title;
+    }
+
+    $date = $date_override;
+
+    if ($date === '') {
+        $date = get_the_date('j M Y', $post);
+    }
+
+    return array(
+        'image' => $image ? esc_url($image) : '',
+        'image_alt' => $alt,
+        'tag' => $tag_label,
+        'title' => $post->post_title,
+        'date' => $date,
+        'url' => get_permalink($post),
+    );
+};
+
+$cards_from_blocks = function () use ($blocks): array {
+    $items = array();
+
+    foreach (($blocks ?? array()) as $block) {
+        $block_type = (string)($block['type'] ?? '');
+        $block_settings = (array)($block['settings'] ?? []);
+
+        if ($block_type !== 'blog-card') {
+            continue;
+        }
+
+        $items[] = array(
+            'image' => (string)($block_settings['image'] ?? ''),
+            'image_alt' => (string)($block_settings['image_alt'] ?? ''),
+            'tag' => (string)($block_settings['tag'] ?? ''),
+            'title' => (string)($block_settings['title'] ?? ''),
+            'date' => (string)($block_settings['date'] ?? ''),
+            'url' => (string)($block_settings['url'] ?? ''),
+        );
+    }
+
+    return $items;
+};
+
+$demo_cards = function () use ($get_media): array {
+    return array(
         array(
             'image' => $get_media('blog-img1.jpg'),
             'image_alt' => 'Event',
@@ -65,13 +146,143 @@ if (empty($cards)) {
         array(
             'image' => $get_media('blog-img3.jpg'),
             'image_alt' => 'Google Cloud',
-            'tag' => 'Next Event',
+            'tag' => 'Media and News',
             'title' => 'From Code to Cloud: the SaaS Journey by Sela and Google Cloud Experts',
             'date' => '15 Jul 2025',
             'url' => '#',
         ),
     );
+};
+
+$cards_from_wp = function () use (
+    $settings,
+    $taxonomy,
+    $slbl_get_tax_query,
+    $slbl_format_ymd_date,
+    $slbl_get_event_date_ymd,
+    $slbl_post_to_card
+): array {
+    if (!function_exists('wp_date')) {
+        return array();
+    }
+
+    $items = array();
+    $exclude_ids = array();
+    $today_ymd = wp_date('Ymd');
+
+    $event_args = array(
+        'post_type' => 'event',
+        'posts_per_page' => 1,
+        'post_status' => 'publish',
+        'meta_key' => 'date_of_event',
+        'orderby' => 'meta_value_num',
+        'order' => 'ASC',
+        'meta_query' => array(
+            array(
+                'key' => 'date_of_event',
+                'value' => $today_ymd,
+                'compare' => '>=',
+                'type' => 'NUMERIC',
+            ),
+        ),
+    );
+
+    $event_tax = $slbl_get_tax_query((string)($settings['slot_1_tag'] ?? ''), $taxonomy);
+
+    if (!empty($event_tax)) {
+        $event_args['tax_query'] = $event_tax;
+    }
+
+    $event_query = new WP_Query($event_args);
+
+    if ($event_query->have_posts()) {
+        $event_query->the_post();
+        $event_post = get_post();
+        $event_id = $event_post instanceof WP_Post ? (int) $event_post->ID : 0;
+        $event_date = $slbl_format_ymd_date($slbl_get_event_date_ymd($event_id));
+        $event_label = (string)($settings['slot_1_tag_label'] ?? 'Next Event');
+        $event_card = $slbl_post_to_card($event_post, $event_label, $event_date);
+
+        if ($event_card !== null) {
+            $items[] = $event_card;
+
+            if ($event_id > 0) {
+                $exclude_ids[] = $event_id;
+            }
+        }
+
+        wp_reset_postdata();
+    }
+
+    $media_slots = array(
+        array(
+            'tag' => (string)($settings['slot_2_tag'] ?? ''),
+            'label' => (string)($settings['slot_2_tag_label'] ?? 'Media and News'),
+        ),
+        array(
+            'tag' => (string)($settings['slot_3_tag'] ?? ''),
+            'label' => (string)($settings['slot_3_tag_label'] ?? 'Media and News'),
+        ),
+    );
+
+    foreach ($media_slots as $slot) {
+        $media_args = array(
+            'post_type' => 'media-news',
+            'posts_per_page' => 1,
+            'post_status' => 'publish',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'post__not_in' => $exclude_ids,
+        );
+
+        $media_tax = $slbl_get_tax_query($slot['tag'], $taxonomy);
+
+        if (!empty($media_tax)) {
+            $media_args['tax_query'] = $media_tax;
+        }
+
+        $media_query = new WP_Query($media_args);
+
+        if (!$media_query->have_posts()) {
+            wp_reset_postdata();
+            continue;
+        }
+
+        $media_query->the_post();
+        $media_post = get_post();
+        $media_card = $slbl_post_to_card($media_post, $slot['label']);
+
+        if ($media_card !== null) {
+            $items[] = $media_card;
+
+            if ($media_post instanceof WP_Post) {
+                $exclude_ids[] = (int) $media_post->ID;
+            }
+        }
+
+        wp_reset_postdata();
+    }
+
+    return $items;
+};
+
+$cards = array();
+
+if ($source_mode === 'manual') {
+    $cards = $cards_from_blocks();
+} else {
+    $cards = $cards_from_wp();
+
+    if (empty($cards)) {
+        $cards = $cards_from_blocks();
+    }
 }
+
+if (empty($cards)) {
+    $cards = $demo_cards();
+}
+
+$track_count = max(1, min(3, count($cards)));
 
 $uid = 'slbl-' . esc_attr($section['id'] ?? uniqid('sec', true));
 ?>
@@ -105,7 +316,7 @@ $uid = 'slbl-' . esc_attr($section['id'] ?? uniqid('sec', true));
         <<?php echo $tag_title; ?> class="blog__title"><?php echo esc_html($title); ?></<?php echo $tag_title; ?>>
 
         <div class="blog__track-outer">
-            <div class="blog__track" data-blog-track>
+            <div class="blog__track blog__track--count-<?php echo (int) $track_count; ?>" data-blog-track>
                 <?php foreach ($cards as $card) : ?>
                     <?php
                     $card_url = trim((string)($card['url'] ?? ''));

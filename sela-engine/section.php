@@ -186,6 +186,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 </style>
 
 <section class="engine" id="<?php echo $uid; ?>">
+    <div class="engine__top-pin">
     <div class="engine__top">
         <div class="wrap">
             <<?php echo $title_tag; ?> class="engine__title"><?php echo wp_kses_post($title); ?></<?php echo $title_tag; ?>>
@@ -267,6 +268,8 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             </div>
         </div>
     </div>
+    <div class="engine__top-pin-spacer" aria-hidden="true"></div>
+    </div>
 
     <div class="engine__second">
         <?php if ($wave_image !== '') : ?>
@@ -308,19 +311,24 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         return;
     }
 
+    const topPin = section.querySelector('.engine__top-pin');
     const topArea = section.querySelector('.engine__top');
     const secondArea = section.querySelector('.engine__second');
     const robot = section.querySelector('.engine__robot');
     const chipsArea = section.querySelector('.experts__chips-area');
     const chips = Array.from(section.querySelectorAll('.experts__chips .chip'));
     const hasChips = Boolean(chipsArea && chips.length);
+    const desktopMedia = window.matchMedia('(min-width: 769px)');
+    const STICKY_PIN_DISTANCE = 600;
+    let stickyProgress = 0;
 
-    if (!topArea || !secondArea) {
+    if (!topPin || !topArea || !secondArea) {
         return;
     }
 
     let ticking = false;
     let overlapTicking = false;
+    let stickyTicking = false;
     let mouseX = 0;
     let mouseY = 0;
     let targetMouseX = 0;
@@ -343,14 +351,51 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         };
     }) : [];
 
+    function updateStickyPinProgress() {
+        if (!desktopMedia.matches) {
+            stickyProgress = 1;
+            section.style.setProperty('--engine-sticky-progress', '1');
+            section.style.setProperty('--engine-logos-opacity', '1');
+            section.classList.add('engine--sticky-complete');
+            stickyTicking = false;
+            return;
+        }
+
+        const scrollY = window.scrollY || window.pageYOffset;
+        const pinTop = topPin.getBoundingClientRect().top + scrollY;
+        const progress = Math.max(0, Math.min(1, (scrollY - pinTop) / STICKY_PIN_DISTANCE));
+
+        stickyProgress = progress;
+        section.style.setProperty('--engine-sticky-progress', progress.toFixed(3));
+        section.style.setProperty('--engine-logos-opacity', progress >= 0.85 ? '1' : '0');
+        section.classList.toggle('engine--sticky-complete', progress >= 1);
+        stickyTicking = false;
+    }
+
+    function requestStickyPinUpdate() {
+        if (!stickyTicking) {
+            window.requestAnimationFrame(function() {
+                updateStickyPinProgress();
+                updateSecondTakeover();
+            });
+            stickyTicking = true;
+        }
+    }
+
     function updateSecondTakeover() {
         const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
         const secondRect = secondArea.getBoundingClientRect();
-        const maxLift = window.matchMedia('(max-width: 768px)').matches ? 110 : 220;
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const maxLift = isMobile ? 110 : 220;
         const triggerStart = viewportHeight * 0.92;
         const triggerEnd = viewportHeight * 0.30;
         const rawProgress = (triggerStart - secondRect.top) / (triggerStart - triggerEnd);
-        const progress = Math.max(0, Math.min(1, rawProgress));
+        let progress = Math.max(0, Math.min(1, rawProgress));
+
+        if (!isMobile) {
+            progress = progress * stickyProgress;
+        }
+
         const lift = -maxLift * progress;
 
         section.style.setProperty('--engine-second-overlap-y', lift.toFixed(2) + 'px');
@@ -358,10 +403,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     }
 
     function requestSecondTakeoverUpdate() {
-        if (!overlapTicking) {
-            window.requestAnimationFrame(updateSecondTakeover);
-            overlapTicking = true;
-        }
+        requestStickyPinUpdate();
     }
 
     function updateWaveParallax() {
@@ -392,6 +434,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     }
 
     updateWaveParallax();
+    updateStickyPinProgress();
     updateSecondTakeover();
 
     if (hasChips) {
@@ -432,8 +475,8 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
     window.addEventListener('scroll', requestWaveParallaxUpdate, { passive: true });
     window.addEventListener('resize', requestWaveParallaxUpdate);
-    window.addEventListener('scroll', requestSecondTakeoverUpdate, { passive: true });
-    window.addEventListener('resize', requestSecondTakeoverUpdate);
+    window.addEventListener('scroll', requestStickyPinUpdate, { passive: true });
+    window.addEventListener('resize', requestStickyPinUpdate);
 
     if (hasChips) {
         window.requestAnimationFrame(animateChips);

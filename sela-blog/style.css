@@ -24,6 +24,17 @@
     justify-content: center;
 }
 
+.blog__track--count-2 {
+    grid-template-columns: repeat(2, var(--blog-card-width, 380px));
+}
+
+.blog__track--count-1 {
+    grid-template-columns: min(var(--blog-card-width, 380px), 100%);
+    max-width: var(--blog-card-width, 380px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .blog__card {
     border: .5px solid var(--blog-card-border, #2f2f2f);
     border-radius: 10px;

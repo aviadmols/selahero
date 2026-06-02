@@ -5,6 +5,8 @@
     overflow: visible;
     font-family: "Lexend", Sans-serif;
     --engine-second-overlap-y: 0px;
+    --engine-sticky-progress: 0;
+    --engine-logos-opacity: 0;
 }
 
 .hero-section--sela-engine {
@@ -20,6 +22,17 @@
     margin: 0 auto;
     position: relative;
     z-index: 2;
+}
+
+.engine__top-pin {
+    position: relative;
+    width: 100%;
+}
+
+.engine__top-pin-spacer {
+    display: none;
+    height: 0;
+    pointer-events: none;
 }
 
 .engine__top,
@@ -63,11 +76,38 @@
 }
 
 @media (min-width: 769px) {
+    .hero-section--sela-engine .engine__top {
+        padding-bottom: 90px;
+    }
+
+    .engine__top-pin-spacer {
+        display: block;
+        height: 600px;
+    }
+
+    .engine__center {
+        overflow: hidden;
+    }
+
+    .engine__card--logos {
+        opacity: var(--engine-logos-opacity, 0);
+        visibility: hidden;
+        transform: translate3d(0, 16px, 0);
+        transition: opacity .35s ease, transform .35s ease, visibility .35s;
+    }
+
+    .engine--sticky-complete .engine__card--logos {
+        opacity: 1;
+        visibility: visible;
+        transform: translate3d(0, 0, 0);
+    }
+
     .hero-section--sela-engine .engine__second {
         margin-top: 220px;
     }
 
     .hero-section--sela-engine .engine__second > .engine__wave {
+        width: 100%;
         z-index: 1;
     }
 }
@@ -375,7 +415,13 @@
     .engine {
         padding: var(--engine-pad-y, 64px) 0;
     }
-	
+
+    .engine__card--logos {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+
   .engine{padding:60px 0}
   .engine__title{font-size:26px}
   .engine__layout{display:flex;flex-direction:column;gap:32px}
