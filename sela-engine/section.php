@@ -320,6 +320,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     const hasChips = Boolean(chipsArea && chips.length);
     const desktopMedia = window.matchMedia('(min-width: 769px)');
     const STICKY_PIN_DISTANCE = 600;
+    const STICKY_START_OFFSET = 100;
     let stickyProgress = 0;
 
     if (!topPin || !topArea || !secondArea) {
@@ -363,7 +364,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
         const scrollY = window.scrollY || window.pageYOffset;
         const pinTop = topPin.getBoundingClientRect().top + scrollY;
-        const progress = Math.max(0, Math.min(1, (scrollY - pinTop) / STICKY_PIN_DISTANCE));
+        const progress = Math.max(0, Math.min(1, (scrollY - pinTop + STICKY_START_OFFSET) / STICKY_PIN_DISTANCE));
 
         stickyProgress = progress;
         section.style.setProperty('--engine-sticky-progress', progress.toFixed(3));

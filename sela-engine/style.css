@@ -77,6 +77,7 @@
 
 @media (min-width: 769px) {
     .hero-section--sela-engine .engine__top {
+        top: -100px;
         padding-bottom: 90px;
     }
 
