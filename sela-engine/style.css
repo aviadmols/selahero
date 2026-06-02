@@ -30,15 +30,10 @@
 
 .engine__top {
     z-index: 1;
-    position: relative;
-    top: auto;
+    position: sticky;
+    top: 0;
     padding-bottom: 120px;
     overflow: hidden;
-}
-
-.engine--overlap-complete .engine__top {
-    visibility: hidden;
-    pointer-events: none;
 }
 
 .engine__wave {

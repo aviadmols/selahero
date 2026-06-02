@@ -354,7 +354,6 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         const lift = -maxLift * progress;
 
         section.style.setProperty('--engine-second-overlap-y', lift.toFixed(2) + 'px');
-        section.classList.toggle('engine--overlap-complete', progress >= 1);
         overlapTicking = false;
     }
 
