@@ -268,7 +268,6 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             </div>
         </div>
     </div>
-    <div class="engine__top-pin-spacer" aria-hidden="true"></div>
     </div>
 
     <div class="engine__second">
@@ -311,31 +310,19 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         return;
     }
 
-    const topPin = section.querySelector('.engine__top-pin');
-    const topArea = section.querySelector('.engine__top');
-    const secondArea = section.querySelector('.engine__second');
-    const robot = section.querySelector('.engine__robot');
     const chipsArea = section.querySelector('.experts__chips-area');
     const chips = Array.from(section.querySelectorAll('.experts__chips .chip'));
-    const hasChips = Boolean(chipsArea && chips.length);
-    const desktopMedia = window.matchMedia('(min-width: 769px)');
-    const STICKY_PIN_DISTANCE = 600;
-    const STICKY_START_OFFSET = 100;
-    let stickyProgress = 0;
 
-    if (!topPin || !topArea || !secondArea) {
+    if (!chipsArea || !chips.length) {
         return;
     }
 
-    let ticking = false;
-    let overlapTicking = false;
-    let stickyTicking = false;
     let mouseX = 0;
     let mouseY = 0;
     let targetMouseX = 0;
     let targetMouseY = 0;
 
-    const chipStates = hasChips ? chips.map(function(chip) {
+    const chipStates = chips.map(function(chip) {
         return {
             chip: chip,
             phaseX: Math.random() * Math.PI * 2,
@@ -350,110 +337,20 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             mouseStrengthX: 2.5 + Math.random() * 2.5,
             mouseStrengthY: 2 + Math.random() * 2.5
         };
-    }) : [];
+    });
 
-    function updateStickyPinProgress() {
-        if (!desktopMedia.matches) {
-            stickyProgress = 1;
-            section.style.setProperty('--engine-sticky-progress', '1');
-            section.style.setProperty('--engine-logos-opacity', '1');
-            section.classList.add('engine--sticky-complete');
-            stickyTicking = false;
-            return;
-        }
+    chipsArea.addEventListener('mousemove', function(event) {
+        const rect = chipsArea.getBoundingClientRect();
+        targetMouseX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+        targetMouseY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+    });
 
-        const scrollY = window.scrollY || window.pageYOffset;
-        const pinTop = topPin.getBoundingClientRect().top + scrollY;
-        const progress = Math.max(0, Math.min(1, (scrollY - pinTop + STICKY_START_OFFSET) / STICKY_PIN_DISTANCE));
-
-        stickyProgress = progress;
-        section.style.setProperty('--engine-sticky-progress', progress.toFixed(3));
-        section.style.setProperty('--engine-logos-opacity', progress >= 0.85 ? '1' : '0');
-        section.classList.toggle('engine--sticky-complete', progress >= 1);
-        stickyTicking = false;
-    }
-
-    function requestStickyPinUpdate() {
-        if (!stickyTicking) {
-            window.requestAnimationFrame(function() {
-                updateStickyPinProgress();
-                updateSecondTakeover();
-            });
-            stickyTicking = true;
-        }
-    }
-
-    function updateSecondTakeover() {
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-        const secondRect = secondArea.getBoundingClientRect();
-        const isMobile = window.matchMedia('(max-width: 768px)').matches;
-        const maxLift = isMobile ? 110 : 220;
-        const triggerStart = viewportHeight * 0.92;
-        const triggerEnd = viewportHeight * 0.30;
-        const rawProgress = (triggerStart - secondRect.top) / (triggerStart - triggerEnd);
-        let progress = Math.max(0, Math.min(1, rawProgress));
-
-        if (!isMobile) {
-            progress = progress * stickyProgress;
-        }
-
-        const lift = -maxLift * progress;
-
-        section.style.setProperty('--engine-second-overlap-y', lift.toFixed(2) + 'px');
-        overlapTicking = false;
-    }
-
-    function requestSecondTakeoverUpdate() {
-        requestStickyPinUpdate();
-    }
-
-    function updateWaveParallax() {
-        const rect = section.getBoundingClientRect();
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-
-        if (rect.bottom < 0 || rect.top > viewportHeight) {
-            ticking = false;
-            return;
-        }
-
-        const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
-        const waveMovement = (progress - 0.52) * 80;
-        const robotMovement = (0.5 - progress) * 28;
-
-        section.style.setProperty('--engine-second-wave-y', waveMovement + 'px');
-        if (robot) {
-            section.style.setProperty('--engine-robot-y', robotMovement + 'px');
-        }
-        ticking = false;
-    }
-
-    function requestWaveParallaxUpdate() {
-        if (!ticking) {
-            window.requestAnimationFrame(updateWaveParallax);
-            ticking = true;
-        }
-    }
-
-    updateWaveParallax();
-    updateStickyPinProgress();
-    updateSecondTakeover();
-
-    if (hasChips) {
-        chipsArea.addEventListener('mousemove', function(event) {
-            const rect = chipsArea.getBoundingClientRect();
-            targetMouseX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-            targetMouseY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-        });
-        chipsArea.addEventListener('mouseleave', function() {
-            targetMouseX = 0;
-            targetMouseY = 0;
-        });
-    }
+    chipsArea.addEventListener('mouseleave', function() {
+        targetMouseX = 0;
+        targetMouseY = 0;
+    });
 
     function animateChips(time) {
-        if (!hasChips) {
-            return;
-        }
         mouseX += (targetMouseX - mouseX) * 0.045;
         mouseY += (targetMouseY - mouseY) * 0.045;
 
@@ -474,13 +371,6 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         window.requestAnimationFrame(animateChips);
     }
 
-    window.addEventListener('scroll', requestWaveParallaxUpdate, { passive: true });
-    window.addEventListener('resize', requestWaveParallaxUpdate);
-    window.addEventListener('scroll', requestStickyPinUpdate, { passive: true });
-    window.addEventListener('resize', requestStickyPinUpdate);
-
-    if (hasChips) {
-        window.requestAnimationFrame(animateChips);
-    }
+    window.requestAnimationFrame(animateChips);
 })();
 </script>

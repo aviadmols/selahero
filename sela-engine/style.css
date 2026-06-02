@@ -1,8 +1,5 @@
 .hero-section--sela-engine .engine {
     background: #fff;
-    --engine-second-overlap-y: 0px;
-    --engine-sticky-progress: 0;
-    --engine-logos-opacity: 0;
 }
 
 .hero-section--sela-engine {
@@ -29,12 +26,6 @@
     width: 100%;
 }
 
-.engine__top-pin-spacer {
-    display: none;
-    height: 0;
-    pointer-events: none;
-}
-
 .engine__top,
 .engine__second {
     position: relative;
@@ -43,8 +34,6 @@
 
 .engine__top {
     z-index: 1;
-    position: sticky;
-    top: 0;
     padding-bottom: 120px;
     overflow: hidden;
 }
@@ -55,56 +44,30 @@
     width: 1761px;
     height: 682px;
     pointer-events: none;
-    will-change: transform;
 }
 
 .engine__second {
-    z-index: 5;
-    margin-top: -120px;
+    z-index: 2;
+    margin-top: 0;
     padding-top: calc(60px + 140px);
     padding-bottom: var(--engine-pad-y, 50px);
     background: #fff;
-    transform: translate3d(0, var(--engine-second-overlap-y, 0px), 0);
-    will-change: transform;
 }
 
 .engine__second > .engine__wave {
     bottom: auto;
     top: -240px;
-    transform: translate3d(-50%, var(--engine-second-wave-y, 0px), 0);
+    transform: translateX(-50%);
     z-index: 1;
 }
 
 @media (min-width: 769px) {
     .hero-section--sela-engine .engine__top {
-        top: -100px;
         padding-bottom: 90px;
-    }
-
-    .engine__top-pin-spacer {
-        display: block;
-        height: 600px;
     }
 
     .engine__center {
         overflow: hidden;
-    }
-
-    .engine__card--logos {
-        opacity: var(--engine-logos-opacity, 0);
-        visibility: hidden;
-        transform: translate3d(0, 16px, 0);
-        transition: opacity .35s ease, transform .35s ease, visibility .35s;
-    }
-
-    .engine--sticky-complete .engine__card--logos {
-        opacity: 1;
-        visibility: visible;
-        transform: translate3d(0, 0, 0);
-    }
-
-    .hero-section--sela-engine .engine__second {
-        margin-top: 220px;
     }
 
     .hero-section--sela-engine .engine__second > .engine__wave {
@@ -125,8 +88,6 @@
     height: auto;
     pointer-events: none;
     z-index: 6;
-    transform: translate3d(0, var(--engine-robot-y, 0px), 0);
-    will-change: transform;
 }
 
 .engine__col-icon img {
@@ -417,12 +378,6 @@
         padding: var(--engine-pad-y, 64px) 0;
     }
 
-    .engine__card--logos {
-        opacity: 1;
-        visibility: visible;
-        transform: none;
-    }
-
   .engine__top-pin{padding:60px 0}
   .engine__title{font-size:26px}
   .engine__layout{display:flex;flex-direction:column;gap:32px}
@@ -514,7 +469,7 @@
     }
 
     .engine__second {
-        margin-top: -120px;
+        margin-top: 0;
         padding-top: calc(36px + 90px);
     }
 
