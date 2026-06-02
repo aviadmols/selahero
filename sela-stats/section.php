@@ -15,6 +15,20 @@ $get_img = function ( string $key, string $fallback ) use ( $settings, $media_ba
     return $media_base ? esc_url( $media_base . ltrim( $fallback, '/' ) ) : '';
 };
 
+$get_media = function ( string $fallback ) use ( $media_base ): string {
+    if ( $media_base !== '' ) {
+        return esc_url( $media_base . ltrim( $fallback, '/' ) );
+    }
+
+    return esc_url( 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-stats/media/' . ltrim( $fallback, '/' ) );
+};
+
+$sep_images = array(
+    1 => $get_media( 'slst-sep-1.png' ),
+    2 => $get_media( 'slst-sep-2.png' ),
+    3 => $get_media( 'slst-sep-3.png' ),
+);
+
 $tag_t = function_exists( 'hero_pick_tag' ) ? hero_pick_tag( (string) ( $settings['title_tag'] ?? 'auto' ), 'h2' ) : 'h2';
 
 $uid = 'slst-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
@@ -28,9 +42,6 @@ $uid = 'slst-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
     --slst-fz-num: <?php echo (int) ( $settings['fz_num_d']   ?? 80 ); ?>px;
     --slst-fw-title: <?php echo esc_attr( $settings['fw_title'] ?? '300' ); ?>;
     --slst-pad-y: <?php echo (int) ( $settings['pad_y'] ?? 80 ); ?>px;
-    <?php for ( $i = 1; $i <= 4; $i++ ) : ?>
-    --slst-sep-<?php echo $i; ?>: <?php echo esc_attr( $settings["stat_{$i}_sep_color"] ?? '#00dbe9' ); ?>;
-    <?php endfor; ?>
 }
 @media (max-width: 768px) {
     #<?php echo $uid; ?> {
@@ -65,7 +76,9 @@ $uid = 'slst-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
                     <p class="slst-label"><?php echo esc_html( $lbl ); ?></p>
                 </div>
                 <?php if ( $i < 4 ) : ?>
-                    <span class="slst-sep" style="--slst-dot: var(--slst-sep-<?php echo $i; ?>)"></span>
+                    <span class="slst-sep slst-sep--<?php echo (int) $i; ?>" aria-hidden="true">
+                        <img src="<?php echo esc_url( $sep_images[ $i ] ?? '' ); ?>" alt="">
+                    </span>
                 <?php endif; ?>
             <?php endfor; ?>
         </div>

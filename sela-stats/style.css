@@ -84,24 +84,18 @@
     text-transform: capitalize;
 }
 .slst-sep {
-    display: block;
-    width: 2px;
-    height: 124px;
-    background: rgba(255,255,255,.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     margin: 0 8px;
-    position: relative;
 }
-.slst-sep::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--slst-dot, #00dbe9);
+
+.slst-sep img {
+    display: block;
+    width: auto;
+    height: 124px;
+    object-fit: contain;
 }
 
 @media (max-width: 1200px) { .slst-wrap { padding: 0 40px; } }
@@ -127,8 +121,12 @@
     .slst-wrap { padding: 0 20px; }
     .slst-row { flex-direction: column; gap: 32px; }
     .slst-sep {
-        width: 200px;
-        height: 2px;
         margin: 0;
+    }
+
+    .slst-sep img {
+        width: 200px;
+        height: auto;
+        transform: rotate(90deg);
     }
 }
