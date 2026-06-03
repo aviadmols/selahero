@@ -1,9 +1,15 @@
 /* Sela — Testimonials. Slug: sela-testimonials, prefix: slte- */
 
 .slte-section { background: var(--slte-bg, #f9f9f9); padding: var(--slte-pad-y, 64px) 0; /* reduced 20% per design comment #35 */ position: relative; }
-.slte-cloud { position: absolute; left: 11%; top: -2%; width: 70px; height: 35px; pointer-events: none; }
 .slte-wrap { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 120px; position: relative; z-index: 2; }
-.slte-tabs { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 48px; flex-wrap: wrap; }
+.slte-tabs { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.slte-cloud {
+    display: block;
+    width: 70px;
+    height: 35px;
+    margin: 0 auto 32px;
+    pointer-events: none;
+}
 .slte-tab {
 width: 105px;
     display: flex; align-items: center; justify-content: center;

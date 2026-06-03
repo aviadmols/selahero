@@ -10,30 +10,6 @@ return array(
     ),
     'settings' => array(
         array(
-            'id' => 'image_video',
-            'type' => 'image',
-            'label' => 'Video thumbnail',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
-        ),
-        array(
-            'id' => 'image_play_btn',
-            'type' => 'image',
-            'label' => 'Play button icon',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/play-btn.svg',
-        ),
-        array(
-            'id' => 'image_cloud',
-            'type' => 'image',
-            'label' => 'Decorative cloud',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/cloud-hero-1.svg',
-        ),
-        array(
-            'id' => 'show_cloud',
-            'type' => 'checkbox',
-            'label' => 'Show decorative cloud',
-            'default' => 1,
-        ),
-        array(
             'tab' => 'style',
             'id' => 'bg_color',
             'type' => 'color',
@@ -105,6 +81,24 @@ return array(
             'min' => 0,
             'max' => 200,
         ),
+        array(
+            'id' => 'image_play_btn',
+            'type' => 'image',
+            'label' => 'Play button icon',
+            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/play-btn.svg',
+        ),
+        array(
+            'id' => 'image_cloud',
+            'type' => 'image',
+            'label' => 'Decorative cloud',
+            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/cloud-hero-1.svg',
+        ),
+        array(
+            'id' => 'show_cloud',
+            'type' => 'checkbox',
+            'label' => 'Show decorative cloud',
+            'default' => 1,
+        ),
     ),
     'blocks' => array(
         'allowed' => array(
@@ -142,6 +136,12 @@ return array(
                     'default' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
                 ),
                 array(
+                    'id' => 'video_thumbnail',
+                    'type' => 'image',
+                    'label' => 'Video thumbnail',
+                    'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
+                ),
+                array(
                     'id' => 'text',
                     'type' => 'textarea',
                     'label' => 'Text',
@@ -164,6 +164,7 @@ return array(
                 'logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/tab-etoro.png',
                 'panel_logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-logo-etoro.png',
                 'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+                'video_thumbnail' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
                 'text' => 'Over 6 million traders in 140 countries use the eToro Social Trading Network to invest. They buy and sell financial instruments while copying successful traders\' decisions in real time, making trading social. In 2015, eToro moved to Microsoft Azure, adding analytics tools for its CopyFunds.',
                 'author' => 'Jasmine Lee, Creative Director',
             ),
@@ -175,6 +176,7 @@ return array(
                 'logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/tab-wiz.png',
                 'panel_logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/tab-wiz.png',
                 'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+                'video_thumbnail' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
                 'text' => 'Wiz partnered with Sela to accelerate cloud security posture management across multi-cloud environments. With Sela\'s expertise, we dramatically reduced our time-to-deploy and cloud spend while maintaining enterprise-grade security across all workloads.',
                 'author' => 'Dan Cohen, CISO, Wiz',
             ),
@@ -186,6 +188,7 @@ return array(
                 'logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/tab-island.png',
                 'panel_logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/tab-island.png',
                 'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+                'video_thumbnail' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
                 'text' => 'Island leverages Sela\'s cloud expertise to build robust, scalable infrastructure for our enterprise browser. Sela\'s 24/7 support and FinOps capabilities have been critical in helping us scale quickly while keeping infrastructure costs under control.',
                 'author' => 'Michael Brown, CTO, Island',
             ),
@@ -197,6 +200,7 @@ return array(
                 'logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/tab-ionix.png',
                 'panel_logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/tab-ionix.png',
                 'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+                'video_thumbnail' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
                 'text' => 'IONIX\'s attack surface management platform requires high availability and performance. Sela\'s cloud engineering team helped us optimize our AWS infrastructure, achieving significant cost savings while improving response times across all global regions.',
                 'author' => 'Sarah Gold, VP Engineering, IONIX',
             ),

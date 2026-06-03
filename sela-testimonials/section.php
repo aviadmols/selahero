@@ -20,6 +20,24 @@ $get_media = function ( string $fallback ) use ( $media_base ): string {
     return esc_url( 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/' . ltrim( $fallback, '/' ) );
 };
 
+$default_thumb = $get_img( 'image_video', 'testi-video.jpg' ) ?: $get_media( 'testi-video.jpg' );
+
+$resolve_thumb = function ( string $thumb = '', string $legacy_key = '' ) use ( $settings, $get_img, $get_media, $default_thumb ): string {
+    if ( $thumb !== '' ) {
+        return esc_url( $thumb );
+    }
+
+    if ( $legacy_key !== '' ) {
+        $legacy = (string) ( $settings[ $legacy_key ] ?? '' );
+
+        if ( $legacy !== '' ) {
+            return esc_url( $legacy );
+        }
+    }
+
+    return $default_thumb;
+};
+
 $uid = 'slte-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
 
 $tabs = [];
@@ -40,6 +58,7 @@ foreach ( ( $blocks ?? [] ) as $block ) {
         'logo'   => (string) ( $block_settings['logo'] ?? '' ) ?: $get_media( 'tab-etoro.png' ),
         'plogo'  => (string) ( $block_settings['panel_logo'] ?? '' ) ?: $get_media( 'testi-logo-etoro.png' ),
         'video'  => (string) ( $block_settings['video'] ?? 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0' ),
+        'thumb'  => $resolve_thumb( (string) ( $block_settings['video_thumbnail'] ?? '' ) ),
         'text'   => (string) ( $block_settings['text'] ?? '' ),
         'author' => (string) ( $block_settings['author'] ?? '' ),
     ];
@@ -58,6 +77,7 @@ if ( empty( $tabs ) ) {
             'logo'  => $get_img( "tab_{$i}_logo",       'tab-etoro.png' ) ?: $get_media( 'tab-etoro.png' ),
             'plogo' => $get_img( "tab_{$i}_panel_logo", 'testi-logo-etoro.png' ) ?: $get_media( 'testi-logo-etoro.png' ),
             'video' => (string) ( $settings["tab_{$i}_video"]  ?? 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0' ),
+            'thumb' => $resolve_thumb( '', "tab_{$i}_video_thumbnail" ),
             'text'  => (string) ( $settings["tab_{$i}_text"]   ?? '' ),
             'author'=> (string) ( $settings["tab_{$i}_author"] ?? '' ),
         ];
@@ -71,6 +91,7 @@ if ( empty( $tabs ) ) {
             'logo' => $get_media( 'tab-etoro.png' ),
             'plogo' => $get_media( 'testi-logo-etoro.png' ),
             'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+            'thumb' => $get_media( 'testi-video.jpg' ),
             'text' => 'Over 6 million traders in 140 countries use the eToro Social Trading Network to invest.',
             'author' => 'Jasmine Lee, Creative Director',
         ],
@@ -79,11 +100,14 @@ if ( empty( $tabs ) ) {
             'logo' => $get_media( 'tab-wiz.png' ),
             'plogo' => $get_media( 'tab-wiz.png' ),
             'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+            'thumb' => $get_media( 'testi-video.jpg' ),
             'text' => 'Wiz partnered with Sela to accelerate cloud security posture management across multi-cloud environments.',
             'author' => 'Dan Cohen, CISO, Wiz',
         ],
     ];
 }
+
+$first_thumb = ! empty( $tabs ) ? (string) ( $tabs[0]['thumb'] ?? $default_thumb ) : $default_thumb;
 ?>
 <style>
 #<?php echo $uid; ?> {
@@ -104,9 +128,6 @@ if ( empty( $tabs ) ) {
 </style>
 
 <section class="slte-section" id="<?php echo $uid; ?>">
-    <?php if ( $show_cloud ) : ?>
-        <img class="slte-cloud" src="<?php echo $get_img( 'image_cloud', 'cloud-hero-1.svg' ) ?: $get_media( 'cloud-hero-1.svg' ); ?>" alt="" aria-hidden="true">
-    <?php endif; ?>
     <div class="slte-wrap">
         <div class="slte-tabs">
             <?php foreach ( $tabs as $i => $t ) : ?>
@@ -115,11 +136,16 @@ if ( empty( $tabs ) ) {
                 </button>
             <?php endforeach; ?>
         </div>
+        <?php if ( $show_cloud ) : ?>
+            <img class="slte-cloud" src="<?php echo $get_img( 'image_cloud', 'cloud-hero-1.svg' ) ?: $get_media( 'cloud-hero-1.svg' ); ?>" alt="" aria-hidden="true">
+        <?php endif; ?>
         <div class="slte-main">
             <div class="slte-panels">
                 <?php foreach ( $tabs as $i => $t ) : ?>
                     <div class="slte-panel<?php echo $i === 0 ? ' slte-panel--active' : ''; ?>"
-                         data-panel="<?php echo $i; ?>" data-video="<?php echo esc_url( $t['video'] ); ?>">
+                         data-panel="<?php echo $i; ?>"
+                         data-video="<?php echo esc_url( $t['video'] ); ?>"
+                         data-video-thumb="<?php echo esc_url( $t['thumb'] ); ?>">
                         <?php if ( $t['plogo'] ) : ?>
                             <img src="<?php echo $t['plogo']; ?>" alt="<?php echo esc_attr( $t['name'] ); ?>" class="slte-panel-logo">
                         <?php endif; ?>
@@ -129,7 +155,7 @@ if ( empty( $tabs ) ) {
                 <?php endforeach; ?>
             </div>
             <div class="slte-video">
-                <img src="<?php echo $get_img( 'image_video', 'testi-video.jpg' ); ?>" alt="" class="slte-video-thumb">
+                <img src="<?php echo esc_url( $first_thumb ); ?>" alt="" class="slte-video-thumb">
                 <button class="slte-play" aria-label="Play" type="button">
                     <img src="<?php echo $get_img( 'image_play_btn', 'play-btn.svg' ); ?>" alt="">
                 </button>
@@ -147,6 +173,7 @@ if ( empty( $tabs ) ) {
     var panels = section.querySelectorAll('.slte-panel');
     var video  = section.querySelector('.slte-video');
     var iframe = section.querySelector('.slte-iframe');
+    var thumb  = section.querySelector('.slte-video-thumb');
 
     tabs.forEach(function (btn, idx) {
         btn.addEventListener('click', function () {
@@ -154,7 +181,13 @@ if ( empty( $tabs ) ) {
             btn.classList.add('slte-tab--active');
             panels.forEach(function (p) { p.classList.remove('slte-panel--active'); });
             var p = section.querySelector('.slte-panel[data-panel="' + idx + '"]');
-            if (p) p.classList.add('slte-panel--active');
+            if (p) {
+                p.classList.add('slte-panel--active');
+                var thumbSrc = p.getAttribute('data-video-thumb');
+                if (thumb && thumbSrc) {
+                    thumb.src = thumbSrc;
+                }
+            }
             if (video) video.classList.remove('slte-video--playing');
             if (iframe) iframe.src = '';
         });
