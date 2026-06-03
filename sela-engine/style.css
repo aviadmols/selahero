@@ -20,7 +20,8 @@
 .engine__top-pin {
     background: var(--engine-bg, var(--bg-ee, #eef5ff));
     padding: var(--engine-pad-y, 50px) 0 0;
-    position: relative;
+       position: sticky;
+    top: 60px;
     overflow: visible;
     font-family: "Lexend", Sans-serif;
     width: 100%;
@@ -42,7 +43,6 @@
     position: absolute;
     left: 50%;
     width: 1761px;
-    height: 682px;
     pointer-events: none;
 }
 
@@ -63,7 +63,7 @@
 
 @media (min-width: 769px) {
     .hero-section--sela-engine .engine__top {
-        padding-bottom: 90px;
+        padding-bottom: 320px;
     }
 
     .engine__center {
@@ -223,7 +223,7 @@
 }
 
 .engine__layout {
-    display: grid;
+    display: flex;
     grid-template-columns: 1fr 270px 1fr;
     gap: 48px;
     align-items: start;
@@ -288,7 +288,7 @@
 .engine__center {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 16px;    padding: 7px;
     align-items: center;
     padding-top: 24px;
 }
@@ -303,6 +303,7 @@
     border-radius: 8px;
     height: 68px;
     width: 334px;
+    max-width: 100%;
     padding: 0 18px;
     font-size: 14px;
     font-weight: 300;
@@ -443,8 +444,8 @@
     }
 
     .engine__card {
-        width: 100%;
-        max-width: 334px;
+        width: 334px;
+        max-width: 100%;
     }
 
     .engine__col--left,
