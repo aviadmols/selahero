@@ -15,12 +15,7 @@ return array(
             'label' => 'Subtitle',
             'default' => 'Find out how Sela can help you',
         ),
-        array(
-            'id' => 'title',
-            'type' => 'textarea',
-            'label' => 'Title',
-            'default' => 'scale, grow & win.',
-        ),
+      
         array(
             'id' => 'title_tag',
             'type' => 'select',

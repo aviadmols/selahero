@@ -2,12 +2,14 @@
 
 .slte-section { background: var(--slte-bg, #f9f9f9); padding: var(--slte-pad-y, 64px) 0; /* reduced 20% per design comment #35 */ position: relative; }
 .slte-wrap { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 120px; position: relative; z-index: 2; }
-.slte-tabs { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.slte-tabs { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 70px; flex-wrap: wrap; }
 .slte-cloud {
     display: block;
     width: 70px;
     height: 35px;
+	    position: absolute;
     margin: 0 auto 32px;
+    top: -34%;
     pointer-events: none;
 }
 .slte-tab {
@@ -40,11 +42,16 @@ width: 105px;
 .slte-panel-author { font-size: var(--slte-fz-text, 18px); font-weight: 500; color: var(--slte-author, #1c1c1c); margin: 0; }
 
 @media (max-width: 1200px) { .slte-wrap { padding: 0 40px; } }
-@media (max-width: 900px)  { .slte-main { grid-template-columns: 1fr; } .slte-video { max-width: 600px; } }
+@media (max-width: 900px)  { .slte-main { grid-template-columns: 1fr; } .slte-video { max-width: 600px; } 
+	.slte-tabs {
+		    margin-bottom: 40px;
+	}
+}
 @media (max-width: 768px)  { .slte-wrap { padding: 0 20px; } 
 .slte-tab {
 height: 23px;
-	    padding: 0 15px;
+        padding: 0 12px;
+        width: auto;
 	}
 
 .slte-tabs {

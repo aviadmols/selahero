@@ -46,28 +46,37 @@ $uid   = 'slsc-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
         <div class="slsc-box">
             <div class="slsc-text">
                 <p class="slsc-find"><?php echo esc_html( $find ); ?></p>
-                <<?php echo $tag_t; ?> class="slsc-title"><?php echo wp_kses_post( $title ); ?></<?php echo $tag_t; ?>>
-                <a href="<?php echo esc_url( $ctaL ); ?>" class="slsc-btn">
-                    <?php echo esc_html( $ctaT ); ?>
-                    <span class="slsc-btn-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" viewBox="0 0 20 18" fill="none">
-                            <path d="M11.6795 14.4546L18.3049 8.62664L11.8943 2.66199" stroke="currentColor"/>
-                            <path d="M0 8.62659L18.1001 8.62659" stroke="currentColor"/>
-                        </svg>
-                    </span>
-                </a>
+             
+             
             </div>
-            <div class="slsc-faces">
-                <?php for ( $i = 1; $i <= 11; $i++ ) :
-                    $src = $get_img( "face_{$i}", "scale-face{$i}." . ( ( $i === 10 || $i === 11 ) ? 'png' : 'jpg' ) );
-                    if ( ! $src ) continue;
-                    $cls = 'slsc-face';
-                    if ( $i === 9 ) $cls .= ' slsc-face--border';
-                    if ( $i === 11 ) $cls .= ' slsc-face--wide';
-                ?>
-                    <img src="<?php echo $src; ?>" alt="" class="<?php echo $cls; ?>">
-                <?php endfor; ?>
-            </div>
+            <?php
+            $faces = array();
+            for ( $i = 1; $i <= 11; $i++ ) {
+                $src = $get_img( "face_{$i}", "scale-face{$i}." . ( ( $i === 10 || $i === 11 ) ? 'png' : 'jpg' ) );
+                if ( ! $src ) {
+                    continue;
+                }
+                $cls = 'slsc-face';
+                if ( $i === 9 )  $cls .= ' slsc-face--border';
+                if ( $i === 11 ) $cls .= ' slsc-face--wide';
+                $faces[] = array( 'src' => $src, 'cls' => $cls );
+            }
+            $face_count = max( 1, count( $faces ) );
+            $marquee_duration = max( 18, $face_count * 3 );
+            ?>
+            <?php if ( ! empty( $faces ) ) : ?>
+                <div class="slsc-faces">
+                    <div class="slsc-track" style="animation-duration: <?php echo (int) $marquee_duration; ?>s;">
+                        <?php for ( $copy = 0; $copy < 2; $copy++ ) : ?>
+                            <div class="slsc-group"<?php echo 0 === $copy ? '' : ' aria-hidden="true"'; ?>>
+                                <?php foreach ( $faces as $face ) : ?>
+                                    <img src="<?php echo $face['src']; ?>" alt="" class="<?php echo $face['cls']; ?>">
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endfor; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>

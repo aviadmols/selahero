@@ -1,16 +1,16 @@
 /* Sela — Scale & Win. Slug: sela-scale, prefix: slsc- */
 
 .slsc-section { padding: var(--slsc-pad-y, 56px) 0; }
-.slsc-wrap { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 120px; }
+.slsc-wrap { width: 100%;  margin: 0 auto; padding: 0 120px; }
 .slsc-box {
     background: var(--slsc-box-bg, #f9f9f9);
     border-radius: 30px;
     padding: 60px 80px;
     display: flex;
     flex-direction: column;
-    gap: 66px;
+    gap: 40px;
     align-items: center;
-    max-width: 1252px;
+
     margin: 0 auto;
     font-family: "Lexend", Sans-serif;
 }
@@ -42,7 +42,57 @@ mix-blend-mode: multiply;
     flex-shrink: 0;
     margin-left: auto;
 }
-.slsc-faces { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.slsc-faces {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: block;
+}
+.slsc-track {
+    display: flex;
+    width: max-content;
+    flex-wrap: nowrap;
+    animation: slsc-scroll 40s linear infinite;
+    will-change: transform;
+}
+.slsc-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding-right: 6px;
+}
+.slsc-faces:hover .slsc-track { animation-play-state: paused; }
+@keyframes slsc-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
+}
+/* subtle gradient fade so logos melt into the box background on both sides */
+.slsc-faces::before,
+.slsc-faces::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 90px;
+    z-index: 2;
+    pointer-events: none;
+}
+.slsc-faces::before {
+    left: 0;
+    background: linear-gradient(to right,
+        var(--slsc-box-bg, #f9f9f9),
+        color-mix(in srgb, var(--slsc-box-bg, #f9f9f9) 0%, transparent));
+}
+.slsc-faces::after {
+    right: 0;
+    background: linear-gradient(to left,
+        var(--slsc-box-bg, #f9f9f9),
+        color-mix(in srgb, var(--slsc-box-bg, #f9f9f9) 0%, transparent));
+}
+@media (prefers-reduced-motion: reduce) {
+    .slsc-track { animation: none; }
+}
 .slsc-face { width: 82px; height: 82px; object-fit: contain; flex-shrink: 0; }
 .slsc-face--border { border: .9px solid #1c1c1c; border-radius: 50%; }
 .slsc-face--wide   { width: 238px; height: 82px; border-radius: 10px; border: .9px solid #1c1c1c; }
@@ -55,7 +105,9 @@ mix-blend-mode: multiply;
 
     .slsc-wrap { padding: 0 20px; }
     .slsc-box { padding: 40px 20px; border-radius: 20px;  gap: 40px;}
-    .slsc-faces { gap: 4px; }
+    .slsc-group { gap: 4px; padding-right: 4px; }
+    .slsc-faces::before,
+    .slsc-faces::after { width: 44px; }
     .slsc-face { width: 40px; height: 40px; }
     .slsc-face--wide { width: 117px; height: 54px; }
 }

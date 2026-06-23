@@ -4,6 +4,9 @@ defined('ABSPATH') || exit;
 $title = (string)($settings['title'] ?? 'Cloud providers give you a powerful<br>engine for your growth.');
 $subtitle = (string)($settings['subtitle'] ?? 'Partnering with Sela provides ongoing technical and commercial add-ons to that engine, maximizing its performance while reducing costs – So you can grow faster and more efficiently.');
 
+$experts_title = (string)($settings['experts_title'] ?? 'Our tech experts,<br>your scale.');
+$experts_desc = (string)($settings['experts_desc'] ?? 'With a deep bench of multi-cloud engineering talent, Sela delivers hands-on, end-to-end expertise that drives real business outcomes so you can grow, scale, and win.');
+
 $source = (string)($section['source'] ?? '');
 $type = (string)($section['type'] ?? 'sela-engine');
 $media_base = '';
@@ -35,6 +38,16 @@ $get_media = function (string $fallback) use ($media_base): string {
     return esc_url('https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-engine/media/' . ltrim($fallback, '/'));
 };
 
+$get_experts_media = function (string $key, string $fallback) use ($settings): string {
+    $value = (string)($settings[$key] ?? '');
+
+    if ($value !== '') {
+        return esc_url($value);
+    }
+
+    return esc_url('https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/' . ltrim($fallback, '/'));
+};
+
 $parse_items = function (string $raw): array {
     $items = array();
 
@@ -58,6 +71,7 @@ $title_tag = function_exists('hero_pick_tag')
 $left_column = null;
 $right_column = null;
 $cards = array();
+$experts_chips = array();
 
 foreach (($blocks ?? array()) as $block) {
     $block_type = (string)($block['type'] ?? '');
@@ -86,6 +100,16 @@ foreach (($blocks ?? array()) as $block) {
             'image' => (string)($block_settings['image'] ?? ''),
             'image_alt' => (string)($block_settings['image_alt'] ?? ''),
             'style' => sanitize_html_class((string)($block_settings['style'] ?? 'pink')),
+        );
+    }
+
+    if ($block_type === 'experts-chip') {
+        $experts_chips[] = array(
+            'type' => (string)($block_settings['type'] ?? 'text'),
+            'text' => (string)($block_settings['text'] ?? ''),
+            'icon' => (string)($block_settings['icon'] ?? ''),
+            'icon_alt' => (string)($block_settings['icon_alt'] ?? ''),
+            'color' => sanitize_html_class((string)($block_settings['color'] ?? 'green')),
         );
     }
 }
@@ -143,22 +167,91 @@ if (empty($cards)) {
     );
 }
 
+if (empty($experts_chips)) {
+    $experts_chips = array(
+        array(
+            'type' => 'text',
+            'text' => 'Migrations & Modernizations',
+            'icon' => '',
+            'icon_alt' => '',
+            'color' => 'green',
+        ),
+        array(
+            'type' => 'text',
+            'text' => 'Data',
+            'icon' => '',
+            'icon_alt' => '',
+            'color' => 'cyan',
+        ),
+        array(
+            'type' => 'text',
+            'text' => 'GenAI',
+            'icon' => '',
+            'icon_alt' => '',
+            'color' => 'pink',
+        ),
+        array(
+            'type' => 'text',
+            'text' => 'Application Engineering',
+            'icon' => '',
+            'icon_alt' => '',
+            'color' => 'yellow',
+        ),
+        array(
+            'type' => 'text',
+            'text' => 'DevOps',
+            'icon' => '',
+            'icon_alt' => '',
+            'color' => 'blue-light',
+        ),
+        array(
+            'type' => 'text',
+            'text' => 'Security',
+            'icon' => '',
+            'icon_alt' => '',
+            'color' => 'gray',
+        ),
+    );
+}
+
+
+$mobile_panels = array();
+
+foreach ($cards as $card) {
+    $card_text = trim((string)($card['text'] ?? ''));
+    $card_type = (string)($card['type'] ?? 'text');
+    $card_style = sanitize_html_class((string)($card['style'] ?? 'pink'));
+
+    $panel = array(
+        'title' => '',
+        'items' => array(),
+        'style' => $card_style,
+    );
+
+    if (
+        strcasecmp($card_text, (string)$left_column['title']) === 0 ||
+        stripos($card_text, 'commercial') !== false
+    ) {
+        $panel['title'] = (string)$left_column['title'];
+        $panel['items'] = (array)$left_column['items'];
+    } elseif (
+        strcasecmp($card_text, (string)$right_column['title']) === 0 ||
+        stripos($card_text, 'technological') !== false
+    ) {
+        $panel['title'] = (string)$right_column['title'];
+        $panel['items'] = (array)$right_column['items'];
+    } elseif ($card_type !== 'image' && $card_text !== '') {
+        $panel['title'] = $card_text;
+    }
+
+    $mobile_panels[] = $panel;
+}
+
 $wave_image = $get_img('wave_image', 'cloud-wave.svg');
 $robot_image = $get_img('robot_image', 'engine-robot.png');
-$get_experts_media = function (string $fallback): string {
-    return esc_url('https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/' . ltrim($fallback, '/'));
-};
-$experts_cloud_1 = $get_experts_media('cloud-hero-1.svg');
-$experts_cloud_2 = $get_experts_media('cloud-hero-2.svg');
-$experts_cloud_3 = $get_experts_media('cloud-hero-1.svg');
-$experts_chips = array(
-    array('text' => 'Migrations & Modernizations', 'color' => 'green'),
-    array('text' => 'Data', 'color' => 'cyan'),
-    array('text' => 'GenAI', 'color' => 'pink'),
-    array('text' => 'Application Engineering', 'color' => 'yellow'),
-    array('text' => 'DevOps', 'color' => 'blue-light'),
-    array('text' => 'Security', 'color' => 'gray'),
-);
+$experts_cloud_1 = $get_experts_media('experts_cloud_1', 'cloud-hero-1.svg');
+$experts_cloud_2 = $get_experts_media('experts_cloud_2', 'cloud-hero-2.svg');
+$experts_cloud_3 = $get_experts_media('experts_cloud_3', 'cloud-hero-1.svg');
 
 $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 ?>
@@ -174,6 +267,55 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     --engine-pad-y: <?php echo (int)($settings['pad_y_d'] ?? 100); ?>px;
     --engine-title-size: <?php echo (int)($settings['fz_title_d'] ?? 38); ?>px;
     --engine-sub-size: <?php echo (int)($settings['fz_sub_d'] ?? 18); ?>px;
+}
+
+#<?php echo $uid; ?> .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#<?php echo $uid; ?> .chip__icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+#<?php echo $uid; ?> .chip__text {
+    display: inline-block;
+}
+
+
+@media (max-width: 1024px) {
+    #<?php echo $uid; ?> .engine__layout {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    #<?php echo $uid; ?> .engine__center {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: relative;
+        width: 100%;
+        max-width: 334px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    #<?php echo $uid; ?> .engine__center .engine__card {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+
+    #<?php echo $uid; ?> .engine__center .engine__card--logos img {
+        width: 100%;
+        max-width: 220px;
+        height: auto;
+    }
 }
 
 @media (max-width: 768px) {
@@ -222,7 +364,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
                 </div>
 
                 <div class="engine__center">
-                    <?php foreach ($cards as $card) : ?>
+                    <?php foreach ($cards as $index => $card) : ?>
                         <?php
                         $card_class = 'engine__card engine__card--' . sanitize_html_class($card['style']);
 
@@ -231,7 +373,10 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
                         }
                         ?>
 
-                        <div class="<?php echo esc_attr($card_class); ?>">
+                        <div
+                            class="<?php echo esc_attr($card_class); ?>"
+                            data-engine-card
+                        >
                             <?php if ($card['type'] === 'image' && !empty($card['image'])) : ?>
                                 <img src="<?php echo esc_url($card['image']); ?>" alt="<?php echo esc_attr($card['image_alt']); ?>">
                             <?php elseif (!empty($card['text'])) : ?>
@@ -281,19 +426,38 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         <div class="wrap">
             <div class="experts__inner">
                 <div class="experts__left">
-                    <h3 class="experts__title">Our tech experts,<br>your scale.</h3>
-                    <p class="experts__desc">With a deep bench of multi-cloud engineering talent, Sela delivers hands-on, end-to-end expertise that drives real business outcomes so you can grow, scale, and win.</p>
+                    <?php if ($experts_title !== '') : ?>
+                        <h3 class="experts__title"><?php echo wp_kses_post($experts_title); ?></h3>
+                    <?php endif; ?>
+
+                    <?php if ($experts_desc !== '') : ?>
+                        <p class="experts__desc"><?php echo wp_kses_post($experts_desc); ?></p>
+                    <?php endif; ?>
                 </div>
                 <div class="experts__chips-area">
-                    <img class="experts__cloud experts__cloud--1" src="<?php echo esc_url($experts_cloud_1); ?>" alt="" aria-hidden="true">
-                    <img class="experts__cloud experts__cloud--2" src="<?php echo esc_url($experts_cloud_2); ?>" alt="" aria-hidden="true">
-                    <img class="experts__cloud experts__cloud--3" src="<?php echo esc_url($experts_cloud_3); ?>" alt="" aria-hidden="true">
+                    <?php if ($experts_cloud_1 !== '') : ?>
+                        <img class="experts__cloud experts__cloud--1" src="<?php echo esc_url($experts_cloud_1); ?>" alt="" aria-hidden="true">
+                    <?php endif; ?>
+
+                    <?php if ($experts_cloud_2 !== '') : ?>
+                        <img class="experts__cloud experts__cloud--2" src="<?php echo esc_url($experts_cloud_2); ?>" alt="" aria-hidden="true">
+                    <?php endif; ?>
+
+                    <?php if ($experts_cloud_3 !== '') : ?>
+                        <img class="experts__cloud experts__cloud--3" src="<?php echo esc_url($experts_cloud_3); ?>" alt="" aria-hidden="true">
+                    <?php endif; ?>
 
                     <div class="experts__chips">
                         <?php foreach ($experts_chips as $chip) : ?>
-                            <span class="chip chip--<?php echo esc_attr($chip['color']); ?>">
-                                <?php echo esc_html($chip['text']); ?>
-                            </span>
+                            <?php if (!empty($chip['text'])) : ?>
+                                <span class="chip chip--<?php echo esc_attr($chip['color']); ?>">
+                                    <?php if (!empty($chip['icon'])) : ?>
+                                        <img class="chip__icon" src="<?php echo esc_url($chip['icon']); ?>" alt="<?php echo esc_attr($chip['icon_alt']); ?>">
+                                    <?php endif; ?>
+
+                                    <span class="chip__text"><?php echo esc_html($chip['text']); ?></span>
+                                </span>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -313,64 +477,95 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     const chipsArea = section.querySelector('.experts__chips-area');
     const chips = Array.from(section.querySelectorAll('.experts__chips .chip'));
 
-    if (!chipsArea || !chips.length) {
-        return;
-    }
+    if (chipsArea && chips.length) {
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetMouseX = 0;
+        let targetMouseY = 0;
 
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetMouseX = 0;
-    let targetMouseY = 0;
-
-    const chipStates = chips.map(function(chip) {
-        return {
-            chip: chip,
-            phaseX: Math.random() * Math.PI * 2,
-            phaseY: Math.random() * Math.PI * 2,
-            phaseRotate: Math.random() * Math.PI * 2,
-            speedX: 0.00055 + Math.random() * 0.00035,
-            speedY: 0.00045 + Math.random() * 0.00035,
-            speedRotate: 0.00035 + Math.random() * 0.00025,
-            amplitudeX: 3 + Math.random() * 4,
-            amplitudeY: 4 + Math.random() * 5,
-            rotateAmount: 0.35 + Math.random() * 0.55,
-            mouseStrengthX: 2.5 + Math.random() * 2.5,
-            mouseStrengthY: 2 + Math.random() * 2.5
-        };
-    });
-
-    chipsArea.addEventListener('mousemove', function(event) {
-        const rect = chipsArea.getBoundingClientRect();
-        targetMouseX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-        targetMouseY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-    });
-
-    chipsArea.addEventListener('mouseleave', function() {
-        targetMouseX = 0;
-        targetMouseY = 0;
-    });
-
-    function animateChips(time) {
-        mouseX += (targetMouseX - mouseX) * 0.045;
-        mouseY += (targetMouseY - mouseY) * 0.045;
-
-        chipStates.forEach(function(state) {
-            const floatX = Math.sin(time * state.speedX + state.phaseX) * state.amplitudeX;
-            const floatY = Math.cos(time * state.speedY + state.phaseY) * state.amplitudeY;
-            const rotate = Math.sin(time * state.speedRotate + state.phaseRotate) * state.rotateAmount;
-            const mouseOffsetX = mouseX * state.mouseStrengthX;
-            const mouseOffsetY = mouseY * state.mouseStrengthY;
-
-            state.chip.style.transform =
-                'translate3d(' +
-                    (floatX + mouseOffsetX) + 'px, ' +
-                    (floatY + mouseOffsetY) + 'px, 0' +
-                ') rotate(' + rotate + 'deg)';
+        const chipStates = chips.map(function(chip) {
+            return {
+                chip: chip,
+                phaseX: Math.random() * Math.PI * 2,
+                phaseY: Math.random() * Math.PI * 2,
+                phaseRotate: Math.random() * Math.PI * 2,
+                speedX: 0.00055 + Math.random() * 0.00035,
+                speedY: 0.00045 + Math.random() * 0.00035,
+                speedRotate: 0.00035 + Math.random() * 0.00025,
+                amplitudeX: 3 + Math.random() * 4,
+                amplitudeY: 4 + Math.random() * 5,
+                rotateAmount: 0.35 + Math.random() * 0.55,
+                mouseStrengthX: 2.5 + Math.random() * 2.5,
+                mouseStrengthY: 2 + Math.random() * 2.5
+            };
         });
+
+        chipsArea.addEventListener('mousemove', function(event) {
+            const rect = chipsArea.getBoundingClientRect();
+
+            targetMouseX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+            targetMouseY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+        });
+
+        chipsArea.addEventListener('mouseleave', function() {
+            targetMouseX = 0;
+            targetMouseY = 0;
+        });
+
+        function animateChips(time) {
+            mouseX += (targetMouseX - mouseX) * 0.045;
+            mouseY += (targetMouseY - mouseY) * 0.045;
+
+            chipStates.forEach(function(state) {
+                const floatX = Math.sin(time * state.speedX + state.phaseX) * state.amplitudeX;
+                const floatY = Math.cos(time * state.speedY + state.phaseY) * state.amplitudeY;
+                const rotate = Math.sin(time * state.speedRotate + state.phaseRotate) * state.rotateAmount;
+                const mouseOffsetX = mouseX * state.mouseStrengthX;
+                const mouseOffsetY = mouseY * state.mouseStrengthY;
+
+                state.chip.style.transform =
+                    'translate3d(' +
+                    (floatX + mouseOffsetX) + 'px, ' +
+                    (floatY + mouseOffsetY) + 'px, 0) rotate(' +
+                    rotate + 'deg)';
+            });
+
+            window.requestAnimationFrame(animateChips);
+        }
 
         window.requestAnimationFrame(animateChips);
     }
 
-    window.requestAnimationFrame(animateChips);
+    const center = section.querySelector('.engine__center');
+    const cards = center ? Array.from(center.querySelectorAll('.engine__card')) : [];
+
+    if (!center || !cards.length) {
+        return;
+    }
+
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduceMotion) {
+        return;
+    }
+
+    center.classList.add('engine--anim');
+
+    cards.forEach(function(card, index) {
+        card.style.transitionDelay = (index * 0.15) + 's';
+    });
+
+    const revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                center.classList.add('is-in');
+                revealObserver.disconnect();
+            }
+        });
+    }, {
+        threshold: 0.25
+    });
+
+    revealObserver.observe(center);
 })();
 </script>
