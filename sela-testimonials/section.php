@@ -136,9 +136,6 @@ $first_thumb = ! empty( $tabs ) ? (string) ( $tabs[0]['thumb'] ?? $default_thumb
                 </button>
             <?php endforeach; ?>
         </div>
-        <?php if ( $show_cloud ) : ?>
-            <img class="slte-cloud" src="<?php echo $get_img( 'image_cloud', 'cloud-hero-1.svg' ) ?: $get_media( 'cloud-hero-1.svg' ); ?>" alt="" aria-hidden="true">
-        <?php endif; ?>
         <div class="slte-main">
             <div class="slte-panels">
                 <?php foreach ( $tabs as $i => $t ) : ?>

@@ -539,11 +539,12 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     const layout = section.querySelector('.engine__layout');
     const center = section.querySelector('.engine__center');
     const topPin = section.querySelector('.engine__top-pin');
+    const second = section.querySelector('.engine__second');
     const cards = center ? Array.from(center.querySelectorAll('.engine__card')) : [];
     const icons = Array.from(section.querySelectorAll('.engine__col-icon'));
     const texts = Array.from(section.querySelectorAll('.engine__col-text'));
 
-    if (!layout || !center || !topPin || !cards.length) {
+    if (!layout || !center || !topPin || !second || !cards.length) {
         return;
     }
 
@@ -558,17 +559,40 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         groups.push(texts);
     }
 
-    const STEP_PX = 150;   // scroll distance that reveals one group (tunable)
-    const PIN_OFFSET = 60; // matches the CSS sticky `top` value
+    const STEP_PX = 150;     // scroll distance that reveals one group (tunable)
+    const TAKEOVER_PX = 700; // scroll distance for the second area to rise over the first (tunable)
+    const PIN_OFFSET = 60;   // matches the site header / sticky offset
     const revealDistance = groups.length * STEP_PX;
 
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const desktopQuery = window.matchMedia('(min-width: 1025px)');
 
+    // wrap the second area in a scroll track so the first area can stay pinned
+    // while the second slides up over it
+    let track = section.querySelector('.engine__scroll-track');
+
+    if (!track) {
+        track = document.createElement('div');
+        track.className = 'engine__scroll-track';
+        second.parentNode.insertBefore(track, second);
+        track.appendChild(second);
+    }
+
     function toggleGroup(group, on) {
         group.forEach(function(el) {
             el.classList.toggle('is-revealed', on);
         });
+    }
+
+    function clearStyles() {
+        [topPin, track, second].forEach(function(el) {
+            el.style.position = '';
+            el.style.top = '';
+            el.style.height = '';
+            el.style.zIndex = '';
+        });
+        second.style.transform = '';
+        second.style.willChange = '';
     }
 
     let scrubbing = false;
@@ -577,14 +601,30 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         if (reduceMotion || !desktopQuery.matches) {
             layout.classList.remove('engine--anim');
             groups.forEach(function(group) { toggleGroup(group, true); });
-            topPin.style.minHeight = '';
+            clearStyles();
             scrubbing = false;
             return;
         }
 
         layout.classList.add('engine--anim');
-        // give the pinned area enough scroll room for the full reveal before the takeover
-        topPin.style.minHeight = 'calc(100vh + ' + (revealDistance + 120) + 'px)';
+
+        const vh = window.innerHeight;
+        const pinHeight = vh - PIN_OFFSET;
+
+        topPin.style.position = 'sticky';
+        topPin.style.top = PIN_OFFSET + 'px';
+        topPin.style.height = pinHeight + 'px';
+        topPin.style.zIndex = '1';
+
+        track.style.position = 'relative';
+        track.style.height = (revealDistance + TAKEOVER_PX + vh) + 'px';
+
+        second.style.position = 'sticky';
+        second.style.top = PIN_OFFSET + 'px';
+        second.style.height = pinHeight + 'px';
+        second.style.zIndex = '5';
+        second.style.willChange = 'transform';
+
         scrubbing = true;
     }
 
@@ -602,6 +642,10 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         groups.forEach(function(group, index) {
             toggleGroup(group, scrolledIntoPin >= index * STEP_PX);
         });
+
+        let takeover = (scrolledIntoPin - revealDistance) / TAKEOVER_PX;
+        takeover = Math.max(0, Math.min(1, takeover));
+        second.style.transform = 'translateY(' + ((1 - takeover) * 100) + '%)';
     }
 
     function onScroll() {

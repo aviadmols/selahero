@@ -232,8 +232,6 @@ $demo_cards = function () use ($get_media): array {
 
 $cards_from_wp = function () use (
     $settings,
-    $taxonomy,
-    $slbl_get_tax_query,
     $slbl_get_event_display_date,
     $slbl_post_to_card
 ): array {
@@ -241,102 +239,57 @@ $cards_from_wp = function () use (
         return array();
     }
 
-    $items = array();
-    $exclude_ids = array();
-    $today_ymd = wp_date('Ymd');
+    $event_label = (string)($settings['slot_1_tag_label'] ?? 'Next Event');
+    $media_label = (string)($settings['slot_2_tag_label'] ?? 'Media and News');
 
-    $event_args = array(
-        'post_type' => 'event',
-        'posts_per_page' => 1,
+    $type_labels = array(
+        'event' => $event_label,
+        'media-news' => $media_label,
+        'post' => $media_label,
+    );
+
+    // newest content overall (events + posts) by publish date, not one per category
+    $query = new WP_Query(array(
+        'post_type' => array('event', 'media-news', 'post'),
+        'posts_per_page' => 3,
         'post_status' => 'publish',
-        'meta_key' => 'date_of_event',
-        'orderby' => 'meta_value_num',
-        'order' => 'ASC',
-        'meta_query' => array(
-            array(
-                'key' => 'date_of_event',
-                'value' => $today_ymd,
-                'compare' => '>=',
-                'type' => 'NUMERIC',
-            ),
-        ),
-    );
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'ignore_sticky_posts' => true,
+    ));
 
-    $event_tax = $slbl_get_tax_query((string)($settings['slot_1_tag'] ?? ''), $taxonomy);
-
-    if (!empty($event_tax)) {
-        $event_args['tax_query'] = $event_tax;
-    }
-
-    $event_query = new WP_Query($event_args);
-
-    if ($event_query->have_posts()) {
-        $event_query->the_post();
-        $event_post = get_post();
-        $event_id = $event_post instanceof WP_Post ? (int) $event_post->ID : 0;
-        $event_date = $slbl_get_event_display_date($event_id);
-        $event_label = (string)($settings['slot_1_tag_label'] ?? 'Next Event');
-        $event_card = $slbl_post_to_card($event_post, $event_label, $event_date);
-
-        if ($event_card !== null) {
-            $items[] = $event_card;
-
-            if ($event_id > 0) {
-                $exclude_ids[] = $event_id;
-            }
-        }
-
+    if (!$query->have_posts()) {
         wp_reset_postdata();
+
+        return array();
     }
 
-    $media_slots = array(
-        array(
-            'tag' => (string)($settings['slot_2_tag'] ?? ''),
-            'label' => (string)($settings['slot_2_tag_label'] ?? 'Media and News'),
-        ),
-        array(
-            'tag' => (string)($settings['slot_3_tag'] ?? ''),
-            'label' => (string)($settings['slot_3_tag_label'] ?? 'Media and News'),
-        ),
-    );
+    $items = array();
 
-    foreach ($media_slots as $slot) {
-        $media_args = array(
-            'post_type' => 'media-news',
-            'posts_per_page' => 1,
-            'post_status' => 'publish',
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'post__not_in' => $exclude_ids,
-        );
+    while ($query->have_posts()) {
+        $query->the_post();
+        $post = get_post();
 
-        $media_tax = $slbl_get_tax_query($slot['tag'], $taxonomy);
-
-        if (!empty($media_tax)) {
-            $media_args['tax_query'] = $media_tax;
-        }
-
-        $media_query = new WP_Query($media_args);
-
-        if (!$media_query->have_posts()) {
-            wp_reset_postdata();
+        if (!$post instanceof WP_Post) {
             continue;
         }
 
-        $media_query->the_post();
-        $media_post = get_post();
-        $media_card = $slbl_post_to_card($media_post, $slot['label']);
+        $label = isset($type_labels[$post->post_type]) ? $type_labels[$post->post_type] : $media_label;
 
-        if ($media_card !== null) {
-            $items[] = $media_card;
+        $date_override = '';
 
-            if ($media_post instanceof WP_Post) {
-                $exclude_ids[] = (int) $media_post->ID;
-            }
+        if ($post->post_type === 'event') {
+            $date_override = $slbl_get_event_display_date((int) $post->ID);
         }
 
-        wp_reset_postdata();
+        $card = $slbl_post_to_card($post, $label, $date_override);
+
+        if ($card !== null) {
+            $items[] = $card;
+        }
     }
+
+    wp_reset_postdata();
 
     return $items;
 };
