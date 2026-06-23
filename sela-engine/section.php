@@ -538,43 +538,86 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
     const layout = section.querySelector('.engine__layout');
     const center = section.querySelector('.engine__center');
+    const topPin = section.querySelector('.engine__top-pin');
     const cards = center ? Array.from(center.querySelectorAll('.engine__card')) : [];
+    const icons = Array.from(section.querySelectorAll('.engine__col-icon'));
+    const texts = Array.from(section.querySelectorAll('.engine__col-text'));
 
-    if (!layout || !center || !cards.length) {
+    if (!layout || !center || !topPin || !cards.length) {
         return;
     }
+
+    // ordered reveal groups: each card on its own, then all icons, then both column texts
+    const groups = cards.map(function(card) { return [card]; });
+
+    if (icons.length) {
+        groups.push(icons);
+    }
+
+    if (texts.length) {
+        groups.push(texts);
+    }
+
+    const STEP_PX = 150;   // scroll distance that reveals one group (tunable)
+    const PIN_OFFSET = 60; // matches the CSS sticky `top` value
+    const revealDistance = groups.length * STEP_PX;
 
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const desktopQuery = window.matchMedia('(min-width: 1025px)');
 
-    if (reduceMotion) {
-        return;
+    function toggleGroup(group, on) {
+        group.forEach(function(el) {
+            el.classList.toggle('is-revealed', on);
+        });
     }
 
-    layout.classList.add('engine--anim');
+    let scrubbing = false;
 
-    cards.forEach(function(card, index) {
-        card.style.transitionDelay = (index * 0.15) + 's';
-    });
+    function configure() {
+        if (reduceMotion || !desktopQuery.matches) {
+            layout.classList.remove('engine--anim');
+            groups.forEach(function(group) { toggleGroup(group, true); });
+            topPin.style.minHeight = '';
+            scrubbing = false;
+            return;
+        }
 
-    let armed = false;
+        layout.classList.add('engine--anim');
+        // give the pinned area enough scroll room for the full reveal before the takeover
+        topPin.style.minHeight = 'calc(100vh + ' + (revealDistance + 120) + 'px)';
+        scrubbing = true;
+    }
 
-    const revealObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-            if (!entry.isIntersecting) {
-                armed = true;
-                return;
-            }
+    let ticking = false;
 
-            if (armed) {
-                layout.classList.add('is-in');
-                revealObserver.disconnect();
-            }
+    function update() {
+        ticking = false;
+
+        if (!scrubbing) {
+            return;
+        }
+
+        const scrolledIntoPin = PIN_OFFSET - section.getBoundingClientRect().top;
+
+        groups.forEach(function(group, index) {
+            toggleGroup(group, scrolledIntoPin >= index * STEP_PX);
         });
-    }, {
-        threshold: 0.2,
-        rootMargin: '0px 0px -25% 0px'
-    });
+    }
 
-    revealObserver.observe(center);
+    function onScroll() {
+        if (!ticking) {
+            ticking = true;
+            window.requestAnimationFrame(update);
+        }
+    }
+
+    configure();
+    update();
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', function() {
+        configure();
+        update();
+    });
 })();
 </script>

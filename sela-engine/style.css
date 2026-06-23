@@ -352,12 +352,12 @@
     display: block;
 }
 
-/* staggered entrance animation: cards -> icons -> column text */
+/* scroll-driven reveal: each element appears as you scroll while the area is pinned */
 .engine__layout.engine--anim .engine__card,
 .engine__layout.engine--anim .engine__col-icon,
 .engine__layout.engine--anim .engine__col-text {
     opacity: 0;
-    transition: opacity .6s ease, transform .7s cubic-bezier(.22, .61, .36, 1);
+    transition: opacity .45s ease, transform .55s cubic-bezier(.22, .61, .36, 1);
     will-change: opacity, transform;
 }
 
@@ -373,20 +373,11 @@
     transform: translateY(16px);
 }
 
-.engine__layout.engine--anim.is-in .engine__card,
-.engine__layout.engine--anim.is-in .engine__col-icon,
-.engine__layout.engine--anim.is-in .engine__col-text {
+.engine__layout.engine--anim .engine__card.is-revealed,
+.engine__layout.engine--anim .engine__col-icon.is-revealed,
+.engine__layout.engine--anim .engine__col-text.is-revealed {
     opacity: 1;
     transform: none;
-}
-
-/* sequence timing: cards (inline delays) first, then icons, then text */
-.engine__layout.engine--anim.is-in .engine__col-icon {
-    transition-delay: .65s;
-}
-
-.engine__layout.engine--anim.is-in .engine__col-text {
-    transition-delay: 1s;
 }
 
 @media (prefers-reduced-motion: reduce) {
