@@ -77,6 +77,12 @@
         overflow: visible;
     }
 
+    /* hold the first area pinned a bit longer before the takeover starts
+       (increase the +400px value to slow the takeover / require more scroll) */
+    .hero-section--sela-engine .engine__top-pin {
+        min-height: calc(100vh + 400px);
+    }
+
     /* second section fully covers the sticky first area while scrolling */
     .hero-section--sela-engine .engine__second {
         min-height: 100vh;
