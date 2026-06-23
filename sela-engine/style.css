@@ -56,6 +56,10 @@
     padding-top: calc(140px);
     padding-bottom: var(--engine-pad-y, 50px);
     background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .engine__second > .engine__wave {
