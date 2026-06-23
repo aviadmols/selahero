@@ -339,7 +339,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
             <div class="engine__layout">
                 <div class="engine__col engine__col--left">
-                    <div>
+                    <div class="engine__col-text">
                         <?php if (!empty($left_column['title'])) : ?>
                             <h3 class="engine__col-title"><?php echo esc_html($left_column['title']); ?></h3>
                         <?php endif; ?>
@@ -396,7 +396,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
                         </div>
                     <?php endif; ?>
 
-                    <div>
+                    <div class="engine__col-text">
                         <?php if (!empty($right_column['title'])) : ?>
                             <h3 class="engine__col-title"><?php echo esc_html($right_column['title']); ?></h3>
                         <?php endif; ?>
@@ -536,10 +536,11 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         window.requestAnimationFrame(animateChips);
     }
 
+    const layout = section.querySelector('.engine__layout');
     const center = section.querySelector('.engine__center');
     const cards = center ? Array.from(center.querySelectorAll('.engine__card')) : [];
 
-    if (!center || !cards.length) {
+    if (!layout || !center || !cards.length) {
         return;
     }
 
@@ -549,21 +550,29 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         return;
     }
 
-    center.classList.add('engine--anim');
+    layout.classList.add('engine--anim');
 
     cards.forEach(function(card, index) {
         card.style.transitionDelay = (index * 0.15) + 's';
     });
 
+    let armed = false;
+
     const revealObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-                center.classList.add('is-in');
+            if (!entry.isIntersecting) {
+                armed = true;
+                return;
+            }
+
+            if (armed) {
+                layout.classList.add('is-in');
                 revealObserver.disconnect();
             }
         });
     }, {
-        threshold: 0.25
+        threshold: 0.2,
+        rootMargin: '0px 0px -25% 0px'
     });
 
     revealObserver.observe(center);

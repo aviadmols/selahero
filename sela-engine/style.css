@@ -346,21 +346,47 @@
     display: block;
 }
 
-/* staggered entrance animation for the center cards */
-.engine__center.engine--anim .engine__card {
+/* staggered entrance animation: cards -> icons -> column text */
+.engine__layout.engine--anim .engine__card,
+.engine__layout.engine--anim .engine__col-icon,
+.engine__layout.engine--anim .engine__col-text {
     opacity: 0;
-    transform: translateY(26px);
     transition: opacity .6s ease, transform .7s cubic-bezier(.22, .61, .36, 1);
     will-change: opacity, transform;
 }
 
-.engine__center.engine--anim.is-in .engine__card {
+.engine__layout.engine--anim .engine__card {
+    transform: translateY(26px);
+}
+
+.engine__layout.engine--anim .engine__col-icon {
+    transform: scale(.92);
+}
+
+.engine__layout.engine--anim .engine__col-text {
+    transform: translateY(16px);
+}
+
+.engine__layout.engine--anim.is-in .engine__card,
+.engine__layout.engine--anim.is-in .engine__col-icon,
+.engine__layout.engine--anim.is-in .engine__col-text {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
+}
+
+/* sequence timing: cards (inline delays) first, then icons, then text */
+.engine__layout.engine--anim.is-in .engine__col-icon {
+    transition-delay: .65s;
+}
+
+.engine__layout.engine--anim.is-in .engine__col-text {
+    transition-delay: 1s;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .engine__center.engine--anim .engine__card {
+    .engine__layout.engine--anim .engine__card,
+    .engine__layout.engine--anim .engine__col-icon,
+    .engine__layout.engine--anim .engine__col-text {
         opacity: 1;
         transform: none;
         transition: none;
