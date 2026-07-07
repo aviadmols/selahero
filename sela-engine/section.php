@@ -549,23 +549,44 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     }
 
     // ordered reveal groups: each card on its own, then all icons, then both column texts
-    const groups = cards.map(function(card) { return [card]; });
-
-    if (icons.length) {
-        groups.push(icons);
-    }
-
-    if (texts.length) {
-        groups.push(texts);
-    }
-
-    const STEP_PX = 150;     // scroll distance that reveals one group (tunable)
-    const TAKEOVER_PX = 700; // scroll distance for the second area to rise over the first (tunable)
-    const PIN_OFFSET = 60;   // matches the site header / sticky offset
-    const revealDistance = groups.length * STEP_PX;
-
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const desktopQuery = window.matchMedia('(min-width: 1025px)');
+    const mobileQuery = window.matchMedia('(max-width: 1024px)');
+
+    function buildGroups() {
+        const cardGroups = cards.map(function(card) { return [card]; });
+
+        if (mobileQuery.matches) {
+            if (texts.length) {
+                cardGroups.push(texts);
+            }
+            return cardGroups;
+        }
+
+        if (icons.length) {
+            cardGroups.push(icons);
+        }
+
+        if (texts.length) {
+            cardGroups.push(texts);
+        }
+
+        return cardGroups;
+    }
+
+    function getStepPx() {
+        return mobileQuery.matches ? 120 : 150;
+    }
+
+    function getTakeoverPx() {
+        return mobileQuery.matches ? 550 : 700;
+    }
+
+    const PIN_OFFSET = 60; // matches the site header / sticky offset
+
+    let groups = buildGroups();
+    let STEP_PX = getStepPx();
+    let TAKEOVER_PX = getTakeoverPx();
+    let revealDistance = groups.length * STEP_PX;
 
     // wrap the second area in a scroll track so the first area can stay pinned
     // while the second slides up over it
@@ -584,6 +605,26 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         });
     }
 
+    function resetRevealState() {
+        cards.concat(icons).concat(texts).forEach(function(el) {
+            el.classList.remove('is-revealed');
+        });
+
+        section.querySelectorAll('.engine__col--left, .engine__col--right').forEach(function(col) {
+            col.classList.remove('is-revealed-col');
+        });
+    }
+
+    function updateColStates() {
+        const textsRevealed = texts.length > 0 && texts.every(function(el) {
+            return el.classList.contains('is-revealed');
+        });
+
+        section.querySelectorAll('.engine__col--left, .engine__col--right').forEach(function(col) {
+            col.classList.toggle('is-revealed-col', textsRevealed);
+        });
+    }
+
     function clearStyles() {
         [topPin, track, second].forEach(function(el) {
             el.style.position = '';
@@ -598,8 +639,14 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     let scrubbing = false;
 
     function configure() {
-        if (reduceMotion || !desktopQuery.matches) {
+        groups = buildGroups();
+        STEP_PX = getStepPx();
+        TAKEOVER_PX = getTakeoverPx();
+        revealDistance = groups.length * STEP_PX;
+
+        if (reduceMotion) {
             layout.classList.remove('engine--anim');
+            section.classList.remove('engine--scroll-mobile');
             groups.forEach(function(group) { toggleGroup(group, true); });
             clearStyles();
             scrubbing = false;
@@ -607,6 +654,9 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         }
 
         layout.classList.add('engine--anim');
+        section.classList.toggle('engine--scroll-mobile', mobileQuery.matches);
+
+        resetRevealState();
 
         const vh = window.innerHeight;
         const pinHeight = vh - PIN_OFFSET;
@@ -642,6 +692,8 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         groups.forEach(function(group, index) {
             toggleGroup(group, scrolledIntoPin >= index * STEP_PX);
         });
+
+        updateColStates();
 
         let takeover = (scrolledIntoPin - revealDistance) / TAKEOVER_PX;
         takeover = Math.max(0, Math.min(1, takeover));

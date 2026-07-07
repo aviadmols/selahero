@@ -388,6 +388,87 @@
     }
 }
 
+/* mobile scroll reveal: collapse hidden items so the pin focuses on engine__center */
+@media (max-width: 1024px) {
+    .engine--scroll-mobile .engine__layout {
+        gap: 16px;
+    }
+
+    .engine--scroll-mobile .engine__layout.engine--anim .engine__card,
+    .engine--scroll-mobile .engine__layout.engine--anim .engine__col-text {
+        transition:
+            opacity .45s ease,
+            transform .55s cubic-bezier(.22, .61, .36, 1),
+            height .4s ease,
+            max-height .4s ease,
+            margin .4s ease,
+            padding .4s ease,
+            border-width .4s ease,
+            box-shadow .4s ease;
+    }
+
+    .engine--scroll-mobile .engine__layout.engine--anim .engine__card:not(.is-revealed) {
+        height: 0;
+        min-height: 0;
+        margin: 0;
+        padding: 0;
+        border-width: 0;
+        box-shadow: none;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(16px);
+    }
+
+    .engine--scroll-mobile .engine__layout.engine--anim .engine__col-text:not(.is-revealed) {
+        max-height: 0;
+        margin: 0;
+        padding: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(12px);
+    }
+
+    .engine--scroll-mobile .engine__col--left:not(.is-revealed-col),
+    .engine--scroll-mobile .engine__col--right:not(.is-revealed-col) {
+        max-height: 0;
+        margin: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .engine--scroll-mobile .engine__layout.engine--anim .engine__col.is-revealed-col {
+        opacity: 1;
+    }
+
+    .engine--scroll-mobile .engine__layout.engine--anim .engine__col:not(.is-revealed-col) {
+        gap: 0;
+    }
+
+    .engine--scroll-mobile .engine__top-pin {
+        overflow: hidden;
+    }
+
+    .engine--scroll-mobile .engine__top {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100%;
+        padding-bottom: 40px;
+        overflow: hidden;
+    }
+
+    .engine--scroll-mobile .engine__layout {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .hero-section--sela-engine .engine--scroll-mobile .engine__second {
+        min-height: calc(100vh - 60px);
+    }
+}
+
 @media (max-width: 1024px) {
     .engine__layout {
         grid-template-columns: 1fr;

@@ -1,0 +1,14 @@
+{
+    "type": "sela-hero-lottie",
+    "label": "Sela Hero — Lottie",
+    "category": "hero",
+    "contexts": ["page"],
+    "plugin_compatible": true,
+    "has_script": true,
+    "version": "1.0.0",
+    "css_prefix": "slhl-",
+    "media_files": [
+        "lottie-desktop.json",
+        "lottie-mobile.json"
+    ]
+}
