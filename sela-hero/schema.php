@@ -41,6 +41,20 @@ return array (
     ),
     4 => 
     array (
+      'id' => 'lottie_desktop',
+      'type' => 'url',
+      'label' => 'Lottie background — desktop (JSON URL)',
+      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/lottie-desktop.json',
+    ),
+    5 => 
+    array (
+      'id' => 'lottie_mobile',
+      'type' => 'url',
+      'label' => 'Lottie background — mobile (JSON URL)',
+      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/lottie-mobile.json',
+    ),
+    6 => 
+    array (
       'tab' => 'style',
       'id' => 'ff_title',
       'type' => 'select',
@@ -285,7 +299,7 @@ return array (
       'tab' => 'style',
       'id' => 'bg_section',
       'type' => 'color',
-      'label' => 'Section background',
+      'label' => 'Section background (fallback)',
       'default' => '#f9f9f9',
     ),
     16 => 
@@ -311,171 +325,6 @@ return array (
       'type' => 'color',
       'label' => 'Button color',
       'default' => '#1c1c1c',
-    ),
-    19 => 
-    array (
-      'tab' => 'style',
-      'id' => 'orb_cyan_color',
-      'type' => 'color',
-      'label' => 'Orb — cyan',
-      'default' => '#00dbe9',
-    ),
-    20 => 
-    array (
-      'tab' => 'style',
-      'id' => 'orb_green_color',
-      'type' => 'color',
-      'label' => 'Orb — green',
-      'default' => '#00dd95',
-    ),
-    21 => 
-    array (
-      'tab' => 'style',
-      'id' => 'orb_blue_color',
-      'type' => 'color',
-      'label' => 'Orb — blue',
-      'default' => '#0071f6',
-    ),
-    22 => 
-    array (
-      'tab' => 'style',
-      'id' => 'orb_pink_color',
-      'type' => 'color',
-      'label' => 'Orb — pink',
-      'default' => '#f191a1',
-    ),
-    23 => 
-    array (
-      'id' => 'show_orb_cyan',
-      'type' => 'checkbox',
-      'label' => 'Show cyan orb',
-      'default' => 1,
-    ),
-    24 => 
-    array (
-      'id' => 'show_orb_green',
-      'type' => 'checkbox',
-      'label' => 'Show green orb',
-      'default' => 1,
-    ),
-    25 => 
-    array (
-      'id' => 'show_orb_blue',
-      'type' => 'checkbox',
-      'label' => 'Show blue orb',
-      'default' => 1,
-    ),
-    26 => 
-    array (
-      'id' => 'show_orb_pink',
-      'type' => 'checkbox',
-      'label' => 'Show pink orb',
-      'default' => 1,
-    ),
-    27 => 
-    array (
-      'id' => 'show_robot',
-      'type' => 'checkbox',
-      'label' => 'Show robot mascot',
-      'default' => 1,
-    ),
-    28 => 
-    array (
-      'id' => 'show_stars',
-      'type' => 'checkbox',
-      'label' => 'Show star decorations',
-      'default' => 1,
-    ),
-    29 => 
-    array (
-      'id' => 'show_clouds',
-      'type' => 'checkbox',
-      'label' => 'Show cloud decorations',
-      'default' => 1,
-    ),
-    30 => 
-    array (
-      'id' => 'image_robot',
-      'type' => 'image',
-      'label' => 'Robot mascot image',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/hero-graphic.png',
-    ),
-    31 => 
-    array (
-      'id' => 'image_star',
-      'type' => 'image',
-      'label' => 'Star image',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/star.gif',
-    ),
-    32 => 
-    array (
-      'id' => 'image_orb_cyan',
-      'type' => 'image',
-      'label' => 'Orb ellipse — cyan',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/ellipse-cyan.svg',
-    ),
-    33 => 
-    array (
-      'id' => 'image_orb_green',
-      'type' => 'image',
-      'label' => 'Orb ellipse — green',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/ellipse-green.svg',
-    ),
-    34 => 
-    array (
-      'id' => 'image_orb_blue',
-      'type' => 'image',
-      'label' => 'Orb ellipse — blue',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/ellipse-blue.svg',
-    ),
-    35 => 
-    array (
-      'id' => 'image_orb_pink',
-      'type' => 'image',
-      'label' => 'Orb ellipse — pink',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/ellipse-pink.svg',
-    ),
-    36 => 
-    array (
-      'id' => 'image_cloud_1',
-      'type' => 'image',
-      'label' => 'Cloud 1 (left, top)',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/cloud-hero-1.svg',
-    ),
-    37 => 
-    array (
-      'id' => 'image_cloud_2',
-      'type' => 'image',
-      'label' => 'Cloud 2 (left, mid)',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/cloud-hero-2.svg',
-    ),
-    38 => 
-    array (
-      'id' => 'image_cloud_3',
-      'type' => 'image',
-      'label' => 'Cloud 3 (left, bottom)',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/cloud-hero-1.svg',
-    ),
-    39 => 
-    array (
-      'id' => 'image_cloud_4',
-      'type' => 'image',
-      'label' => 'Cloud 4 (right, decorative)',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/cloud-hero-2.svg',
-    ),
-    40 => 
-    array (
-      'id' => 'image_cloud_5',
-      'type' => 'image',
-      'label' => 'Cloud 5 (right, bottom)',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/cloud-hero-1.svg',
-    ),
-    41 => 
-    array (
-      'id' => 'image_cloud_6',
-      'type' => 'image',
-      'label' => 'Cloud 6 (right, mid)',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/cloud-hero-2.svg',
     ),
   ),
   'blocks' => 
