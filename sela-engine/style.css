@@ -445,7 +445,20 @@
     }
 
   .engine__top-pin{padding:60px 0}
-  .engine__title{font-size:26px}
+
+  .hero-section--sela-engine .engine__title {
+        font-size: 25px;
+    }
+
+  .hero-section--sela-engine .engine__list li {
+        font-size: 14px;
+    }
+
+  .hero-section--sela-engine .engine__col--left,
+  .hero-section--sela-engine .engine__col--right {
+        padding-top: 40px;
+    }
+
   .engine__layout{display:flex;flex-direction:column;gap:32px}
   .engine__center{display:flex;order:1;align-items:center}
   .engine__col--right{order: 2;
