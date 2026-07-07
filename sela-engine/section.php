@@ -539,57 +539,24 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     const layout = section.querySelector('.engine__layout');
     const center = section.querySelector('.engine__center');
     const topPin = section.querySelector('.engine__top-pin');
+    const topArea = section.querySelector('.engine__top');
+    const topWrap = topArea ? topArea.querySelector('.wrap') : null;
+    const rightCol = section.querySelector('.engine__col--right');
     const second = section.querySelector('.engine__second');
     const cards = center ? Array.from(center.querySelectorAll('.engine__card')) : [];
-    const icons = Array.from(section.querySelectorAll('.engine__col-icon'));
-    const texts = Array.from(section.querySelectorAll('.engine__col-text'));
 
-    if (!layout || !center || !topPin || !second || !cards.length) {
+    if (!layout || !center || !topPin || !topArea || !topWrap || !second || !cards.length) {
         return;
     }
 
-    // ordered reveal groups: each card on its own, then all icons, then both column texts
+    const PIN_OFFSET = 60;
+    const STICKY_HOLD_PX = 280;
+    const TAKEOVER_PX = 700;
+    const REVEAL_LINE_RATIO = 0.52;
+
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const mobileQuery = window.matchMedia('(max-width: 1024px)');
+    const desktopQuery = window.matchMedia('(min-width: 1025px)');
 
-    function buildGroups() {
-        const cardGroups = cards.map(function(card) { return [card]; });
-
-        if (mobileQuery.matches) {
-            if (texts.length) {
-                cardGroups.push(texts);
-            }
-            return cardGroups;
-        }
-
-        if (icons.length) {
-            cardGroups.push(icons);
-        }
-
-        if (texts.length) {
-            cardGroups.push(texts);
-        }
-
-        return cardGroups;
-    }
-
-    function getStepPx() {
-        return mobileQuery.matches ? 120 : 150;
-    }
-
-    function getTakeoverPx() {
-        return mobileQuery.matches ? 550 : 700;
-    }
-
-    const PIN_OFFSET = 60; // matches the site header / sticky offset
-
-    let groups = buildGroups();
-    let STEP_PX = getStepPx();
-    let TAKEOVER_PX = getTakeoverPx();
-    let revealDistance = groups.length * STEP_PX;
-
-    // wrap the second area in a scroll track so the first area can stay pinned
-    // while the second slides up over it
     let track = section.querySelector('.engine__scroll-track');
 
     if (!track) {
@@ -599,30 +566,40 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         track.appendChild(second);
     }
 
-    function toggleGroup(group, on) {
-        group.forEach(function(el) {
+    function collectRevealTargets() {
+        const targets = cards.slice();
+
+        const leftCol = section.querySelector('.engine__col--left');
+
+        if (leftCol) {
+            leftCol.querySelectorAll('.engine__col-icon, .engine__col-text').forEach(function(el) {
+                targets.push(el);
+            });
+        }
+
+        if (rightCol) {
+            rightCol.querySelectorAll('.engine__col-icon, .engine__col-text').forEach(function(el) {
+                targets.push(el);
+            });
+        }
+
+        return targets.sort(function(a, b) {
+            return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+        });
+    }
+
+    let revealTargets = collectRevealTargets();
+    let contentScrollMax = 0;
+    let pinHeight = 0;
+
+    function revealAll(on) {
+        revealTargets.forEach(function(el) {
             el.classList.toggle('is-revealed', on);
         });
-    }
 
-    function resetRevealState() {
-        cards.concat(icons).concat(texts).forEach(function(el) {
-            el.classList.remove('is-revealed');
-        });
-
-        section.querySelectorAll('.engine__col--left, .engine__col--right').forEach(function(col) {
-            col.classList.remove('is-revealed-col');
-        });
-    }
-
-    function updateColStates() {
-        const textsRevealed = texts.length > 0 && texts.every(function(el) {
-            return el.classList.contains('is-revealed');
-        });
-
-        section.querySelectorAll('.engine__col--left, .engine__col--right').forEach(function(col) {
-            col.classList.toggle('is-revealed-col', textsRevealed);
-        });
+        if (rightCol) {
+            rightCol.classList.toggle('is-revealed-col', on);
+        }
     }
 
     function clearStyles() {
@@ -632,42 +609,57 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             el.style.height = '';
             el.style.zIndex = '';
         });
+
         second.style.transform = '';
         second.style.willChange = '';
+
+        if (topWrap) {
+            topWrap.style.transform = '';
+            topWrap.style.willChange = '';
+        }
+
+        if (rightCol) {
+            rightCol.classList.remove('is-revealed-col');
+        }
     }
 
     let scrubbing = false;
 
-    function configure() {
-        groups = buildGroups();
-        STEP_PX = getStepPx();
-        TAKEOVER_PX = getTakeoverPx();
-        revealDistance = groups.length * STEP_PX;
+    function measure() {
+        if (topWrap) {
+            topWrap.style.transform = 'none';
+        }
 
-        if (reduceMotion) {
+        revealTargets = collectRevealTargets();
+        pinHeight = window.innerHeight - PIN_OFFSET;
+        contentScrollMax = Math.max(0, topArea.scrollHeight - pinHeight);
+    }
+
+    function configure() {
+        if (reduceMotion || !desktopQuery.matches) {
             layout.classList.remove('engine--anim');
-            section.classList.remove('engine--scroll-mobile');
-            groups.forEach(function(group) { toggleGroup(group, true); });
+            revealAll(true);
             clearStyles();
             scrubbing = false;
             return;
         }
 
         layout.classList.add('engine--anim');
-        section.classList.toggle('engine--scroll-mobile', mobileQuery.matches);
-
-        resetRevealState();
+        measure();
 
         const vh = window.innerHeight;
-        const pinHeight = vh - PIN_OFFSET;
+        pinHeight = vh - PIN_OFFSET;
+
+        section.style.setProperty('--engine-pin-offset', PIN_OFFSET + 'px');
 
         topPin.style.position = 'sticky';
         topPin.style.top = PIN_OFFSET + 'px';
         topPin.style.height = pinHeight + 'px';
         topPin.style.zIndex = '1';
+        topPin.style.overflow = 'hidden';
 
         track.style.position = 'relative';
-        track.style.height = (revealDistance + TAKEOVER_PX + vh) + 'px';
+        track.style.height = (contentScrollMax + STICKY_HOLD_PX + TAKEOVER_PX + vh) + 'px';
 
         second.style.position = 'sticky';
         second.style.top = PIN_OFFSET + 'px';
@@ -675,7 +667,21 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         second.style.zIndex = '5';
         second.style.willChange = 'transform';
 
+        if (topWrap) {
+            topWrap.style.willChange = 'transform';
+        }
+
         scrubbing = true;
+    }
+
+    function isRightColRevealed() {
+        if (!rightCol) {
+            return false;
+        }
+
+        return Array.from(rightCol.querySelectorAll('.engine__col-icon, .engine__col-text')).every(function(el) {
+            return el.classList.contains('is-revealed');
+        });
     }
 
     let ticking = false;
@@ -687,17 +693,40 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             return;
         }
 
-        const scrolledIntoPin = PIN_OFFSET - section.getBoundingClientRect().top;
+        const scrolledIntoPin = Math.max(0, PIN_OFFSET - section.getBoundingClientRect().top);
+        const revealLine = PIN_OFFSET + pinHeight * REVEAL_LINE_RATIO;
+        const scrollPhaseEnd = contentScrollMax;
+        const stickyPhaseEnd = scrollPhaseEnd + STICKY_HOLD_PX;
+        const takeoverStart = stickyPhaseEnd;
 
-        groups.forEach(function(group, index) {
-            toggleGroup(group, scrolledIntoPin >= index * STEP_PX);
+        let contentShift = Math.min(scrolledIntoPin, scrollPhaseEnd);
+
+        if (topWrap) {
+            topWrap.style.transform = 'translate3d(0, ' + (-contentShift) + 'px, 0)';
+        }
+
+        revealTargets.forEach(function(el) {
+            const rect = el.getBoundingClientRect();
+
+            if (rect.top <= revealLine + 12) {
+                el.classList.add('is-revealed');
+            }
         });
 
-        updateColStates();
+        const rightRevealed = isRightColRevealed();
+        const inStickyHold = scrolledIntoPin >= scrollPhaseEnd && scrolledIntoPin < stickyPhaseEnd;
 
-        let takeover = (scrolledIntoPin - revealDistance) / TAKEOVER_PX;
+        if (rightCol) {
+            rightCol.classList.toggle('is-revealed-col', rightRevealed && scrolledIntoPin >= scrollPhaseEnd * 0.85);
+        }
+
+        if (inStickyHold && topWrap) {
+            topWrap.style.transform = 'translate3d(0, ' + (-scrollPhaseEnd) + 'px, 0)';
+        }
+
+        let takeover = (scrolledIntoPin - takeoverStart) / TAKEOVER_PX;
         takeover = Math.max(0, Math.min(1, takeover));
-        second.style.transform = 'translateY(' + ((1 - takeover) * 100) + '%)';
+        second.style.transform = 'translate3d(0, ' + ((1 - takeover) * 100) + '%, 0)';
     }
 
     function onScroll() {
