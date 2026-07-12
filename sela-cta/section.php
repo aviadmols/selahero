@@ -170,23 +170,162 @@ $uid = 'slct-' . esc_attr($section['id'] ?? uniqid('sec', true));
     }
 
     const track = section.querySelector('[data-track]');
+    const box = track ? track.parentElement : null;
     const dots = section.querySelectorAll('.slct-sdot');
 
-    if (!track || !dots.length) {
+    if (!track || !box || !dots.length) {
         return;
     }
 
     let current = 0;
+    let startX = 0;
+    let startY = 0;
+    let deltaX = 0;
+    let dragging = false;
+    let axis = null;
 
-    const slide = function (index) {
-        const width = track.parentElement.getBoundingClientRect().width;
+    const getStep = function () {
+        const card = track.querySelector('.slct-card');
+        if (!card) {
+            return box.getBoundingClientRect().width;
+        }
+
+        const styles = window.getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+
+        return card.getBoundingClientRect().width + gap;
+    };
+
+    const slide = function (index, animate) {
+        const step = getStep();
         current = Math.max(0, Math.min(index, dots.length - 1));
-        track.style.transform = 'translateX(-' + current * width + 'px)';
+
+        if (animate === false) {
+            track.style.transition = 'none';
+        } else {
+            track.style.transition = '';
+        }
+
+        track.style.transform = 'translateX(-' + (current * step) + 'px)';
 
         dots.forEach(function (dot, dotIndex) {
             dot.classList.toggle('slct-sdot--active', dotIndex === current);
         });
+
+        if (animate === false) {
+            track.offsetHeight;
+            track.style.transition = '';
+        }
     };
+
+    const onPointerDown = function (clientX, clientY) {
+        dragging = true;
+        axis = null;
+        startX = clientX;
+        startY = clientY;
+        deltaX = 0;
+        track.style.transition = 'none';
+        box.classList.add('is-dragging');
+    };
+
+    const onPointerMove = function (clientX, clientY, event) {
+        if (!dragging) {
+            return;
+        }
+
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+
+        if (!axis) {
+            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) {
+                return;
+            }
+            axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        }
+
+        if (axis !== 'x') {
+            return;
+        }
+
+        if (event && event.cancelable) {
+            event.preventDefault();
+        }
+
+        deltaX = dx;
+        const base = -current * getStep();
+        track.style.transform = 'translateX(' + (base + deltaX) + 'px)';
+    };
+
+    const onPointerUp = function () {
+        if (!dragging) {
+            return;
+        }
+
+        dragging = false;
+        box.classList.remove('is-dragging');
+        track.style.transition = '';
+
+        if (axis !== 'x') {
+            slide(current);
+            axis = null;
+            deltaX = 0;
+            return;
+        }
+
+        const threshold = Math.max(40, getStep() * 0.18);
+
+        if (deltaX <= -threshold) {
+            slide(current + 1);
+        } else if (deltaX >= threshold) {
+            slide(current - 1);
+        } else {
+            slide(current);
+        }
+
+        axis = null;
+        deltaX = 0;
+    };
+
+    box.addEventListener('touchstart', function (event) {
+        if (!event.touches || !event.touches.length) {
+            return;
+        }
+        onPointerDown(event.touches[0].clientX, event.touches[0].clientY);
+    }, { passive: true });
+
+    box.addEventListener('touchmove', function (event) {
+        if (!event.touches || !event.touches.length) {
+            return;
+        }
+        onPointerMove(event.touches[0].clientX, event.touches[0].clientY, event);
+    }, { passive: false });
+
+    box.addEventListener('touchend', onPointerUp);
+    box.addEventListener('touchcancel', onPointerUp);
+
+    box.addEventListener('pointerdown', function (event) {
+        if (event.pointerType === 'touch') {
+            return;
+        }
+        if (event.button !== 0) {
+            return;
+        }
+        onPointerDown(event.clientX, event.clientY);
+    });
+
+    window.addEventListener('pointermove', function (event) {
+        if (!dragging || event.pointerType === 'touch') {
+            return;
+        }
+        onPointerMove(event.clientX, event.clientY, event);
+    });
+
+    window.addEventListener('pointerup', function (event) {
+        if (event.pointerType === 'touch') {
+            return;
+        }
+        onPointerUp();
+    });
 
     dots.forEach(function (dot) {
         dot.addEventListener('click', function () {
@@ -195,7 +334,7 @@ $uid = 'slct-' . esc_attr($section['id'] ?? uniqid('sec', true));
     });
 
     window.addEventListener('resize', function () {
-        slide(current);
+        slide(current, false);
     });
 
     slide(0);

@@ -41,8 +41,9 @@
     width: 43px;
     z-index: 2;
 }
-.slct-box { max-width: 1252px; width: 100%; margin: 0 auto; overflow: hidden; }
-.slct-cards { display: flex; gap: 24px; transition: transform .5s cubic-bezier(.4,0,.2,1); }
+.slct-box { max-width: 1252px; width: 100%; margin: 0 auto; overflow: hidden; touch-action: pan-y; cursor: grab; }
+.slct-box.is-dragging { cursor: grabbing; user-select: none; }
+.slct-cards { display: flex; gap: 24px; transition: transform .5s cubic-bezier(.4,0,.2,1); will-change: transform; }
 .slct-card {
     flex: 0 0 calc((100% - 48px) / 3);
     min-height: 436px;
