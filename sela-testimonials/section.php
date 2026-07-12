@@ -1,8 +1,6 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-$show_cloud = ! empty( $settings['show_cloud'] );
-
 $media_base = '';
 if ( ( $section['source'] ?? '' ) === 'uploads' ) {
     $u = wp_upload_dir();
@@ -21,6 +19,34 @@ $get_media = function ( string $fallback ) use ( $media_base ): string {
 };
 
 $default_thumb = $get_img( 'image_video', 'testi-video.jpg' ) ?: $get_media( 'testi-video.jpg' );
+
+/**
+ * Normalize video URL. Empty / legacy demo placeholder => no video.
+ */
+$normalize_video = function ( string $video_url ): string {
+    $video_url = trim( $video_url );
+    if ( $video_url === '' ) {
+        return '';
+    }
+
+    // Old schema default that was auto-filled on tabs — treat as "no video".
+    $legacy_placeholders = array(
+        'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+        'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1',
+        'https://www.youtube.com/embed/zfVHUuJB3Dk',
+        'https://youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+        'https://www.youtube.com/watch?v=zfVHUuJB3Dk',
+    );
+
+    $normalized = preg_replace( '/#.*$/', '', $video_url );
+    foreach ( $legacy_placeholders as $placeholder ) {
+        if ( strcasecmp( $normalized, $placeholder ) === 0 ) {
+            return '';
+        }
+    }
+
+    return $video_url;
+};
 
 /**
  * Extract a public thumbnail URL from a YouTube / Vimeo video URL.
@@ -80,7 +106,7 @@ foreach ( ( $blocks ?? [] ) as $block ) {
         continue;
     }
 
-    $video = trim( (string) ( $block_settings['video'] ?? '' ) );
+    $video = $normalize_video( (string) ( $block_settings['video'] ?? '' ) );
     $thumb_raw = trim( (string) ( $block_settings['video_thumbnail'] ?? '' ) );
 
     $tabs[] = [
@@ -104,7 +130,7 @@ if ( empty( $tabs ) ) {
             continue;
         }
 
-        $video = trim( (string) ( $settings["tab_{$i}_video"] ?? '' ) );
+        $video = $normalize_video( (string) ( $settings["tab_{$i}_video"] ?? '' ) );
 
         $tabs[] = [
             'name'  => $name,
@@ -206,7 +232,7 @@ $first_has_video = $first_video !== '';
             <div class="slte-video<?php echo $first_has_video ? '' : ' slte-video--no-play'; ?>">
                 <img src="<?php echo esc_url( $first_thumb ); ?>" alt="" class="slte-video-thumb">
                 <button class="slte-play" aria-label="Play" type="button"<?php echo $first_has_video ? '' : ' hidden'; ?>>
-                    <img src="<?php echo $get_img( 'image_play_btn', 'play-btn.svg' ); ?>" alt="">
+                    <img src="<?php echo $get_media( 'play-btn.svg' ); ?>" alt="">
                 </button>
                 <iframe class="slte-iframe" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
             </div>

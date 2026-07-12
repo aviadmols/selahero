@@ -81,24 +81,6 @@ return array(
             'min' => 0,
             'max' => 200,
         ),
-        array(
-            'id' => 'image_play_btn',
-            'type' => 'image',
-            'label' => 'Play button icon',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/play-btn.svg',
-        ),
-        array(
-            'id' => 'image_cloud',
-            'type' => 'image',
-            'label' => 'Decorative cloud',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/cloud-hero-1.svg',
-        ),
-        array(
-            'id' => 'show_cloud',
-            'type' => 'checkbox',
-            'label' => 'Show decorative cloud',
-            'default' => 1,
-        ),
     ),
     'blocks' => array(
         'allowed' => array(
