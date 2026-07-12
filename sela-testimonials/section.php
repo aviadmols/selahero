@@ -241,6 +241,7 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
                          data-video="<?php echo esc_url( $t['video'] ); ?>"
                          data-video-thumb="<?php echo esc_url( $t['thumb'] ); ?>"
                          data-mp4-thumb="<?php echo ! empty( $t['mp4_thumb'] ) ? '1' : '0'; ?>"
+                         data-video-mp4="<?php echo $is_mp4_video( (string) ( $t['video'] ?? '' ) ) ? '1' : '0'; ?>"
                          data-has-video="<?php echo $t['video'] !== '' ? '1' : '0'; ?>">
                         <?php if ( $t['plogo'] ) : ?>
                             <img src="<?php echo $t['plogo']; ?>" alt="<?php echo esc_attr( $t['name'] ); ?>" class="slte-panel-logo">
@@ -262,9 +263,10 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
             <div class="slte-video<?php echo $first_has_video ? '' : ' slte-video--no-play'; ?>"
                  data-default-thumb="<?php echo esc_url( $default_thumb ); ?>">
                 <img src="<?php echo $first_thumb !== '' ? esc_url( $first_thumb ) : ''; ?>" alt="" class="slte-video-thumb"<?php echo $first_mp4_thumb ? ' data-awaiting-mp4="1"' : ''; ?>>
-                <button class="slte-play" aria-label="Play" type="button"<?php echo $first_has_video ? '' : ' hidden'; ?>>
+                <button class="slte-play" aria-label="Play" type="button" hidden>
                     <img src="<?php echo $get_media( 'play-btn.svg' ); ?>" alt="">
                 </button>
+                <video class="slte-native" muted playsinline loop preload="metadata"></video>
                 <iframe class="slte-iframe" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
             </div>
         </div>
@@ -279,6 +281,7 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
     var panels = section.querySelectorAll('.slte-panel');
     var video  = section.querySelector('.slte-video');
     var iframe = section.querySelector('.slte-iframe');
+    var native = section.querySelector('.slte-native');
     var thumb  = section.querySelector('.slte-video-thumb');
     var play   = section.querySelector('.slte-play');
     var defaultThumb = video ? (video.getAttribute('data-default-thumb') || '') : '';
@@ -397,23 +400,102 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
         thumb.removeAttribute('data-awaiting-mp4');
     }
 
+    function stopMedia() {
+        if (iframe) iframe.src = '';
+        if (native) {
+            native.pause();
+            native.removeAttribute('src');
+            native.load();
+        }
+        if (video) {
+            video.classList.remove('slte-video--playing', 'slte-video--mp4', 'slte-video--iframe');
+        }
+    }
+
+    function withMutedAutoplay(url) {
+        var src = String(url || '');
+        if (!src) return '';
+
+        // YouTube watch / youtu.be → embed
+        var yt = src.match(/(?:youtube\.com\/watch\?.*?v=|youtu\.be\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{6,})/);
+        if (yt) {
+            src = 'https://www.youtube.com/embed/' + yt[1];
+        }
+
+        // Vimeo page → player
+        var vm = src.match(/(?:vimeo\.com\/(?:video\/)?)(\d+)/);
+        if (vm && src.indexOf('player.vimeo.com') === -1) {
+            src = 'https://player.vimeo.com/video/' + vm[1];
+        }
+
+        function setParam(u, key, value) {
+            var re = new RegExp('([?&])' + key + '=[^&]*');
+            if (re.test(u)) {
+                return u.replace(re, '$1' + key + '=' + value);
+            }
+            return u + (u.indexOf('?') >= 0 ? '&' : '?') + key + '=' + value;
+        }
+
+        src = setParam(src, 'autoplay', '1');
+        src = setParam(src, 'mute', '1');
+        src = setParam(src, 'muted', '1');
+        if (src.indexOf('youtube.com') !== -1 || src.indexOf('youtu.be') !== -1) {
+            src = setParam(src, 'playsinline', '1');
+            src = setParam(src, 'rel', '0');
+        }
+        return src;
+    }
+
+    function startMuted(panel) {
+        stopMedia();
+        if (!panel || !video) return;
+
+        var hasVideo = panel.getAttribute('data-has-video') === '1';
+        var src = panel.getAttribute('data-video') || '';
+        if (!hasVideo || !src) return;
+
+        var isMp4 = panel.getAttribute('data-video-mp4') === '1';
+
+        if (isMp4 && native) {
+            native.muted = true;
+            native.defaultMuted = true;
+            native.setAttribute('muted', '');
+            native.playsInline = true;
+            native.setAttribute('playsinline', '');
+            native.loop = true;
+            native.src = src;
+            video.classList.add('slte-video--playing', 'slte-video--mp4');
+            var playPromise = native.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(function () {
+                    video.classList.remove('slte-video--playing', 'slte-video--mp4');
+                });
+            }
+            return;
+        }
+
+        if (iframe) {
+            iframe.src = withMutedAutoplay(src);
+            video.classList.add('slte-video--playing', 'slte-video--iframe');
+        }
+    }
+
     function syncPlayState(panel) {
         var hasVideo = panel && panel.getAttribute('data-has-video') === '1';
         var src = panel ? (panel.getAttribute('data-video') || '') : '';
 
         if (video) {
             video.classList.toggle('slte-video--no-play', !hasVideo || !src);
-            video.classList.remove('slte-video--playing');
         }
         if (play) {
-            if (hasVideo && src) {
-                play.hidden = false;
-                play.removeAttribute('hidden');
-            } else {
-                play.hidden = true;
-            }
+            play.hidden = true;
         }
-        if (iframe) iframe.src = '';
+
+        if (hasVideo && src) {
+            startMuted(panel);
+        } else {
+            stopMedia();
+        }
     }
 
     tabs.forEach(function (btn, idx) {
@@ -429,18 +511,6 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
             }
         });
     });
-
-    if (play && video && iframe) {
-        play.addEventListener('click', function () {
-            var active = section.querySelector('.slte-panel--active');
-            var src = active ? (active.getAttribute('data-video') || '') : '';
-            var hasVideo = active && active.getAttribute('data-has-video') === '1';
-            if (hasVideo && src) {
-                iframe.src = src;
-                video.classList.add('slte-video--playing');
-            }
-        });
-    }
 
     var activePanel = section.querySelector('.slte-panel--active');
     applyPanelThumb(activePanel);
