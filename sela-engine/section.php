@@ -539,20 +539,33 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     const layout = section.querySelector('.engine__layout');
     const center = section.querySelector('.engine__center');
     const topPin = section.querySelector('.engine__top-pin');
-    const topArea = section.querySelector('.engine__top');
-    const topWrap = topArea ? topArea.querySelector('.wrap') : null;
     const rightCol = section.querySelector('.engine__col--right');
     const second = section.querySelector('.engine__second');
     const cards = center ? Array.from(center.querySelectorAll('.engine__card')) : [];
+    const icons = Array.from(section.querySelectorAll('.engine__col-icon'));
+    const texts = Array.from(section.querySelectorAll('.engine__col-text'));
 
-    if (!layout || !center || !topPin || !topArea || !topWrap || !second || !cards.length) {
+    if (!layout || !center || !topPin || !second || !cards.length) {
         return;
     }
 
-    const PIN_OFFSET = 60;
-    const STICKY_HOLD_PX = 280;
+    // One group per card, then icons together, then column texts together.
+    // Each group fades in on its own scroll step while the area stays pinned.
+    const groups = cards.map(function(card) { return [card]; });
+
+    if (icons.length) {
+        groups.push(icons);
+    }
+
+    if (texts.length) {
+        groups.push(texts);
+    }
+
+    const STEP_PX = 160;
+    const STICKY_HOLD_PX = 220;
     const TAKEOVER_PX = 700;
-    const REVEAL_LINE_RATIO = 0.52;
+    const PIN_OFFSET = 60;
+    const revealDistance = groups.length * STEP_PX;
 
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const desktopQuery = window.matchMedia('(min-width: 1025px)');
@@ -566,35 +579,15 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         track.appendChild(second);
     }
 
-    function collectRevealTargets() {
-        const targets = cards.slice();
-
-        const leftCol = section.querySelector('.engine__col--left');
-
-        if (leftCol) {
-            leftCol.querySelectorAll('.engine__col-icon, .engine__col-text').forEach(function(el) {
-                targets.push(el);
-            });
-        }
-
-        if (rightCol) {
-            rightCol.querySelectorAll('.engine__col-icon, .engine__col-text').forEach(function(el) {
-                targets.push(el);
-            });
-        }
-
-        return targets.sort(function(a, b) {
-            return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+    function toggleGroup(group, on) {
+        group.forEach(function(el) {
+            el.classList.toggle('is-revealed', on);
         });
     }
 
-    let revealTargets = collectRevealTargets();
-    let contentScrollMax = 0;
-    let pinHeight = 0;
-
     function revealAll(on) {
-        revealTargets.forEach(function(el) {
-            el.classList.toggle('is-revealed', on);
+        groups.forEach(function(group) {
+            toggleGroup(group, on);
         });
 
         if (rightCol) {
@@ -608,15 +601,11 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             el.style.top = '';
             el.style.height = '';
             el.style.zIndex = '';
+            el.style.overflow = '';
         });
 
         second.style.transform = '';
         second.style.willChange = '';
-
-        if (topWrap) {
-            topWrap.style.transform = '';
-            topWrap.style.willChange = '';
-        }
 
         if (rightCol) {
             rightCol.classList.remove('is-revealed-col');
@@ -624,16 +613,6 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     }
 
     let scrubbing = false;
-
-    function measure() {
-        if (topWrap) {
-            topWrap.style.transform = 'none';
-        }
-
-        revealTargets = collectRevealTargets();
-        pinHeight = window.innerHeight - PIN_OFFSET;
-        contentScrollMax = Math.max(0, topArea.scrollHeight - pinHeight);
-    }
 
     function configure() {
         if (reduceMotion || !desktopQuery.matches) {
@@ -645,10 +624,10 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         }
 
         layout.classList.add('engine--anim');
-        measure();
+        revealAll(false);
 
         const vh = window.innerHeight;
-        pinHeight = vh - PIN_OFFSET;
+        const pinHeight = vh - PIN_OFFSET;
 
         section.style.setProperty('--engine-pin-offset', PIN_OFFSET + 'px');
 
@@ -659,7 +638,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         topPin.style.overflow = 'hidden';
 
         track.style.position = 'relative';
-        track.style.height = (contentScrollMax + STICKY_HOLD_PX + TAKEOVER_PX + vh) + 'px';
+        track.style.height = (revealDistance + STICKY_HOLD_PX + TAKEOVER_PX + vh) + 'px';
 
         second.style.position = 'sticky';
         second.style.top = PIN_OFFSET + 'px';
@@ -667,21 +646,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         second.style.zIndex = '5';
         second.style.willChange = 'transform';
 
-        if (topWrap) {
-            topWrap.style.willChange = 'transform';
-        }
-
         scrubbing = true;
-    }
-
-    function isRightColRevealed() {
-        if (!rightCol) {
-            return false;
-        }
-
-        return Array.from(rightCol.querySelectorAll('.engine__col-icon, .engine__col-text')).every(function(el) {
-            return el.classList.contains('is-revealed');
-        });
     }
 
     let ticking = false;
@@ -694,36 +659,18 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         }
 
         const scrolledIntoPin = Math.max(0, PIN_OFFSET - section.getBoundingClientRect().top);
-        const revealLine = PIN_OFFSET + pinHeight * REVEAL_LINE_RATIO;
-        const scrollPhaseEnd = contentScrollMax;
-        const stickyPhaseEnd = scrollPhaseEnd + STICKY_HOLD_PX;
-        const takeoverStart = stickyPhaseEnd;
 
-        let contentShift = Math.min(scrolledIntoPin, scrollPhaseEnd);
-
-        if (topWrap) {
-            topWrap.style.transform = 'translate3d(0, ' + (-contentShift) + 'px, 0)';
-        }
-
-        revealTargets.forEach(function(el) {
-            const rect = el.getBoundingClientRect();
-
-            if (rect.top <= revealLine + 12) {
-                el.classList.add('is-revealed');
-            }
+        groups.forEach(function(group, index) {
+            toggleGroup(group, scrolledIntoPin >= (index + 1) * STEP_PX);
         });
 
-        const rightRevealed = isRightColRevealed();
-        const inStickyHold = scrolledIntoPin >= scrollPhaseEnd && scrolledIntoPin < stickyPhaseEnd;
+        const allRevealed = scrolledIntoPin >= revealDistance;
 
         if (rightCol) {
-            rightCol.classList.toggle('is-revealed-col', rightRevealed && scrolledIntoPin >= scrollPhaseEnd * 0.85);
+            rightCol.classList.toggle('is-revealed-col', allRevealed);
         }
 
-        if (inStickyHold && topWrap) {
-            topWrap.style.transform = 'translate3d(0, ' + (-scrollPhaseEnd) + 'px, 0)';
-        }
-
+        const takeoverStart = revealDistance + STICKY_HOLD_PX;
         let takeover = (scrolledIntoPin - takeoverStart) / TAKEOVER_PX;
         takeover = Math.max(0, Math.min(1, takeover));
         second.style.transform = 'translate3d(0, ' + ((1 - takeover) * 100) + '%, 0)';

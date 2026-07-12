@@ -378,10 +378,6 @@
     transform: none;
 }
 
-.engine__layout.engine--anim .engine__top .wrap {
-    will-change: transform;
-}
-
 .engine__layout.engine--anim .engine__col--right.is-revealed-col {
     position: sticky;
     top: var(--engine-pin-offset, 60px);
