@@ -61,12 +61,10 @@ $uid   = 'slsc-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
                 if ( $i === 11 ) $cls .= ' slsc-face--wide';
                 $faces[] = array( 'src' => $src, 'cls' => $cls );
             }
-            $face_count = max( 1, count( $faces ) );
-            $marquee_duration = max( 18, $face_count * 3 );
             ?>
             <?php if ( ! empty( $faces ) ) : ?>
                 <div class="slsc-faces">
-                    <div class="slsc-track" style="animation-duration: <?php echo (int) $marquee_duration; ?>s;">
+                    <div class="slsc-track" data-slsc-marquee>
                         <?php for ( $copy = 0; $copy < 2; $copy++ ) : ?>
                             <div class="slsc-group"<?php echo 0 === $copy ? '' : ' aria-hidden="true"'; ?>>
                                 <?php foreach ( $faces as $face ) : ?>
@@ -76,6 +74,62 @@ $uid   = 'slsc-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
                         <?php endfor; ?>
                     </div>
                 </div>
+                <script>
+                (function () {
+                    var section = document.getElementById('<?php echo esc_js( $uid ); ?>');
+                    if (!section) return;
+
+                    var faces = section.querySelector('.slsc-faces');
+                    var track = section.querySelector('[data-slsc-marquee]');
+                    if (!faces || !track) return;
+
+                    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    if (reduceMotion) return;
+
+                    function setup() {
+                        var groups = Array.prototype.slice.call(track.querySelectorAll('.slsc-group'));
+                        if (!groups.length) return;
+
+                        var template = groups[0];
+
+                        // Keep only the first group, then clone enough times to fill the viewport seamlessly.
+                        while (groups.length > 1) {
+                            groups.pop().remove();
+                        }
+
+                        var groupWidth = template.getBoundingClientRect().width;
+                        var viewWidth = faces.getBoundingClientRect().width;
+                        if (groupWidth < 1) return;
+
+                        // Need at least 2 full sets, and enough total width to always cover the viewport.
+                        var copies = Math.max(2, Math.ceil((viewWidth * 2) / groupWidth) + 1);
+
+                        for (var i = 1; i < copies; i++) {
+                            var clone = template.cloneNode(true);
+                            clone.setAttribute('aria-hidden', 'true');
+                            track.appendChild(clone);
+                        }
+
+                        // Duration scales with content width so speed stays roughly constant.
+                        var seconds = Math.max(18, Math.round(groupWidth / 40));
+                        track.style.setProperty('--slsc-shift', groupWidth + 'px');
+                        track.style.animationDuration = seconds + 's';
+                    }
+
+                    if (document.readyState === 'complete') {
+                        setup();
+                    } else {
+                        setup();
+                        window.addEventListener('load', setup);
+                    }
+
+                    var resizeTimer;
+                    window.addEventListener('resize', function () {
+                        clearTimeout(resizeTimer);
+                        resizeTimer = setTimeout(setup, 150);
+                    });
+                }());
+                </script>
             <?php endif; ?>
         </div>
     </div>

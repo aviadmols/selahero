@@ -22,7 +22,29 @@ $get_media = function ( string $fallback ) use ( $media_base ): string {
 
 $default_thumb = $get_img( 'image_video', 'testi-video.jpg' ) ?: $get_media( 'testi-video.jpg' );
 
-$resolve_thumb = function ( string $thumb = '', string $legacy_key = '' ) use ( $settings, $get_img, $get_media, $default_thumb ): string {
+/**
+ * Extract a public thumbnail URL from a YouTube / Vimeo video URL.
+ */
+$video_provider_thumb = function ( string $video_url ): string {
+    $video_url = trim( $video_url );
+    if ( $video_url === '' ) {
+        return '';
+    }
+
+    // YouTube: watch / embed / youtu.be / shorts
+    if ( preg_match( '~(?:youtube\.com/(?:embed/|watch\?.*?v=|shorts/)|youtu\.be/)([A-Za-z0-9_-]{6,})~', $video_url, $m ) ) {
+        return 'https://img.youtube.com/vi/' . $m[1] . '/hqdefault.jpg';
+    }
+
+    // Vimeo: vimeo.com/ID or player.vimeo.com/video/ID
+    if ( preg_match( '~(?:vimeo\.com/(?:video/)?|player\.vimeo\.com/video/)(\d+)~', $video_url, $m ) ) {
+        return 'https://vumbnail.com/' . $m[1] . '.jpg';
+    }
+
+    return '';
+};
+
+$resolve_thumb = function ( string $thumb = '', string $legacy_key = '', string $video = '' ) use ( $settings, $default_thumb, $video_provider_thumb ): string {
     if ( $thumb !== '' ) {
         return esc_url( $thumb );
     }
@@ -33,6 +55,11 @@ $resolve_thumb = function ( string $thumb = '', string $legacy_key = '' ) use ( 
         if ( $legacy !== '' ) {
             return esc_url( $legacy );
         }
+    }
+
+    $from_video = $video_provider_thumb( $video );
+    if ( $from_video !== '' ) {
+        return esc_url( $from_video );
     }
 
     return $default_thumb;
@@ -53,14 +80,19 @@ foreach ( ( $blocks ?? [] ) as $block ) {
         continue;
     }
 
+    $video = trim( (string) ( $block_settings['video'] ?? '' ) );
+    $thumb_raw = trim( (string) ( $block_settings['video_thumbnail'] ?? '' ) );
+
     $tabs[] = [
         'name'   => $name,
         'logo'   => (string) ( $block_settings['logo'] ?? '' ) ?: $get_media( 'tab-etoro.png' ),
         'plogo'  => (string) ( $block_settings['panel_logo'] ?? '' ) ?: $get_media( 'testi-logo-etoro.png' ),
-        'video'  => (string) ( $block_settings['video'] ?? 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0' ),
-        'thumb'  => $resolve_thumb( (string) ( $block_settings['video_thumbnail'] ?? '' ) ),
+        'video'  => $video,
+        'thumb'  => $resolve_thumb( $thumb_raw, '', $video ),
         'text'   => (string) ( $block_settings['text'] ?? '' ),
         'author' => (string) ( $block_settings['author'] ?? '' ),
+        'story'  => trim( (string) ( $block_settings['story_link'] ?? '' ) ),
+        'story_label' => trim( (string) ( $block_settings['story_label'] ?? '' ) ) ?: 'View Customer Story',
     ];
 }
 
@@ -72,14 +104,18 @@ if ( empty( $tabs ) ) {
             continue;
         }
 
+        $video = trim( (string) ( $settings["tab_{$i}_video"] ?? '' ) );
+
         $tabs[] = [
             'name'  => $name,
             'logo'  => $get_img( "tab_{$i}_logo",       'tab-etoro.png' ) ?: $get_media( 'tab-etoro.png' ),
             'plogo' => $get_img( "tab_{$i}_panel_logo", 'testi-logo-etoro.png' ) ?: $get_media( 'testi-logo-etoro.png' ),
-            'video' => (string) ( $settings["tab_{$i}_video"]  ?? 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0' ),
-            'thumb' => $resolve_thumb( '', "tab_{$i}_video_thumbnail" ),
+            'video' => $video,
+            'thumb' => $resolve_thumb( '', "tab_{$i}_video_thumbnail", $video ),
             'text'  => (string) ( $settings["tab_{$i}_text"]   ?? '' ),
             'author'=> (string) ( $settings["tab_{$i}_author"] ?? '' ),
+            'story' => trim( (string) ( $settings["tab_{$i}_story_link"] ?? '' ) ),
+            'story_label' => trim( (string) ( $settings["tab_{$i}_story_label"] ?? '' ) ) ?: 'View Customer Story',
         ];
     }
 }
@@ -94,6 +130,8 @@ if ( empty( $tabs ) ) {
             'thumb' => $get_media( 'testi-video.jpg' ),
             'text' => 'Over 6 million traders in 140 countries use the eToro Social Trading Network to invest.',
             'author' => 'Jasmine Lee, Creative Director',
+            'story' => '',
+            'story_label' => 'View Customer Story',
         ],
         [
             'name' => 'WIZ',
@@ -103,11 +141,15 @@ if ( empty( $tabs ) ) {
             'thumb' => $get_media( 'testi-video.jpg' ),
             'text' => 'Wiz partnered with Sela to accelerate cloud security posture management across multi-cloud environments.',
             'author' => 'Dan Cohen, CISO, Wiz',
+            'story' => '',
+            'story_label' => 'View Customer Story',
         ],
     ];
 }
 
+$first_video = ! empty( $tabs ) ? trim( (string) ( $tabs[0]['video'] ?? '' ) ) : '';
 $first_thumb = ! empty( $tabs ) ? (string) ( $tabs[0]['thumb'] ?? $default_thumb ) : $default_thumb;
+$first_has_video = $first_video !== '';
 ?>
 <style>
 #<?php echo $uid; ?> {
@@ -142,18 +184,28 @@ $first_thumb = ! empty( $tabs ) ? (string) ( $tabs[0]['thumb'] ?? $default_thumb
                     <div class="slte-panel<?php echo $i === 0 ? ' slte-panel--active' : ''; ?>"
                          data-panel="<?php echo $i; ?>"
                          data-video="<?php echo esc_url( $t['video'] ); ?>"
-                         data-video-thumb="<?php echo esc_url( $t['thumb'] ); ?>">
+                         data-video-thumb="<?php echo esc_url( $t['thumb'] ); ?>"
+                         data-has-video="<?php echo $t['video'] !== '' ? '1' : '0'; ?>">
                         <?php if ( $t['plogo'] ) : ?>
                             <img src="<?php echo $t['plogo']; ?>" alt="<?php echo esc_attr( $t['name'] ); ?>" class="slte-panel-logo">
                         <?php endif; ?>
                         <p class="slte-panel-text"><?php echo wp_kses_post( $t['text'] ); ?></p>
                         <p class="slte-panel-author"><?php echo esc_html( $t['author'] ); ?></p>
+                        <?php if ( ! empty( $t['story'] ) ) : ?>
+                            <a class="slte-story-link" href="<?php echo esc_url( $t['story'] ); ?>">
+                                <span class="slte-story-link__text"><?php echo esc_html( $t['story_label'] ); ?></span>
+                                <svg class="slte-story-link__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 18" fill="none" aria-hidden="true">
+                                    <path d="M11.6795 14.4546L18.3049 8.62664L11.8943 2.66199" stroke="currentColor"/>
+                                    <path d="M0 8.62659L18.1001 8.62659" stroke="currentColor"/>
+                                </svg>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>
-            <div class="slte-video">
+            <div class="slte-video<?php echo $first_has_video ? '' : ' slte-video--no-play'; ?>">
                 <img src="<?php echo esc_url( $first_thumb ); ?>" alt="" class="slte-video-thumb">
-                <button class="slte-play" aria-label="Play" type="button">
+                <button class="slte-play" aria-label="Play" type="button"<?php echo $first_has_video ? '' : ' hidden'; ?>>
                     <img src="<?php echo $get_img( 'image_play_btn', 'play-btn.svg' ); ?>" alt="">
                 </button>
                 <iframe class="slte-iframe" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
@@ -171,6 +223,26 @@ $first_thumb = ! empty( $tabs ) ? (string) ( $tabs[0]['thumb'] ?? $default_thumb
     var video  = section.querySelector('.slte-video');
     var iframe = section.querySelector('.slte-iframe');
     var thumb  = section.querySelector('.slte-video-thumb');
+    var play   = section.querySelector('.slte-play');
+
+    function syncPlayState(panel) {
+        var hasVideo = panel && panel.getAttribute('data-has-video') === '1';
+        var src = panel ? (panel.getAttribute('data-video') || '') : '';
+
+        if (video) {
+            video.classList.toggle('slte-video--no-play', !hasVideo || !src);
+            video.classList.remove('slte-video--playing');
+        }
+        if (play) {
+            if (hasVideo && src) {
+                play.hidden = false;
+                play.removeAttribute('hidden');
+            } else {
+                play.hidden = true;
+            }
+        }
+        if (iframe) iframe.src = '';
+    }
 
     tabs.forEach(function (btn, idx) {
         btn.addEventListener('click', function () {
@@ -184,22 +256,23 @@ $first_thumb = ! empty( $tabs ) ? (string) ( $tabs[0]['thumb'] ?? $default_thumb
                 if (thumb && thumbSrc) {
                     thumb.src = thumbSrc;
                 }
+                syncPlayState(p);
             }
-            if (video) video.classList.remove('slte-video--playing');
-            if (iframe) iframe.src = '';
         });
     });
 
-    var play = section.querySelector('.slte-play');
     if (play && video && iframe) {
         play.addEventListener('click', function () {
             var active = section.querySelector('.slte-panel--active');
-            var src = active ? active.getAttribute('data-video') : '';
-            if (src) {
+            var src = active ? (active.getAttribute('data-video') || '') : '';
+            var hasVideo = active && active.getAttribute('data-has-video') === '1';
+            if (hasVideo && src) {
                 iframe.src = src;
                 video.classList.add('slte-video--playing');
             }
         });
     }
+
+    syncPlayState(section.querySelector('.slte-panel--active'));
 }());
 </script>

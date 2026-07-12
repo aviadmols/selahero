@@ -54,6 +54,7 @@ mix-blend-mode: multiply;
     flex-wrap: nowrap;
     animation: slsc-scroll 40s linear infinite;
     will-change: transform;
+    --slsc-shift: 50%;
 }
 .slsc-group {
     display: flex;
@@ -65,7 +66,7 @@ mix-blend-mode: multiply;
 .slsc-faces:hover .slsc-track { animation-play-state: paused; }
 @keyframes slsc-scroll {
     from { transform: translate3d(0, 0, 0); }
-    to   { transform: translate3d(-50%, 0, 0); }
+    to   { transform: translate3d(calc(-1 * var(--slsc-shift)), 0, 0); }
 }
 /* subtle gradient fade so logos melt into the box background on both sides */
 .slsc-faces::before,

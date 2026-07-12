@@ -132,14 +132,14 @@ return array(
                 array(
                     'id' => 'video',
                     'type' => 'url',
-                    'label' => 'Video URL',
-                    'default' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
+                    'label' => 'Video URL (leave empty to hide play)',
+                    'default' => '',
                 ),
                 array(
                     'id' => 'video_thumbnail',
                     'type' => 'image',
-                    'label' => 'Video thumbnail',
-                    'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
+                    'label' => 'Video thumbnail (optional — falls back to YouTube/Vimeo thumb)',
+                    'default' => '',
                 ),
                 array(
                     'id' => 'text',
@@ -152,6 +152,18 @@ return array(
                     'type' => 'text',
                     'label' => 'Author',
                     'default' => 'Jasmine Lee, Creative Director',
+                ),
+                array(
+                    'id' => 'story_link',
+                    'type' => 'url',
+                    'label' => 'Customer story / post link (optional)',
+                    'default' => '',
+                ),
+                array(
+                    'id' => 'story_label',
+                    'type' => 'text',
+                    'label' => 'Story link text',
+                    'default' => 'View Customer Story',
                 ),
             ),
         ),
@@ -167,6 +179,8 @@ return array(
                 'video_thumbnail' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
                 'text' => 'Over 6 million traders in 140 countries use the eToro Social Trading Network to invest. They buy and sell financial instruments while copying successful traders\' decisions in real time, making trading social. In 2015, eToro moved to Microsoft Azure, adding analytics tools for its CopyFunds.',
                 'author' => 'Jasmine Lee, Creative Director',
+                'story_link' => '',
+                'story_label' => 'View Customer Story',
             ),
         ),
         array(
@@ -179,6 +193,8 @@ return array(
                 'video_thumbnail' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
                 'text' => 'Wiz partnered with Sela to accelerate cloud security posture management across multi-cloud environments. With Sela\'s expertise, we dramatically reduced our time-to-deploy and cloud spend while maintaining enterprise-grade security across all workloads.',
                 'author' => 'Dan Cohen, CISO, Wiz',
+                'story_link' => '',
+                'story_label' => 'View Customer Story',
             ),
         ),
         array(
@@ -191,6 +207,8 @@ return array(
                 'video_thumbnail' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
                 'text' => 'Island leverages Sela\'s cloud expertise to build robust, scalable infrastructure for our enterprise browser. Sela\'s 24/7 support and FinOps capabilities have been critical in helping us scale quickly while keeping infrastructure costs under control.',
                 'author' => 'Michael Brown, CTO, Island',
+                'story_link' => '',
+                'story_label' => 'View Customer Story',
             ),
         ),
         array(
@@ -203,6 +221,8 @@ return array(
                 'video_thumbnail' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/testi-video.jpg',
                 'text' => 'IONIX\'s attack surface management platform requires high availability and performance. Sela\'s cloud engineering team helped us optimize our AWS infrastructure, achieving significant cost savings while improving response times across all global regions.',
                 'author' => 'Sarah Gold, VP Engineering, IONIX',
+                'story_link' => '',
+                'story_label' => 'View Customer Story',
             ),
         ),
     ),
