@@ -89,4 +89,8 @@ height: 23px;
     height: 16px;
 	}
 
+	.hero-section--sela-testimonials .slte-panel-logo {
+		height: 30px;
+	}
+
 }

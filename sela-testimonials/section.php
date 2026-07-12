@@ -49,6 +49,20 @@ $normalize_video = function ( string $video_url ): string {
 };
 
 /**
+ * Whether the video URL points to an MP4 file.
+ */
+$is_mp4_video = function ( string $video_url ): bool {
+    $video_url = trim( $video_url );
+    if ( $video_url === '' ) {
+        return false;
+    }
+
+    $path = (string) ( parse_url( $video_url, PHP_URL_PATH ) ?? '' );
+
+    return (bool) preg_match( '/\.mp4$/i', $path );
+};
+
+/**
  * Extract a public thumbnail URL from a YouTube / Vimeo video URL.
  */
 $video_provider_thumb = function ( string $video_url ): string {
@@ -70,7 +84,7 @@ $video_provider_thumb = function ( string $video_url ): string {
     return '';
 };
 
-$resolve_thumb = function ( string $thumb = '', string $legacy_key = '', string $video = '' ) use ( $settings, $default_thumb, $video_provider_thumb ): string {
+$resolve_thumb = function ( string $thumb = '', string $legacy_key = '', string $video = '' ) use ( $settings, $default_thumb, $video_provider_thumb, $is_mp4_video ): string {
     if ( $thumb !== '' ) {
         return esc_url( $thumb );
     }
@@ -86,6 +100,11 @@ $resolve_thumb = function ( string $thumb = '', string $legacy_key = '', string 
     $from_video = $video_provider_thumb( $video );
     if ( $from_video !== '' ) {
         return esc_url( $from_video );
+    }
+
+    // MP4 without a custom thumb — leave empty for JS frame capture.
+    if ( $is_mp4_video( $video ) ) {
+        return '';
     }
 
     return $default_thumb;
@@ -108,13 +127,15 @@ foreach ( ( $blocks ?? [] ) as $block ) {
 
     $video = $normalize_video( (string) ( $block_settings['video'] ?? '' ) );
     $thumb_raw = trim( (string) ( $block_settings['video_thumbnail'] ?? '' ) );
+    $thumb = $resolve_thumb( $thumb_raw, '', $video );
 
     $tabs[] = [
         'name'   => $name,
         'logo'   => (string) ( $block_settings['logo'] ?? '' ) ?: $get_media( 'tab-etoro.png' ),
         'plogo'  => (string) ( $block_settings['panel_logo'] ?? '' ) ?: $get_media( 'testi-logo-etoro.png' ),
         'video'  => $video,
-        'thumb'  => $resolve_thumb( $thumb_raw, '', $video ),
+        'thumb'  => $thumb,
+        'mp4_thumb' => ( $thumb === '' && $is_mp4_video( $video ) ),
         'text'   => (string) ( $block_settings['text'] ?? '' ),
         'author' => (string) ( $block_settings['author'] ?? '' ),
         'story'  => trim( (string) ( $block_settings['story_link'] ?? '' ) ),
@@ -131,13 +152,15 @@ if ( empty( $tabs ) ) {
         }
 
         $video = $normalize_video( (string) ( $settings["tab_{$i}_video"] ?? '' ) );
+        $thumb = $resolve_thumb( '', "tab_{$i}_video_thumbnail", $video );
 
         $tabs[] = [
             'name'  => $name,
             'logo'  => $get_img( "tab_{$i}_logo",       'tab-etoro.png' ) ?: $get_media( 'tab-etoro.png' ),
             'plogo' => $get_img( "tab_{$i}_panel_logo", 'testi-logo-etoro.png' ) ?: $get_media( 'testi-logo-etoro.png' ),
             'video' => $video,
-            'thumb' => $resolve_thumb( '', "tab_{$i}_video_thumbnail", $video ),
+            'thumb' => $thumb,
+            'mp4_thumb' => ( $thumb === '' && $is_mp4_video( $video ) ),
             'text'  => (string) ( $settings["tab_{$i}_text"]   ?? '' ),
             'author'=> (string) ( $settings["tab_{$i}_author"] ?? '' ),
             'story' => trim( (string) ( $settings["tab_{$i}_story_link"] ?? '' ) ),
@@ -154,6 +177,7 @@ if ( empty( $tabs ) ) {
             'plogo' => $get_media( 'testi-logo-etoro.png' ),
             'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
             'thumb' => $get_media( 'testi-video.jpg' ),
+            'mp4_thumb' => false,
             'text' => 'Over 6 million traders in 140 countries use the eToro Social Trading Network to invest.',
             'author' => 'Jasmine Lee, Creative Director',
             'story' => '',
@@ -165,6 +189,7 @@ if ( empty( $tabs ) ) {
             'plogo' => $get_media( 'tab-wiz.png' ),
             'video' => 'https://www.youtube.com/embed/zfVHUuJB3Dk?autoplay=1&rel=0',
             'thumb' => $get_media( 'testi-video.jpg' ),
+            'mp4_thumb' => false,
             'text' => 'Wiz partnered with Sela to accelerate cloud security posture management across multi-cloud environments.',
             'author' => 'Dan Cohen, CISO, Wiz',
             'story' => '',
@@ -174,8 +199,12 @@ if ( empty( $tabs ) ) {
 }
 
 $first_video = ! empty( $tabs ) ? trim( (string) ( $tabs[0]['video'] ?? '' ) ) : '';
-$first_thumb = ! empty( $tabs ) ? (string) ( $tabs[0]['thumb'] ?? $default_thumb ) : $default_thumb;
+$first_thumb = ! empty( $tabs ) ? (string) ( $tabs[0]['thumb'] ?? '' ) : '';
+$first_mp4_thumb = ! empty( $tabs[0]['mp4_thumb'] );
 $first_has_video = $first_video !== '';
+if ( $first_thumb === '' && ! $first_mp4_thumb ) {
+    $first_thumb = $default_thumb;
+}
 ?>
 <style>
 #<?php echo $uid; ?> {
@@ -211,6 +240,7 @@ $first_has_video = $first_video !== '';
                          data-panel="<?php echo $i; ?>"
                          data-video="<?php echo esc_url( $t['video'] ); ?>"
                          data-video-thumb="<?php echo esc_url( $t['thumb'] ); ?>"
+                         data-mp4-thumb="<?php echo ! empty( $t['mp4_thumb'] ) ? '1' : '0'; ?>"
                          data-has-video="<?php echo $t['video'] !== '' ? '1' : '0'; ?>">
                         <?php if ( $t['plogo'] ) : ?>
                             <img src="<?php echo $t['plogo']; ?>" alt="<?php echo esc_attr( $t['name'] ); ?>" class="slte-panel-logo">
@@ -229,8 +259,9 @@ $first_has_video = $first_video !== '';
                     </div>
                 <?php endforeach; ?>
             </div>
-            <div class="slte-video<?php echo $first_has_video ? '' : ' slte-video--no-play'; ?>">
-                <img src="<?php echo esc_url( $first_thumb ); ?>" alt="" class="slte-video-thumb">
+            <div class="slte-video<?php echo $first_has_video ? '' : ' slte-video--no-play'; ?>"
+                 data-default-thumb="<?php echo esc_url( $default_thumb ); ?>">
+                <img src="<?php echo $first_thumb !== '' ? esc_url( $first_thumb ) : ''; ?>" alt="" class="slte-video-thumb"<?php echo $first_mp4_thumb ? ' data-awaiting-mp4="1"' : ''; ?>>
                 <button class="slte-play" aria-label="Play" type="button"<?php echo $first_has_video ? '' : ' hidden'; ?>>
                     <img src="<?php echo $get_media( 'play-btn.svg' ); ?>" alt="">
                 </button>
@@ -250,6 +281,121 @@ $first_has_video = $first_video !== '';
     var iframe = section.querySelector('.slte-iframe');
     var thumb  = section.querySelector('.slte-video-thumb');
     var play   = section.querySelector('.slte-play');
+    var defaultThumb = video ? (video.getAttribute('data-default-thumb') || '') : '';
+    var mp4Cache = {};
+    var captureToken = 0;
+
+    function applyFallbackThumb() {
+        if (thumb && defaultThumb) {
+            thumb.src = defaultThumb;
+            thumb.removeAttribute('data-awaiting-mp4');
+        }
+    }
+
+    function captureMp4Thumb(url, imgEl) {
+        if (!url || !imgEl) return;
+
+        if (mp4Cache[url]) {
+            imgEl.src = mp4Cache[url];
+            imgEl.removeAttribute('data-awaiting-mp4');
+            return;
+        }
+
+        var token = ++captureToken;
+        var v = document.createElement('video');
+        v.muted = true;
+        v.playsInline = true;
+        v.setAttribute('playsinline', '');
+        v.preload = 'auto';
+
+        function cleanup() {
+            v.removeAttribute('src');
+            v.load();
+        }
+
+        function fail() {
+            if (token !== captureToken) return;
+            cleanup();
+            applyFallbackThumb();
+        }
+
+        function onSeeked() {
+            if (token !== captureToken) {
+                cleanup();
+                return;
+            }
+
+            try {
+                var c = document.createElement('canvas');
+                var w = v.videoWidth || 0;
+                var h = v.videoHeight || 0;
+                if (!w || !h) {
+                    fail();
+                    return;
+                }
+                c.width = w;
+                c.height = h;
+                c.getContext('2d').drawImage(v, 0, 0, w, h);
+                var dataUrl = c.toDataURL('image/jpeg', 0.85);
+                mp4Cache[url] = dataUrl;
+                if (token === captureToken) {
+                    imgEl.src = dataUrl;
+                    imgEl.removeAttribute('data-awaiting-mp4');
+                }
+            } catch (e) {
+                fail();
+                return;
+            }
+            cleanup();
+        }
+
+        v.addEventListener('error', fail);
+        v.addEventListener('seeked', onSeeked);
+        v.addEventListener('loadeddata', function () {
+            if (token !== captureToken) {
+                cleanup();
+                return;
+            }
+            try {
+                var t = 0.5;
+                if (v.duration && isFinite(v.duration)) {
+                    t = Math.min(0.5, Math.max(0.1, v.duration * 0.05));
+                }
+                if (v.currentTime === t) {
+                    onSeeked();
+                } else {
+                    v.currentTime = t;
+                }
+            } catch (e) {
+                fail();
+            }
+        });
+
+        imgEl.setAttribute('data-awaiting-mp4', '1');
+        v.src = url;
+        v.load();
+    }
+
+    function applyPanelThumb(panel) {
+        if (!panel || !thumb) return;
+
+        var needsMp4 = panel.getAttribute('data-mp4-thumb') === '1';
+        var videoSrc = panel.getAttribute('data-video') || '';
+        var thumbSrc = panel.getAttribute('data-video-thumb') || '';
+
+        if (needsMp4 && videoSrc) {
+            captureMp4Thumb(videoSrc, thumb);
+            return;
+        }
+
+        captureToken += 1;
+        if (thumbSrc) {
+            thumb.src = thumbSrc;
+        } else if (defaultThumb) {
+            thumb.src = defaultThumb;
+        }
+        thumb.removeAttribute('data-awaiting-mp4');
+    }
 
     function syncPlayState(panel) {
         var hasVideo = panel && panel.getAttribute('data-has-video') === '1';
@@ -278,10 +424,7 @@ $first_has_video = $first_video !== '';
             var p = section.querySelector('.slte-panel[data-panel="' + idx + '"]');
             if (p) {
                 p.classList.add('slte-panel--active');
-                var thumbSrc = p.getAttribute('data-video-thumb');
-                if (thumb && thumbSrc) {
-                    thumb.src = thumbSrc;
-                }
+                applyPanelThumb(p);
                 syncPlayState(p);
             }
         });
@@ -299,6 +442,8 @@ $first_has_video = $first_video !== '';
         });
     }
 
-    syncPlayState(section.querySelector('.slte-panel--active'));
+    var activePanel = section.querySelector('.slte-panel--active');
+    applyPanelThumb(activePanel);
+    syncPlayState(activePanel);
 }());
 </script>
