@@ -492,7 +492,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
             return chips.map(function(chip) {
                 if (mobile) {
-                    // Soft, slow float on mobile — smaller motion, much lower speed.
+                    // Slow but clearly floating chips on mobile — larger motion, low speed.
                     return {
                         chip: chip,
                         phaseX: Math.random() * Math.PI * 2,
@@ -501,9 +501,9 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
                         speedX: 0.00012 + Math.random() * 0.00008,
                         speedY: 0.0001 + Math.random() * 0.00007,
                         speedRotate: 0.00008 + Math.random() * 0.00005,
-                        amplitudeX: 1.2 + Math.random() * 1.4,
-                        amplitudeY: 1.6 + Math.random() * 1.8,
-                        rotateAmount: 0.12 + Math.random() * 0.18,
+                        amplitudeX: 5 + Math.random() * 4,
+                        amplitudeY: 6 + Math.random() * 5,
+                        rotateAmount: 0.8 + Math.random() * 0.7,
                         mouseStrengthX: 0,
                         mouseStrengthY: 0
                     };
