@@ -55,7 +55,7 @@ $uid = 'slst-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
     #<?php echo $uid; ?> {
         --slst-fz-title: <?php echo (int) ( $settings['fz_title_m'] ?? 26 ); ?>px;
         --slst-fz-num: <?php echo (int) ( $settings['fz_num_m'] ?? 48 ); ?>px;
-        --slst-pad-y: 60px;
+        --slst-pad-y: 35px;
     }
 }
 </style>

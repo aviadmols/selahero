@@ -122,7 +122,7 @@ $first_thumb = ! empty( $tabs ) ? (string) ( $tabs[0]['thumb'] ?? $default_thumb
 @media (max-width: 768px) {
     #<?php echo $uid; ?> {
         --slte-fz-text: <?php echo (int) ( $settings['fz_text_m'] ?? 15 ); ?>px;
-        --slte-pad-y: 50px;
+        --slte-pad-y: 35px;
     }
 }
 </style>

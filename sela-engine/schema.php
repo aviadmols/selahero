@@ -249,7 +249,7 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
 @media (max-width: 768px) {
     #<?php echo $uid; ?> {
-        --engine-pad-y: <?php echo (int)($settings['pad_y_m'] ?? 64); ?>px;
+        --engine-pad-y: <?php echo (int)($settings['pad_y_m'] ?? 35); ?>px;
         --engine-title-size: <?php echo (int)($settings['fz_title_m'] ?? 28); ?>px;
         --engine-sub-size: <?php echo (int)($settings['fz_sub_m'] ?? 16); ?>px;
     }
@@ -631,7 +631,7 @@ return array(
             'id' => 'pad_y_m',
             'type' => 'range',
             'label' => 'Section padding — mobile',
-            'default' => 64,
+            'default' => 35,
             'min' => 0,
             'max' => 180,
             'step' => 1,

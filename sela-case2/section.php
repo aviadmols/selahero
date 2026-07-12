@@ -38,7 +38,7 @@ $uid   = 'slc2-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
     #<?php echo $uid; ?> {
         --slc2-fz-title: <?php echo (int) ( $settings['fz_title_m'] ?? 26 ); ?>px;
         --slc2-fz-desc: <?php echo (int) ( $settings['fz_desc_m']  ?? 14 ); ?>px;
-        --slc2-pad-y: 50px;
+        --slc2-pad-y: 35px;
     }
 }
 </style>

@@ -114,7 +114,7 @@ $uid = 'slct-' . esc_attr($section['id'] ?? uniqid('sec', true));
     #<?php echo $uid; ?> {
         --slct-fz-title: <?php echo (int)($settings['fz_title_m'] ?? 26); ?>px;
         --slct-fz-quote: <?php echo (int)($settings['fz_quote_m'] ?? 14); ?>px;
-        --slct-pad-y: 60px;
+        --slct-pad-y: 35px;
     }
 }
 </style>

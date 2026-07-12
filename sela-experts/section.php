@@ -138,7 +138,7 @@ $uid = 'slex-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
 @media (max-width: 768px) {
     #<?php echo $uid; ?> {
-        --experts-pad-y: <?php echo (int)($settings['pad_y_m'] ?? 60); ?>px;
+        --experts-pad-y: <?php echo (int)($settings['pad_y_m'] ?? 35); ?>px;
         --experts-title-size: <?php echo (int)($settings['fz_title_m'] ?? 28); ?>px;
         --experts-desc-size: <?php echo (int)($settings['fz_desc_m'] ?? 16); ?>px;
     }

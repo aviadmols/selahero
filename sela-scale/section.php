@@ -36,7 +36,7 @@ $uid   = 'slsc-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
     #<?php echo $uid; ?> {
         --slsc-fz-find: <?php echo (int) ( $settings['fz_find_m']  ?? 16 ); ?>px;
         --slsc-fz-title: <?php echo (int) ( $settings['fz_title_m'] ?? 30 ); ?>px;
-        --slsc-pad-y: 40px;
+        --slsc-pad-y: 35px;
     }
 }
 </style>

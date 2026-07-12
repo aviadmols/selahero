@@ -34,7 +34,7 @@ $uid = 'slpr-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
     #<?php echo $uid; ?> {
         --slpr-fz-h: <?php echo (int) ( $settings['fz_h_m'] ?? 26 ); ?>px;
         --slpr-fz-sub: <?php echo (int) ( $settings['fz_sub_m'] ?? 15 ); ?>px;
-        --slpr-pad-y: 60px;
+        --slpr-pad-y: 35px;
     }
 }
 </style>

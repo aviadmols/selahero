@@ -16,7 +16,7 @@ $logo_h_m  = (int) ( $settings['logo_height_m']  ?? 20 );
 $badge_h_d = (int) ( $settings['badge_height_d'] ?? 107 );
 $badge_h_m = (int) ( $settings['badge_height_m'] ?? 44 );
 $pad_d     = (int) ( $settings['pad_y_d'] ?? 60 );
-$pad_m     = (int) ( $settings['pad_y_m'] ?? 40 );
+$pad_m     = (int) ( $settings['pad_y_m'] ?? 35 );
 
 $media_base = '';
 if ( ( $section['source'] ?? '' ) === 'uploads' ) {

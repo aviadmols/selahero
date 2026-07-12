@@ -333,7 +333,7 @@ $uid = 'slbl-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
 @media (max-width: 768px) {
     #<?php echo $uid; ?> {
-        --blog-pad-y: <?php echo (int)($settings['pad_y_m'] ?? 56); ?>px;
+        --blog-pad-y: <?php echo (int)($settings['pad_y_m'] ?? 35); ?>px;
         --blog-title-size: <?php echo (int)($settings['fz_title_m'] ?? 30); ?>px;
     }
 }

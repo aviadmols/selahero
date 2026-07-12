@@ -288,7 +288,7 @@ return array (
       'id' => 'pad_y_m',
       'type' => 'range',
       'label' => 'Section padding-y — mobile (px)',
-      'default' => 40,
+      'default' => 35,
       'min' => 0,
       'max' => 120,
       'step' => 1,

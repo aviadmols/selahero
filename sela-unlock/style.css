@@ -62,8 +62,8 @@
 	}
 
  .slun-section {
-padding-bottom: 100px;
-	 padding-top: 32px;
+        padding-top: 35px;
+        padding-bottom: 35px;
 	}
     .slun-wrap { padding: 0 20px; }
     .slun-right { padding: 0; background: none; }

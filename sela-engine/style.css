@@ -437,10 +437,8 @@
 
 @media (max-width: 768px) {
     .engine__top-pin {
-        padding: var(--engine-pad-y, 64px) 0;
+        padding: 35px 0;
     }
-
-  .engine__top-pin{padding:60px 0}
 
   .hero-section--sela-engine .engine__title {
         font-size: 25px;
@@ -545,7 +543,8 @@
 
     .engine__second {
         margin-top: 0;
-        padding-top: calc(36px + 90px);
+        padding-top: calc(35px + 90px);
+        padding-bottom: 35px;
     }
 
     .engine__robot {

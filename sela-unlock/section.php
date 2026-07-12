@@ -36,7 +36,7 @@ $uid   = 'slun-' . esc_attr( $section['id'] ?? uniqid( 'sec', true ) );
 @media (max-width: 768px) {
     #<?php echo $uid; ?> {
         --slun-fz-title: <?php echo (int) ( $settings['fz_title_m'] ?? 28 ); ?>px;
-        --slun-pad-y: 60px;
+        --slun-pad-y: 35px;
     }
 }
 </style>
