@@ -483,24 +483,56 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         let targetMouseX = 0;
         let targetMouseY = 0;
 
-        const chipStates = chips.map(function(chip) {
-            return {
-                chip: chip,
-                phaseX: Math.random() * Math.PI * 2,
-                phaseY: Math.random() * Math.PI * 2,
-                phaseRotate: Math.random() * Math.PI * 2,
-                speedX: 0.00055 + Math.random() * 0.00035,
-                speedY: 0.00045 + Math.random() * 0.00035,
-                speedRotate: 0.00035 + Math.random() * 0.00025,
-                amplitudeX: 3 + Math.random() * 4,
-                amplitudeY: 4 + Math.random() * 5,
-                rotateAmount: 0.35 + Math.random() * 0.55,
-                mouseStrengthX: 2.5 + Math.random() * 2.5,
-                mouseStrengthY: 2 + Math.random() * 2.5
-            };
-        });
+        const isMobile = function() {
+            return window.matchMedia('(max-width: 768px)').matches;
+        };
+
+        const buildChipStates = function() {
+            const mobile = isMobile();
+
+            return chips.map(function(chip) {
+                if (mobile) {
+                    // Soft, slow float on mobile — smaller motion, much lower speed.
+                    return {
+                        chip: chip,
+                        phaseX: Math.random() * Math.PI * 2,
+                        phaseY: Math.random() * Math.PI * 2,
+                        phaseRotate: Math.random() * Math.PI * 2,
+                        speedX: 0.00012 + Math.random() * 0.00008,
+                        speedY: 0.0001 + Math.random() * 0.00007,
+                        speedRotate: 0.00008 + Math.random() * 0.00005,
+                        amplitudeX: 1.2 + Math.random() * 1.4,
+                        amplitudeY: 1.6 + Math.random() * 1.8,
+                        rotateAmount: 0.12 + Math.random() * 0.18,
+                        mouseStrengthX: 0,
+                        mouseStrengthY: 0
+                    };
+                }
+
+                return {
+                    chip: chip,
+                    phaseX: Math.random() * Math.PI * 2,
+                    phaseY: Math.random() * Math.PI * 2,
+                    phaseRotate: Math.random() * Math.PI * 2,
+                    speedX: 0.00055 + Math.random() * 0.00035,
+                    speedY: 0.00045 + Math.random() * 0.00035,
+                    speedRotate: 0.00035 + Math.random() * 0.00025,
+                    amplitudeX: 3 + Math.random() * 4,
+                    amplitudeY: 4 + Math.random() * 5,
+                    rotateAmount: 0.35 + Math.random() * 0.55,
+                    mouseStrengthX: 2.5 + Math.random() * 2.5,
+                    mouseStrengthY: 2 + Math.random() * 2.5
+                };
+            });
+        };
+
+        let chipStates = buildChipStates();
 
         chipsArea.addEventListener('mousemove', function(event) {
+            if (isMobile()) {
+                return;
+            }
+
             const rect = chipsArea.getBoundingClientRect();
 
             targetMouseX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
@@ -512,9 +544,19 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             targetMouseY = 0;
         });
 
+        window.addEventListener('resize', function() {
+            chipStates = buildChipStates();
+            targetMouseX = 0;
+            targetMouseY = 0;
+            mouseX = 0;
+            mouseY = 0;
+        });
+
         function animateChips(time) {
-            mouseX += (targetMouseX - mouseX) * 0.045;
-            mouseY += (targetMouseY - mouseY) * 0.045;
+            const ease = isMobile() ? 0.02 : 0.045;
+
+            mouseX += (targetMouseX - mouseX) * ease;
+            mouseY += (targetMouseY - mouseY) * ease;
 
             chipStates.forEach(function(state) {
                 const floatX = Math.sin(time * state.speedX + state.phaseX) * state.amplitudeX;
