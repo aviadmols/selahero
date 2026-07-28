@@ -26,11 +26,7 @@ width: 105px;
 .slte-main { display: grid; grid-template-columns: minmax(0, 612px) 1fr; gap: 28px; /* reduced 30% per design comment #36 */ align-items: start; margin-bottom: 48px; }
 .slte-video { position: relative; border-radius: 10px; /* halved per design comment #34 */ overflow: hidden; aspect-ratio: 16/9; cursor: pointer; }
 .slte-video-thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
-.slte-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.15); border: 0; cursor: pointer; }
-.slte-play img { width: 80px; height: 80px; }
 .slte-video--no-play { cursor: default; }
-.slte-video--no-play .slte-play,
-.slte-play[hidden] { display: none !important; }
 .slte-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 10px; /* halved per design comment #34 */ display: none; }
 .slte-native {
     position: absolute;
@@ -42,12 +38,58 @@ width: 105px;
     display: none;
     background: #000;
 }
-.slte-video--playing .slte-video-thumb,
-.slte-video--playing .slte-play { display: none; }
+.slte-video--playing .slte-video-thumb { display: none; }
 .slte-video--playing .slte-iframe,
 .slte-video--playing .slte-native { display: none; }
-.slte-video--playing.slte-video--iframe .slte-iframe { display: block; }
+.slte-video--playing.slte-video--iframe .slte-iframe {
+    display: block;
+    pointer-events: none; /* כדי ש-hover על ההורה יעבוד מעל iframe */
+}
 .slte-video--playing.slte-video--mp4 .slte-native { display: block; }
+
+.slte-controls {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: rgba(0, 0, 0, .28);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+}
+.slte-controls[hidden] { display: none !important; }
+.slte-video--playing:hover .slte-controls,
+.slte-video--playing.slte-video--show-controls .slte-controls {
+    opacity: 1;
+    pointer-events: auto;
+}
+@media (hover: none) {
+    .slte-video--playing .slte-controls {
+        opacity: 1;
+        pointer-events: auto;
+        background: linear-gradient(to top, rgba(0,0,0,.45), transparent 45%);
+        align-items: flex-end;
+        padding-bottom: 16px;
+    }
+}
+.slte-ctrl {
+    width: 56px;
+    height: 56px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(28, 28, 28, .72);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+}
+.slte-ctrl:hover { background: rgba(28, 28, 28, .9); transform: scale(1.04); }
+.slte-ctrl__icon[hidden] { display: none !important; }
 
 .slte-panels { position: relative; max-width: 100%; }
 .slte-panel { display: none; flex-direction: column; gap: 24px; /* reduced 20% per design comment #35 */ animation: slteFadeIn .3s ease; font-family: "Lexend", Sans-serif; }

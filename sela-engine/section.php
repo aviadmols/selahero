@@ -591,9 +591,9 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         return;
     }
 
-    // One group per card, then icons together, then column texts together.
+    // One group per card (bottom → top), then icons together, then column texts together.
     // Each group fades in on its own scroll step while the area stays pinned.
-    const groups = cards.map(function(card) { return [card]; });
+    const groups = cards.slice().reverse().map(function(card) { return [card]; });
 
     if (icons.length) {
         groups.push(icons);

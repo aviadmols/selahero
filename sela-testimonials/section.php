@@ -263,11 +263,29 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
             <div class="slte-video<?php echo $first_has_video ? '' : ' slte-video--no-play'; ?>"
                  data-default-thumb="<?php echo esc_url( $default_thumb ); ?>">
                 <img src="<?php echo $first_thumb !== '' ? esc_url( $first_thumb ) : ''; ?>" alt="" class="slte-video-thumb"<?php echo $first_mp4_thumb ? ' data-awaiting-mp4="1"' : ''; ?>>
-                <button class="slte-play" aria-label="Play" type="button" hidden>
-                    <img src="<?php echo $get_media( 'play-btn.svg' ); ?>" alt="">
-                </button>
                 <video class="slte-native" muted playsinline loop preload="metadata"></video>
                 <iframe class="slte-iframe" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                <div class="slte-controls" hidden>
+                    <button class="slte-ctrl slte-ctrl--play" type="button" aria-label="Pause">
+                        <svg class="slte-ctrl__icon slte-ctrl__icon--pause" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+                            <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+                        </svg>
+                        <svg class="slte-ctrl__icon slte-ctrl__icon--play" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                            <path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <button class="slte-ctrl slte-ctrl--sound" type="button" aria-label="Unmute">
+                        <svg class="slte-ctrl__icon slte-ctrl__icon--muted" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M4 10v4h3l5 4V6L7 10H4Z" fill="currentColor"/>
+                            <path d="M16.5 8.5l5 5M21.5 8.5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        </svg>
+                        <svg class="slte-ctrl__icon slte-ctrl__icon--unmuted" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                            <path d="M4 10v4h3l5 4V6L7 10H4Z" fill="currentColor"/>
+                            <path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -283,10 +301,15 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
     var iframe = section.querySelector('.slte-iframe');
     var native = section.querySelector('.slte-native');
     var thumb  = section.querySelector('.slte-video-thumb');
-    var play   = section.querySelector('.slte-play');
+    var controls = section.querySelector('.slte-controls');
+    var btnPlay = section.querySelector('.slte-ctrl--play');
+    var btnSound = section.querySelector('.slte-ctrl--sound');
     var defaultThumb = video ? (video.getAttribute('data-default-thumb') || '') : '';
     var mp4Cache = {};
     var captureToken = 0;
+    var iframeMuted = true;
+    var iframePaused = false;
+    var iframeBaseSrc = '';
 
     function applyFallbackThumb() {
         if (thumb && defaultThumb) {
@@ -400,6 +423,72 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
         thumb.removeAttribute('data-awaiting-mp4');
     }
 
+    function setParam(u, key, value) {
+        var re = new RegExp('([?&])' + key + '=[^&]*');
+        if (re.test(u)) {
+            return u.replace(re, '$1' + key + '=' + value);
+        }
+        return u + (u.indexOf('?') >= 0 ? '&' : '?') + key + '=' + value;
+    }
+
+    function toEmbedUrl(url) {
+        var src = String(url || '');
+        if (!src) return '';
+
+        var yt = src.match(/(?:youtube\.com\/watch\?.*?v=|youtu\.be\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{6,})/);
+        if (yt) {
+            src = 'https://www.youtube.com/embed/' + yt[1];
+        }
+
+        var vm = src.match(/(?:vimeo\.com\/(?:video\/)?)(\d+)/);
+        if (vm && src.indexOf('player.vimeo.com') === -1) {
+            src = 'https://player.vimeo.com/video/' + vm[1];
+        }
+        return src;
+    }
+
+    function withAutoplay(url, muted) {
+        var src = toEmbedUrl(url);
+        if (!src) return '';
+
+        src = setParam(src, 'autoplay', '1');
+        src = setParam(src, 'mute', muted ? '1' : '0');
+        src = setParam(src, 'muted', muted ? '1' : '0');
+        if (src.indexOf('youtube.com') !== -1 || src.indexOf('youtu.be') !== -1) {
+            src = setParam(src, 'playsinline', '1');
+            src = setParam(src, 'rel', '0');
+        }
+        return src;
+    }
+
+    function syncControlsUi() {
+        if (!controls) return;
+
+        var isPlaying = video && video.classList.contains('slte-video--playing');
+        controls.hidden = !isPlaying;
+        if (!isPlaying) return;
+
+        var isMp4 = video.classList.contains('slte-video--mp4');
+        var paused = isMp4 && native ? native.paused : iframePaused;
+        var muted = isMp4 && native ? !!native.muted : iframeMuted;
+
+        if (btnPlay) {
+            var playIcon = btnPlay.querySelector('.slte-ctrl__icon--play');
+            var pauseIcon = btnPlay.querySelector('.slte-ctrl__icon--pause');
+            if (playIcon) playIcon.hidden = !paused;
+            if (pauseIcon) pauseIcon.hidden = paused;
+            btnPlay.setAttribute('aria-label', paused ? 'Play' : 'Pause');
+        }
+
+        if (btnSound) {
+            var mutedIcon = btnSound.querySelector('.slte-ctrl__icon--muted');
+            var unmutedIcon = btnSound.querySelector('.slte-ctrl__icon--unmuted');
+            if (mutedIcon) mutedIcon.hidden = !muted;
+            if (unmutedIcon) unmutedIcon.hidden = muted;
+            btnSound.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+        }
+    }
+
     function stopMedia() {
         if (iframe) iframe.src = '';
         if (native) {
@@ -407,43 +496,13 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
             native.removeAttribute('src');
             native.load();
         }
+        iframeMuted = true;
+        iframePaused = false;
+        iframeBaseSrc = '';
         if (video) {
-            video.classList.remove('slte-video--playing', 'slte-video--mp4', 'slte-video--iframe');
+            video.classList.remove('slte-video--playing', 'slte-video--mp4', 'slte-video--iframe', 'slte-video--show-controls');
         }
-    }
-
-    function withMutedAutoplay(url) {
-        var src = String(url || '');
-        if (!src) return '';
-
-        // YouTube watch / youtu.be → embed
-        var yt = src.match(/(?:youtube\.com\/watch\?.*?v=|youtu\.be\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{6,})/);
-        if (yt) {
-            src = 'https://www.youtube.com/embed/' + yt[1];
-        }
-
-        // Vimeo page → player
-        var vm = src.match(/(?:vimeo\.com\/(?:video\/)?)(\d+)/);
-        if (vm && src.indexOf('player.vimeo.com') === -1) {
-            src = 'https://player.vimeo.com/video/' + vm[1];
-        }
-
-        function setParam(u, key, value) {
-            var re = new RegExp('([?&])' + key + '=[^&]*');
-            if (re.test(u)) {
-                return u.replace(re, '$1' + key + '=' + value);
-            }
-            return u + (u.indexOf('?') >= 0 ? '&' : '?') + key + '=' + value;
-        }
-
-        src = setParam(src, 'autoplay', '1');
-        src = setParam(src, 'mute', '1');
-        src = setParam(src, 'muted', '1');
-        if (src.indexOf('youtube.com') !== -1 || src.indexOf('youtu.be') !== -1) {
-            src = setParam(src, 'playsinline', '1');
-            src = setParam(src, 'rel', '0');
-        }
-        return src;
+        syncControlsUi();
     }
 
     function startMuted(panel) {
@@ -465,18 +524,24 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
             native.loop = true;
             native.src = src;
             video.classList.add('slte-video--playing', 'slte-video--mp4');
+            syncControlsUi();
             var playPromise = native.play();
             if (playPromise && typeof playPromise.catch === 'function') {
                 playPromise.catch(function () {
                     video.classList.remove('slte-video--playing', 'slte-video--mp4');
+                    syncControlsUi();
                 });
             }
             return;
         }
 
         if (iframe) {
-            iframe.src = withMutedAutoplay(src);
+            iframeMuted = true;
+            iframePaused = false;
+            iframeBaseSrc = src;
+            iframe.src = withAutoplay(src, true);
             video.classList.add('slte-video--playing', 'slte-video--iframe');
+            syncControlsUi();
         }
     }
 
@@ -487,15 +552,80 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
         if (video) {
             video.classList.toggle('slte-video--no-play', !hasVideo || !src);
         }
-        if (play) {
-            play.hidden = true;
-        }
 
         if (hasVideo && src) {
             startMuted(panel);
         } else {
             stopMedia();
         }
+    }
+
+    function togglePlay() {
+        if (!video || !video.classList.contains('slte-video--playing')) return;
+
+        if (video.classList.contains('slte-video--mp4') && native) {
+            if (native.paused) {
+                native.play();
+            } else {
+                native.pause();
+            }
+            syncControlsUi();
+            return;
+        }
+
+        if (video.classList.contains('slte-video--iframe') && iframe && iframeBaseSrc) {
+            if (!iframePaused) {
+                iframePaused = true;
+                iframe.src = '';
+            } else {
+                iframePaused = false;
+                iframe.src = withAutoplay(iframeBaseSrc, iframeMuted);
+            }
+            syncControlsUi();
+        }
+    }
+
+    function toggleSound() {
+        if (!video || !video.classList.contains('slte-video--playing')) return;
+
+        if (video.classList.contains('slte-video--mp4') && native) {
+            native.muted = !native.muted;
+            if (native.muted) {
+                native.setAttribute('muted', '');
+            } else {
+                native.removeAttribute('muted');
+            }
+            syncControlsUi();
+            return;
+        }
+
+        if (video.classList.contains('slte-video--iframe') && iframe && iframeBaseSrc) {
+            iframeMuted = !iframeMuted;
+            if (!iframePaused) {
+                iframe.src = withAutoplay(iframeBaseSrc, iframeMuted);
+            }
+            syncControlsUi();
+        }
+    }
+
+    if (btnPlay) {
+        btnPlay.addEventListener('click', function (e) {
+            e.stopPropagation();
+            togglePlay();
+        });
+    }
+
+    if (btnSound) {
+        btnSound.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggleSound();
+        });
+    }
+
+    if (native) {
+        native.addEventListener('play', syncControlsUi);
+        native.addEventListener('pause', syncControlsUi);
+        native.addEventListener('volumechange', syncControlsUi);
     }
 
     tabs.forEach(function (btn, idx) {
