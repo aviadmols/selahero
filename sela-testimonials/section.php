@@ -268,31 +268,31 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
                 <div class="slte-controls" hidden>
                     <div class="slte-controls__bar">
                         <button class="slte-ctrl slte-ctrl--play" type="button" aria-label="Pause">
-                            <svg class="slte-ctrl__icon slte-ctrl__icon--pause" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--pause" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                 <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/>
                                 <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>
                             </svg>
-                            <svg class="slte-ctrl__icon slte-ctrl__icon--play" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--play" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
                                 <path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor"/>
                             </svg>
                         </button>
                         <span class="slte-controls__time" data-slte-time>0:00 / 0:00</span>
                         <div class="slte-controls__spacer" aria-hidden="true"></div>
                         <button class="slte-ctrl slte-ctrl--sound" type="button" aria-label="Unmute">
-                            <svg class="slte-ctrl__icon slte-ctrl__icon--muted" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--muted" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                 <path d="M4 10v4h3l5 4V6L7 10H4Z" fill="currentColor"/>
                                 <path d="M16.5 8.5l5 5M21.5 8.5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
                             </svg>
-                            <svg class="slte-ctrl__icon slte-ctrl__icon--unmuted" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--unmuted" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
                                 <path d="M4 10v4h3l5 4V6L7 10H4Z" fill="currentColor"/>
                                 <path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
                             </svg>
                         </button>
                         <button class="slte-ctrl slte-ctrl--fs" type="button" aria-label="Full screen">
-                            <svg class="slte-ctrl__icon slte-ctrl__icon--expand" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--expand" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                 <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <svg class="slte-ctrl__icon slte-ctrl__icon--compress" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--compress" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
                                 <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
