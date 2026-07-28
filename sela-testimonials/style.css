@@ -49,13 +49,15 @@ width: 105px;
 
 .slte-controls {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 4;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    background: rgba(0, 0, 0, .28);
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 10px 8px;
+    background: linear-gradient(to top, rgba(0, 0, 0, .72) 0%, rgba(0, 0, 0, .35) 55%, transparent 100%);
     opacity: 0;
     pointer-events: none;
     transition: opacity .25s ease;
@@ -70,26 +72,121 @@ width: 105px;
     .slte-video--playing .slte-controls {
         opacity: 1;
         pointer-events: auto;
-        background: linear-gradient(to top, rgba(0,0,0,.45), transparent 45%);
-        align-items: flex-end;
-        padding-bottom: 16px;
     }
 }
+.slte-controls__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    color: #fff;
+}
+.slte-controls__time {
+    font-family: "Lexend", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    opacity: .95;
+    user-select: none;
+}
+.slte-controls__spacer { flex: 1; min-width: 8px; }
 .slte-ctrl {
-    width: 56px;
-    height: 56px;
+    width: 36px;
+    height: 36px;
     border: 0;
-    border-radius: 50%;
-    background: rgba(28, 28, 28, .72);
+    border-radius: 0;
+    background: transparent;
     color: #fff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background .2s, transform .2s;
+    flex-shrink: 0;
+    transition: opacity .2s;
 }
-.slte-ctrl:hover { background: rgba(28, 28, 28, .9); transform: scale(1.04); }
+.slte-ctrl:hover { opacity: .85; }
 .slte-ctrl__icon[hidden] { display: none !important; }
+.slte-controls__progress {
+    position: relative;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+}
+.slte-controls--iframe .slte-controls__progress,
+.slte-controls--iframe .slte-controls__time {
+    visibility: hidden;
+    pointer-events: none;
+}
+.slte-controls__progress-track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .35);
+    overflow: hidden;
+    pointer-events: none;
+}
+.slte-controls__progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    border-radius: 2px;
+}
+.slte-controls__seek {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 14px;
+    margin: 0;
+    padding: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    cursor: pointer;
+}
+.slte-controls__seek::-webkit-slider-runnable-track {
+    height: 3px;
+    background: transparent;
+}
+.slte-controls__seek::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    margin-top: -4.5px;
+    border-radius: 50%;
+    background: #fff;
+    border: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+}
+.slte-controls__seek::-moz-range-track {
+    height: 3px;
+    background: transparent;
+    border: 0;
+}
+.slte-controls__seek::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+}
+
+.slte-video:fullscreen,
+.slte-video:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    background: #000;
+}
+.slte-video:fullscreen .slte-controls,
+.slte-video:-webkit-full-screen .slte-controls {
+    opacity: 1;
+    pointer-events: auto;
+}
 
 .slte-panels { position: relative; max-width: 100%; }
 .slte-panel { display: none; flex-direction: column; gap: 24px; /* reduced 20% per design comment #35 */ animation: slteFadeIn .3s ease; font-family: "Lexend", Sans-serif; }

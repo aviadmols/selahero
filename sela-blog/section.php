@@ -232,7 +232,6 @@ $demo_cards = function () use ($get_media): array {
 
 $cards_from_wp = function () use (
     $settings,
-    $slbl_get_event_display_date,
     $slbl_post_to_card
 ): array {
     if (!function_exists('wp_date')) {
@@ -248,7 +247,7 @@ $cards_from_wp = function () use (
         'post' => $media_label,
     );
 
-    // newest content overall (events + posts) by publish date, not one per category
+    // Strict: 3 newest by post creation date (post_date), across content types.
     $query = new WP_Query(array(
         'post_type' => array('event', 'media-news', 'post'),
         'posts_per_page' => 3,
@@ -256,6 +255,8 @@ $cards_from_wp = function () use (
         'orderby' => 'date',
         'order' => 'DESC',
         'ignore_sticky_posts' => true,
+        'suppress_filters' => true,
+        'no_found_rows' => true,
     ));
 
     if (!$query->have_posts()) {
@@ -264,32 +265,40 @@ $cards_from_wp = function () use (
         return array();
     }
 
+    $posts = $query->posts;
+    wp_reset_postdata();
+
+    usort($posts, static function ($a, $b): int {
+        $ta = ($a instanceof WP_Post) ? strtotime((string) $a->post_date_gmt) : 0;
+        $tb = ($b instanceof WP_Post) ? strtotime((string) $b->post_date_gmt) : 0;
+
+        if ($ta === $tb) {
+            $ida = ($a instanceof WP_Post) ? (int) $a->ID : 0;
+            $idb = ($b instanceof WP_Post) ? (int) $b->ID : 0;
+
+            return $idb <=> $ida;
+        }
+
+        return $tb <=> $ta;
+    });
+
+    $posts = array_slice($posts, 0, 3);
     $items = array();
 
-    while ($query->have_posts()) {
-        $query->the_post();
-        $post = get_post();
-
+    foreach ($posts as $post) {
         if (!$post instanceof WP_Post) {
             continue;
         }
 
         $label = isset($type_labels[$post->post_type]) ? $type_labels[$post->post_type] : $media_label;
 
-        $date_override = '';
-
-        if ($post->post_type === 'event') {
-            $date_override = $slbl_get_event_display_date((int) $post->ID);
-        }
-
-        $card = $slbl_post_to_card($post, $label, $date_override);
+        // Display the creation/publish date used for sorting (not event meta date).
+        $card = $slbl_post_to_card($post, $label, get_the_date('j M Y', $post));
 
         if ($card !== null) {
             $items[] = $card;
         }
     }
-
-    wp_reset_postdata();
 
     return $items;
 };
@@ -310,6 +319,7 @@ if (empty($cards)) {
     $cards = $demo_cards();
 }
 
+$cards = array_slice(array_values($cards), 0, 3);
 $track_count = max(1, min(3, count($cards)));
 
 $uid = 'slbl-' . esc_attr($section['id'] ?? uniqid('sec', true));

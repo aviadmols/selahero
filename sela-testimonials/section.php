@@ -266,25 +266,43 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
                 <video class="slte-native" muted playsinline loop preload="metadata"></video>
                 <iframe class="slte-iframe" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
                 <div class="slte-controls" hidden>
-                    <button class="slte-ctrl slte-ctrl--play" type="button" aria-label="Pause">
-                        <svg class="slte-ctrl__icon slte-ctrl__icon--pause" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/>
-                            <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>
-                        </svg>
-                        <svg class="slte-ctrl__icon slte-ctrl__icon--play" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
-                            <path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor"/>
-                        </svg>
-                    </button>
-                    <button class="slte-ctrl slte-ctrl--sound" type="button" aria-label="Unmute">
-                        <svg class="slte-ctrl__icon slte-ctrl__icon--muted" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M4 10v4h3l5 4V6L7 10H4Z" fill="currentColor"/>
-                            <path d="M16.5 8.5l5 5M21.5 8.5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                        </svg>
-                        <svg class="slte-ctrl__icon slte-ctrl__icon--unmuted" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
-                            <path d="M4 10v4h3l5 4V6L7 10H4Z" fill="currentColor"/>
-                            <path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
-                        </svg>
-                    </button>
+                    <div class="slte-controls__bar">
+                        <button class="slte-ctrl slte-ctrl--play" type="button" aria-label="Pause">
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--pause" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+                                <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>
+                            </svg>
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--play" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                                <path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                        <span class="slte-controls__time" data-slte-time>0:00 / 0:00</span>
+                        <div class="slte-controls__spacer" aria-hidden="true"></div>
+                        <button class="slte-ctrl slte-ctrl--sound" type="button" aria-label="Unmute">
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--muted" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M4 10v4h3l5 4V6L7 10H4Z" fill="currentColor"/>
+                                <path d="M16.5 8.5l5 5M21.5 8.5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--unmuted" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                                <path d="M4 10v4h3l5 4V6L7 10H4Z" fill="currentColor"/>
+                                <path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                            </svg>
+                        </button>
+                        <button class="slte-ctrl slte-ctrl--fs" type="button" aria-label="Full screen">
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--expand" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <svg class="slte-ctrl__icon slte-ctrl__icon--compress" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+                                <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="slte-controls__progress" data-slte-progress>
+                        <div class="slte-controls__progress-track">
+                            <div class="slte-controls__progress-fill" data-slte-progress-fill></div>
+                        </div>
+                        <input class="slte-controls__seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek" data-slte-seek>
+                    </div>
                 </div>
             </div>
         </div>
@@ -304,12 +322,72 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
     var controls = section.querySelector('.slte-controls');
     var btnPlay = section.querySelector('.slte-ctrl--play');
     var btnSound = section.querySelector('.slte-ctrl--sound');
+    var btnFs = section.querySelector('.slte-ctrl--fs');
+    var timeEl = section.querySelector('[data-slte-time]');
+    var progressFill = section.querySelector('[data-slte-progress-fill]');
+    var seekEl = section.querySelector('[data-slte-seek]');
     var defaultThumb = video ? (video.getAttribute('data-default-thumb') || '') : '';
     var mp4Cache = {};
     var captureToken = 0;
     var iframeMuted = true;
     var iframePaused = false;
     var iframeBaseSrc = '';
+    var seeking = false;
+
+    function formatTime(sec) {
+        if (!isFinite(sec) || sec < 0) sec = 0;
+        sec = Math.floor(sec);
+        var m = Math.floor(sec / 60);
+        var s = sec % 60;
+        return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function syncProgressUi() {
+        if (!native || !video || !video.classList.contains('slte-video--mp4')) {
+            if (timeEl) timeEl.textContent = '0:00 / 0:00';
+            if (progressFill) progressFill.style.width = '0%';
+            if (seekEl && !seeking) seekEl.value = '0';
+            return;
+        }
+
+        var dur = native.duration;
+        var cur = native.currentTime || 0;
+        if (!isFinite(dur) || dur <= 0) {
+            if (timeEl) timeEl.textContent = formatTime(cur) + ' / 0:00';
+            return;
+        }
+
+        if (timeEl) timeEl.textContent = formatTime(cur) + ' / ' + formatTime(dur);
+        var pct = (cur / dur) * 100;
+        if (progressFill) progressFill.style.width = pct + '%';
+        if (seekEl && !seeking) seekEl.value = String(Math.round((cur / dur) * 1000));
+    }
+
+    function isFullscreen() {
+        var el = document.fullscreenElement || document.webkitFullscreenElement;
+        return !!(video && el && (el === video || video.contains(el)));
+    }
+
+    function syncFsUi() {
+        if (!btnFs) return;
+        var on = isFullscreen();
+        var expand = btnFs.querySelector('.slte-ctrl__icon--expand');
+        var compress = btnFs.querySelector('.slte-ctrl__icon--compress');
+        if (expand) expand.hidden = on;
+        if (compress) compress.hidden = !on;
+        btnFs.setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
+    }
+
+    function toggleFullscreen() {
+        if (!video) return;
+        if (isFullscreen()) {
+            var exit = document.exitFullscreen || document.webkitExitFullscreen;
+            if (exit) exit.call(document);
+            return;
+        }
+        var req = video.requestFullscreen || video.webkitRequestFullscreen;
+        if (req) req.call(video);
+    }
 
     function applyFallbackThumb() {
         if (thumb && defaultThumb) {
@@ -466,11 +544,16 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
 
         var isPlaying = video && video.classList.contains('slte-video--playing');
         controls.hidden = !isPlaying;
-        if (!isPlaying) return;
+        if (!isPlaying) {
+            syncProgressUi();
+            return;
+        }
 
         var isMp4 = video.classList.contains('slte-video--mp4');
         var paused = isMp4 && native ? native.paused : iframePaused;
         var muted = isMp4 && native ? !!native.muted : iframeMuted;
+
+        controls.classList.toggle('slte-controls--iframe', !isMp4);
 
         if (btnPlay) {
             var playIcon = btnPlay.querySelector('.slte-ctrl__icon--play');
@@ -487,6 +570,9 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
             if (unmutedIcon) unmutedIcon.hidden = muted;
             btnSound.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
         }
+
+        syncProgressUi();
+        syncFsUi();
     }
 
     function stopMedia() {
@@ -622,11 +708,51 @@ if ( $first_thumb === '' && ! $first_mp4_thumb ) {
         });
     }
 
+    if (btnFs) {
+        btnFs.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggleFullscreen();
+        });
+    }
+
+    if (seekEl) {
+        seekEl.addEventListener('pointerdown', function (e) {
+            e.stopPropagation();
+            seeking = true;
+        });
+        seekEl.addEventListener('input', function (e) {
+            e.stopPropagation();
+            if (!native || !video || !video.classList.contains('slte-video--mp4')) return;
+            var dur = native.duration;
+            if (!isFinite(dur) || dur <= 0) return;
+            var pct = Number(seekEl.value) / 1000;
+            if (progressFill) progressFill.style.width = (pct * 100) + '%';
+            if (timeEl) timeEl.textContent = formatTime(pct * dur) + ' / ' + formatTime(dur);
+        });
+        function commitSeek(e) {
+            if (e) e.stopPropagation();
+            seeking = false;
+            if (!native || !video || !video.classList.contains('slte-video--mp4')) return;
+            var dur = native.duration;
+            if (!isFinite(dur) || dur <= 0) return;
+            native.currentTime = (Number(seekEl.value) / 1000) * dur;
+            syncProgressUi();
+        }
+        seekEl.addEventListener('change', commitSeek);
+        seekEl.addEventListener('pointerup', commitSeek);
+    }
+
     if (native) {
         native.addEventListener('play', syncControlsUi);
         native.addEventListener('pause', syncControlsUi);
         native.addEventListener('volumechange', syncControlsUi);
+        native.addEventListener('timeupdate', syncProgressUi);
+        native.addEventListener('loadedmetadata', syncProgressUi);
+        native.addEventListener('durationchange', syncProgressUi);
     }
+
+    document.addEventListener('fullscreenchange', syncFsUi);
+    document.addEventListener('webkitfullscreenchange', syncFsUi);
 
     tabs.forEach(function (btn, idx) {
         btn.addEventListener('click', function () {
