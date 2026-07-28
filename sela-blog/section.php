@@ -304,19 +304,22 @@ $cards_from_wp = function () use (
 };
 
 $cards = array();
+$blog_source = 'empty';
 
 if ($source_mode === 'manual') {
     $cards = $cards_from_blocks();
+    $blog_source = 'manual';
 } else {
     $cards = $cards_from_wp();
+    $blog_source = empty($cards) ? 'auto-empty' : 'post_date';
 
-    if (empty($cards)) {
-        $cards = $cards_from_blocks();
-    }
+    // Do not fall back to stale manual/demo cards when auto mode is on —
+    // an empty result should stay empty so deploy/query issues are visible.
 }
 
-if (empty($cards)) {
+if (empty($cards) && $source_mode === 'manual') {
     $cards = $demo_cards();
+    $blog_source = 'demo';
 }
 
 $cards = array_slice(array_values($cards), 0, 3);
@@ -349,12 +352,15 @@ $uid = 'slbl-' . esc_attr($section['id'] ?? uniqid('sec', true));
 }
 </style>
 
-<section class="blog" id="<?php echo $uid; ?>">
+<section class="blog" id="<?php echo $uid; ?>" data-blog-source="<?php echo esc_attr($blog_source); ?>">
     <div class="wrap">
         <<?php echo $tag_title; ?> class="blog__title"><?php echo esc_html($title); ?></<?php echo $tag_title; ?>>
 
         <div class="blog__track-outer">
-            <div class="blog__track blog__track--count-<?php echo (int) $track_count; ?>" data-blog-track>
+            <div class="blog__track blog__track--count-<?php echo (int) $track_count; ?>" data-blog-track data-blog-order="post_date_desc">
+                <?php if (empty($cards)) : ?>
+                    <!-- sela-blog: no published posts found for event/media-news/post -->
+                <?php endif; ?>
                 <?php foreach ($cards as $card) : ?>
                     <?php
                     $card_url = trim((string)($card['url'] ?? ''));
