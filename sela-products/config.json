@@ -1,0 +1,14 @@
+{
+    "type": "sela-products",
+    "label": "Sela — Products / CTA",
+    "category": "content",
+    "contexts": ["page"],
+    "plugin_compatible": true,
+    "has_script": false,
+    "version": "1.1.0",
+    "css_prefix": "slpr-",
+    "media_files": [
+        "product-icon-bag.svg",
+        "product-icon.svg"
+    ]
+}

@@ -2,26 +2,11 @@
 defined('ABSPATH') || exit;
 
 $accent_options = array(
-    array(
-        'value' => 'blue',
-        'label' => 'Blue',
-    ),
-    array(
-        'value' => 'green',
-        'label' => 'Green',
-    ),
-    array(
-        'value' => 'cyan',
-        'label' => 'Cyan',
-    ),
-    array(
-        'value' => 'pink',
-        'label' => 'Pink',
-    ),
-    array(
-        'value' => 'dark',
-        'label' => 'Dark',
-    ),
+    array('value' => 'blue', 'label' => 'Blue'),
+    array('value' => 'green', 'label' => 'Green'),
+    array('value' => 'cyan', 'label' => 'Cyan'),
+    array('value' => 'pink', 'label' => 'Pink'),
+    array('value' => 'dark', 'label' => 'Dark'),
 );
 
 $default_icon = 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-products/media/product-icon-bag.svg';
@@ -74,14 +59,8 @@ return array(
             'label' => 'Font',
             'default' => '\'Lexend\', sans-serif',
             'options' => array(
-                array(
-                    'value' => '\'Lexend\', sans-serif',
-                    'label' => 'Lexend',
-                ),
-                array(
-                    'value' => '\'Inter\', sans-serif',
-                    'label' => 'Inter',
-                ),
+                array('value' => '\'Lexend\', sans-serif', 'label' => 'Lexend'),
+                array('value' => '\'Inter\', sans-serif', 'label' => 'Inter'),
             ),
         ),
         array(
@@ -92,6 +71,7 @@ return array(
             'default' => 38,
             'min' => 16,
             'max' => 80,
+            'step' => 1,
         ),
         array(
             'tab' => 'style',
@@ -101,6 +81,7 @@ return array(
             'default' => 26,
             'min' => 14,
             'max' => 60,
+            'step' => 1,
         ),
         array(
             'tab' => 'style',
@@ -110,6 +91,7 @@ return array(
             'default' => 18,
             'min' => 12,
             'max' => 32,
+            'step' => 1,
         ),
         array(
             'tab' => 'style',
@@ -119,6 +101,7 @@ return array(
             'default' => 15,
             'min' => 12,
             'max' => 24,
+            'step' => 1,
         ),
         array(
             'tab' => 'style',
@@ -128,6 +111,7 @@ return array(
             'default' => 28,
             'min' => 16,
             'max' => 48,
+            'step' => 1,
         ),
         array(
             'tab' => 'style',
@@ -137,43 +121,21 @@ return array(
             'default' => 100,
             'min' => 0,
             'max' => 200,
+            'step' => 1,
         ),
     ),
+    // Same repeater pattern as sela-engine center cards (engine-card).
     'blocks' => array(
         'allowed' => array(
             'product-card',
         ),
-        'min' => 0,
+        'min' => 1,
         'max' => 12,
     ),
     'block_types' => array(
         'product-card' => array(
             'label' => 'Product card',
             'settings' => array(
-                array(
-                    'id' => 'name',
-                    'type' => 'text',
-                    'label' => 'Name',
-                    'default' => 'SavePro',
-                ),
-                array(
-                    'id' => 'desc',
-                    'type' => 'textarea',
-                    'label' => 'Description',
-                    'default' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
-                ),
-                array(
-                    'id' => 'cta',
-                    'type' => 'text',
-                    'label' => 'CTA',
-                    'default' => 'Get Started',
-                ),
-                array(
-                    'id' => 'link',
-                    'type' => 'url',
-                    'label' => 'CTA link',
-                    'default' => '#',
-                ),
                 array(
                     'id' => 'icon',
                     'type' => 'image',
@@ -199,6 +161,30 @@ return array(
                     'step' => 1,
                 ),
                 array(
+                    'id' => 'name',
+                    'type' => 'text',
+                    'label' => 'Title',
+                    'default' => 'SavePro',
+                ),
+                array(
+                    'id' => 'desc',
+                    'type' => 'textarea',
+                    'label' => 'Text',
+                    'default' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
+                ),
+                array(
+                    'id' => 'cta',
+                    'type' => 'text',
+                    'label' => 'Button label',
+                    'default' => 'Get Started',
+                ),
+                array(
+                    'id' => 'link',
+                    'type' => 'url',
+                    'label' => 'Button link',
+                    'default' => '',
+                ),
+                array(
                     'id' => 'accent',
                     'type' => 'select',
                     'label' => 'Accent',
@@ -212,39 +198,39 @@ return array(
         array(
             'type' => 'product-card',
             'settings' => array(
-                'name' => 'SavePro',
-                'desc' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
-                'cta' => 'Get Started',
-                'link' => '#',
                 'icon' => $default_icon,
                 'icon_size_d' => 33,
                 'icon_size_m' => 33,
+                'name' => 'SavePro',
+                'desc' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
+                'cta' => 'Get Started',
+                'link' => '',
                 'accent' => 'blue',
             ),
         ),
         array(
             'type' => 'product-card',
             'settings' => array(
-                'name' => 'SavePro',
-                'desc' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
-                'cta' => 'Get Started',
-                'link' => '#',
                 'icon' => $default_icon,
                 'icon_size_d' => 33,
                 'icon_size_m' => 33,
+                'name' => 'SavePro',
+                'desc' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
+                'cta' => 'Get Started',
+                'link' => '',
                 'accent' => 'green',
             ),
         ),
         array(
             'type' => 'product-card',
             'settings' => array(
-                'name' => 'SavePro',
-                'desc' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
-                'cta' => 'Get Started',
-                'link' => '#',
                 'icon' => $default_icon,
                 'icon_size_d' => 33,
                 'icon_size_m' => 33,
+                'name' => 'SavePro',
+                'desc' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
+                'cta' => 'Get Started',
+                'link' => '',
                 'accent' => 'cyan',
             ),
         ),

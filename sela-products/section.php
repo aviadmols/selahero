@@ -20,6 +20,12 @@ $resolve_icon = static function (string $icon) use ($default_icon): string {
     return $icon !== '' ? esc_url($icon) : $default_icon;
 };
 
+$has_cta_link = static function (string $link): bool {
+    $link = trim($link);
+
+    return $link !== '' && $link !== '#' && strtolower($link) !== 'javascript:void(0)';
+};
+
 $cards = array();
 
 foreach (($blocks ?? array()) as $block) {
@@ -38,7 +44,7 @@ foreach (($blocks ?? array()) as $block) {
         'name' => $name,
         'desc' => (string) ($bs['desc'] ?? ''),
         'cta' => (string) ($bs['cta'] ?? 'Get Started'),
-        'link' => (string) ($bs['link'] ?? '#'),
+        'link' => trim((string) ($bs['link'] ?? '')),
         'icon' => $resolve_icon((string) ($bs['icon'] ?? '')),
         'icon_size_d' => max(16, (int) ($bs['icon_size_d'] ?? 33)),
         'icon_size_m' => max(16, (int) ($bs['icon_size_m'] ?? 33)),
@@ -61,7 +67,7 @@ if (empty($cards)) {
             'name' => $name,
             'desc' => (string) ($settings["card_{$i}_desc"] ?? ''),
             'cta' => (string) ($settings["card_{$i}_cta"] ?? 'Get Started'),
-            'link' => (string) ($settings["card_{$i}_link"] ?? '#'),
+            'link' => trim((string) ($settings["card_{$i}_link"] ?? '')),
             'icon' => $resolve_icon($icon),
             'icon_size_d' => max(16, (int) ($settings["card_{$i}_icon_size_d"] ?? 33)),
             'icon_size_m' => max(16, (int) ($settings["card_{$i}_icon_size_m"] ?? 33)),
@@ -111,8 +117,9 @@ $uid = 'slpr-' . esc_attr($section['id'] ?? uniqid('sec', true));
                 }
                 $icon_d = (int) $card['icon_size_d'];
                 $icon_m = (int) $card['icon_size_m'];
+                $show_cta = $has_cta_link((string) ($card['link'] ?? ''));
                 ?>
-                <div class="slpr-card" style="--slpr-icon-d: <?php echo $icon_d; ?>px; --slpr-icon-m: <?php echo $icon_m; ?>px;">
+                <div class="slpr-card" data-product-card style="--slpr-icon-d: <?php echo $icon_d; ?>px; --slpr-icon-m: <?php echo $icon_m; ?>px;">
                     <div class="slpr-card-content">
                         <?php if (!empty($card['icon'])) : ?>
                             <img src="<?php echo esc_url($card['icon']); ?>" alt="" class="slpr-icon">
@@ -122,7 +129,9 @@ $uid = 'slpr-' . esc_attr($section['id'] ?? uniqid('sec', true));
                             <p class="slpr-desc"><?php echo wp_kses_post($card['desc']); ?></p>
                         <?php endif; ?>
                     </div>
-                    <a href="<?php echo esc_url($card['link'] ?: '#'); ?>" class="slpr-cta"><?php echo esc_html($card['cta'] ?: 'Get Started'); ?></a>
+                    <?php if ($show_cta) : ?>
+                        <a href="<?php echo esc_url($card['link']); ?>" class="slpr-cta"><?php echo esc_html($card['cta'] !== '' ? $card['cta'] : 'Get Started'); ?></a>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         </div>
