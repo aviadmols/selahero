@@ -10,6 +10,7 @@
     color: var(--slpr-text, #1c1c1c);
     text-align: center;
     margin: 0 0 20px;
+    text-transform: capitalize;
 }
 .slpr-sub {
     font-family: "Lexend", Sans-serif;
@@ -43,13 +44,17 @@
     align-items: center;
     width: 100%;
 }
-.slpr-icon { width: 33px; height: 43px; object-fit: contain; }
+.slpr-icon {
+    width: var(--slpr-icon-d, 33px);
+    height: var(--slpr-icon-d, 33px);
+    object-fit: contain;
+}
 .slpr-name {
     font-family: "Lexend", Sans-serif;
     font-size: var(--slpr-fz-name, 28px);
     font-weight: 400;
     line-height: 1.32;
-    text-transform: lowercase;
+    text-transform: capitalize;
     margin: 0;
 }
 .slpr-name--blue  { color: #0071f6; }
@@ -86,6 +91,11 @@
 @media (max-width: 768px)  { 
 .slpr-card {
     gap: 25px;
+	}
+
+	.slpr-icon {
+		width: var(--slpr-icon-m, 33px);
+		height: var(--slpr-icon-m, 33px);
 	}
 
 	.slpr-wrap { padding: 0 20px; } .slpr-grid { flex-direction: column; align-items: center; } }
