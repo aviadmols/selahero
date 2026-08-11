@@ -621,6 +621,9 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         track.appendChild(second);
     }
 
+    let overflowScroll = 0;
+    let takeoverStart = revealDistance + STICKY_HOLD_PX;
+
     function toggleGroup(group, on) {
         group.forEach(function(el) {
             el.classList.toggle('is-revealed', on);
@@ -661,26 +664,47 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             layout.classList.remove('engine--anim');
             revealAll(true);
             clearStyles();
+            overflowScroll = 0;
+            takeoverStart = revealDistance + STICKY_HOLD_PX;
             scrubbing = false;
             return;
         }
 
-        layout.classList.add('engine--anim');
-        revealAll(false);
-
         const vh = window.innerHeight;
         const pinHeight = vh - PIN_OFFSET;
+
+        // Measure the full top-pin content without clipping it to the viewport.
+        topPin.style.position = 'relative';
+        topPin.style.top = '';
+        topPin.style.height = '';
+        topPin.style.overflow = 'visible';
+
+        const contentHeight = topPin.offsetHeight;
+        overflowScroll = Math.max(0, contentHeight - pinHeight);
+        const stickyTop = PIN_OFFSET - overflowScroll;
+        const pinScrollRange = overflowScroll === 0
+            ? revealDistance + STICKY_HOLD_PX + TAKEOVER_PX
+            : STICKY_HOLD_PX + TAKEOVER_PX;
+        takeoverStart = overflowScroll === 0
+            ? revealDistance + STICKY_HOLD_PX
+            : STICKY_HOLD_PX;
+
+        layout.classList.add('engine--anim');
+
+        // Short viewport: show the whole area while the user scrolls to its bottom.
+        // Tall viewport: keep the existing per-step reveal while pinned.
+        revealAll(overflowScroll > 0);
 
         section.style.setProperty('--engine-pin-offset', PIN_OFFSET + 'px');
 
         topPin.style.position = 'sticky';
-        topPin.style.top = PIN_OFFSET + 'px';
-        topPin.style.height = pinHeight + 'px';
+        topPin.style.top = stickyTop + 'px';
+        topPin.style.height = '';
         topPin.style.zIndex = '1';
-        topPin.style.overflow = 'hidden';
+        topPin.style.overflow = 'visible';
 
         track.style.position = 'relative';
-        track.style.height = (revealDistance + STICKY_HOLD_PX + TAKEOVER_PX + vh) + 'px';
+        track.style.height = (pinScrollRange + vh) + 'px';
 
         second.style.position = 'sticky';
         second.style.top = PIN_OFFSET + 'px';
@@ -700,20 +724,20 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
             return;
         }
 
-        const scrolledIntoPin = Math.max(0, PIN_OFFSET - section.getBoundingClientRect().top);
+        const scrolled = Math.max(0, PIN_OFFSET - section.getBoundingClientRect().top);
+        const pinProgress = Math.max(0, scrolled - overflowScroll);
 
-        groups.forEach(function(group, index) {
-            toggleGroup(group, scrolledIntoPin >= (index + 1) * STEP_PX);
-        });
+        if (overflowScroll === 0) {
+            groups.forEach(function(group, index) {
+                toggleGroup(group, pinProgress >= (index + 1) * STEP_PX);
+            });
 
-        const allRevealed = scrolledIntoPin >= revealDistance;
-
-        if (rightCol) {
-            rightCol.classList.toggle('is-revealed-col', allRevealed);
+            if (rightCol) {
+                rightCol.classList.toggle('is-revealed-col', pinProgress >= revealDistance);
+            }
         }
 
-        const takeoverStart = revealDistance + STICKY_HOLD_PX;
-        let takeover = (scrolledIntoPin - takeoverStart) / TAKEOVER_PX;
+        let takeover = (pinProgress - takeoverStart) / TAKEOVER_PX;
         takeover = Math.max(0, Math.min(1, takeover));
         second.style.transform = 'translate3d(0, ' + ((1 - takeover) * 100) + '%, 0)';
     }

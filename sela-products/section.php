@@ -26,6 +26,16 @@ $has_cta_link = static function (string $link): bool {
     return $link !== '' && $link !== '#' && strtolower($link) !== 'javascript:void(0)';
 };
 
+$parse_icon_size = static function ($value, int $fallback = 33): int {
+    $size = (int) $value;
+
+    if ($size < 16) {
+        return $fallback;
+    }
+
+    return min(120, $size);
+};
+
 $cards = array();
 
 foreach (($blocks ?? array()) as $block) {
@@ -46,8 +56,8 @@ foreach (($blocks ?? array()) as $block) {
         'cta' => (string) ($bs['cta'] ?? 'Get Started'),
         'link' => trim((string) ($bs['link'] ?? '')),
         'icon' => $resolve_icon((string) ($bs['icon'] ?? '')),
-        'icon_size_d' => max(16, (int) ($bs['icon_size_d'] ?? 33)),
-        'icon_size_m' => max(16, (int) ($bs['icon_size_m'] ?? 33)),
+        'icon_size_d' => $parse_icon_size($bs['icon_size_d'] ?? 33),
+        'icon_size_m' => $parse_icon_size($bs['icon_size_m'] ?? 33),
         'accent' => (string) ($bs['accent'] ?? 'blue'),
     );
 }
@@ -69,8 +79,8 @@ if (empty($cards)) {
             'cta' => (string) ($settings["card_{$i}_cta"] ?? 'Get Started'),
             'link' => trim((string) ($settings["card_{$i}_link"] ?? '')),
             'icon' => $resolve_icon($icon),
-            'icon_size_d' => max(16, (int) ($settings["card_{$i}_icon_size_d"] ?? 33)),
-            'icon_size_m' => max(16, (int) ($settings["card_{$i}_icon_size_m"] ?? 33)),
+            'icon_size_d' => $parse_icon_size($settings["card_{$i}_icon_size_d"] ?? 33),
+            'icon_size_m' => $parse_icon_size($settings["card_{$i}_icon_size_m"] ?? 33),
             'accent' => (string) ($settings["card_{$i}_accent"] ?? 'blue'),
         );
     }

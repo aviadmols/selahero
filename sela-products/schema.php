@@ -9,6 +9,19 @@ $accent_options = array(
     array('value' => 'dark', 'label' => 'Dark'),
 );
 
+$icon_size_options = array(
+    array('value' => '24', 'label' => '24px'),
+    array('value' => '28', 'label' => '28px'),
+    array('value' => '33', 'label' => '33px'),
+    array('value' => '40', 'label' => '40px'),
+    array('value' => '48', 'label' => '48px'),
+    array('value' => '56', 'label' => '56px'),
+    array('value' => '64', 'label' => '64px'),
+    array('value' => '80', 'label' => '80px'),
+    array('value' => '96', 'label' => '96px'),
+    array('value' => '120', 'label' => '120px'),
+);
+
 $default_icon = 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-products/media/product-icon-bag.svg';
 
 return array(
@@ -144,21 +157,17 @@ return array(
                 ),
                 array(
                     'id' => 'icon_size_d',
-                    'type' => 'range',
-                    'label' => 'Icon size — desktop (px)',
-                    'default' => 33,
-                    'min' => 16,
-                    'max' => 120,
-                    'step' => 1,
+                    'type' => 'select',
+                    'label' => 'Icon size — desktop',
+                    'default' => '33',
+                    'options' => $icon_size_options,
                 ),
                 array(
                     'id' => 'icon_size_m',
-                    'type' => 'range',
-                    'label' => 'Icon size — mobile (px)',
-                    'default' => 33,
-                    'min' => 16,
-                    'max' => 120,
-                    'step' => 1,
+                    'type' => 'select',
+                    'label' => 'Icon size — mobile',
+                    'default' => '33',
+                    'options' => $icon_size_options,
                 ),
                 array(
                     'id' => 'name',
@@ -199,8 +208,8 @@ return array(
             'type' => 'product-card',
             'settings' => array(
                 'icon' => $default_icon,
-                'icon_size_d' => 33,
-                'icon_size_m' => 33,
+                'icon_size_d' => '33',
+                'icon_size_m' => '33',
                 'name' => 'SavePro',
                 'desc' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
                 'cta' => 'Get Started',
@@ -212,8 +221,8 @@ return array(
             'type' => 'product-card',
             'settings' => array(
                 'icon' => $default_icon,
-                'icon_size_d' => 33,
-                'icon_size_m' => 33,
+                'icon_size_d' => '33',
+                'icon_size_m' => '33',
                 'name' => 'SavePro',
                 'desc' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
                 'cta' => 'Get Started',
@@ -225,8 +234,8 @@ return array(
             'type' => 'product-card',
             'settings' => array(
                 'icon' => $default_icon,
-                'icon_size_d' => 33,
-                'icon_size_m' => 33,
+                'icon_size_d' => '33',
+                'icon_size_m' => '33',
                 'name' => 'SavePro',
                 'desc' => 'The only automatic Azure cost optimization tool, built by FinOps from hands-on experience managing thousands of Azure environments.',
                 'cta' => 'Get Started',

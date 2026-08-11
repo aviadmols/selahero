@@ -24,8 +24,9 @@
 .engine__top-pin {
     background: var(--engine-bg, var(--bg-ee, #eef5ff));
     padding: var(--engine-pad-y, 50px) 0 0;
-       position: sticky;
+    position: sticky;
     top: 60px;
+    height: auto;
     overflow: visible;
     font-family: "Lexend", Sans-serif;
     width: 100%;
@@ -70,6 +71,11 @@
 }
 
 @media (min-width: 769px) {
+    .hero-section--sela-engine .engine__top-pin {
+        height: auto;
+        overflow: visible;
+    }
+
     .hero-section--sela-engine .engine__top {
         padding-bottom: 320px;
     }
