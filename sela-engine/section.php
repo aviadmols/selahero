@@ -604,8 +604,9 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
     }
 
     const STEP_PX = 160;
-    const STICKY_HOLD_PX = 220;
-    const TAKEOVER_PX = 700;
+    const STICKY_HOLD_PX = 64;
+    const OVERFLOW_HOLD_PX = 24;
+    const TAKEOVER_PX = 420;
     const PIN_OFFSET = 60;
     const revealDistance = groups.length * STEP_PX;
 
@@ -684,10 +685,10 @@ $uid = 'slen-' . esc_attr($section['id'] ?? uniqid('sec', true));
         const stickyTop = PIN_OFFSET - overflowScroll;
         const pinScrollRange = overflowScroll === 0
             ? revealDistance + STICKY_HOLD_PX + TAKEOVER_PX
-            : STICKY_HOLD_PX + TAKEOVER_PX;
+            : OVERFLOW_HOLD_PX + TAKEOVER_PX;
         takeoverStart = overflowScroll === 0
             ? revealDistance + STICKY_HOLD_PX
-            : STICKY_HOLD_PX;
+            : OVERFLOW_HOLD_PX;
 
         layout.classList.add('engine--anim');
 
