@@ -214,7 +214,7 @@ $demo_cards = function () use ($get_media): array {
         array(
             'image' => $get_media('blog-img2.jpg'),
             'image_alt' => 'SaaS Journey',
-            'tag' => 'Media and News',
+            'tag' => 'Blog',
             'title' => 'From Code to Cloud: the SaaS Journey by Sela Cloud Experts',
             'date' => '15 Jul 2025',
             'url' => '#',
@@ -222,7 +222,7 @@ $demo_cards = function () use ($get_media): array {
         array(
             'image' => $get_media('blog-img3.jpg'),
             'image_alt' => 'Google Cloud',
-            'tag' => 'Media and News',
+            'tag' => 'Blog',
             'title' => 'From Code to Cloud: the SaaS Journey by Sela and Google Cloud Experts',
             'date' => '15 Jul 2025',
             'url' => '#',
@@ -230,27 +230,63 @@ $demo_cards = function () use ($get_media): array {
     );
 };
 
+$slbl_is_hebrew_post = static function ($post): bool {
+    if (!$post instanceof WP_Post) {
+        return false;
+    }
+
+    $post_id = (int) $post->ID;
+
+    if (function_exists('pll_get_post_language')) {
+        $lang = (string) pll_get_post_language($post_id);
+
+        if ($lang !== '' && stripos($lang, 'he') === 0) {
+            return true;
+        }
+    }
+
+    if (has_filter('wpml_element_language_code')) {
+        $lang = (string) apply_filters('wpml_element_language_code', null, array(
+            'element_id' => $post_id,
+            'element_type' => $post->post_type,
+        ));
+
+        if ($lang !== '' && stripos($lang, 'he') === 0) {
+            return true;
+        }
+    }
+
+    $haystack = trim($post->post_title . ' ' . $post->post_name . ' ' . (string) get_permalink($post));
+
+    return (bool) preg_match('/[\x{0590}-\x{05FF}]/u', $haystack);
+};
+
 $cards_from_wp = function () use (
     $settings,
-    $slbl_post_to_card
+    $slbl_post_to_card,
+    $slbl_is_hebrew_post
 ): array {
     if (!function_exists('wp_date')) {
         return array();
     }
 
     $event_label = (string)($settings['slot_1_tag_label'] ?? 'Next Event');
-    $media_label = (string)($settings['slot_2_tag_label'] ?? 'Media and News');
+    $blog_label = (string)($settings['slot_2_tag_label'] ?? 'Blog');
+
+    if (trim($blog_label) === '' || strcasecmp($blog_label, 'Media and News') === 0) {
+        $blog_label = 'Blog';
+    }
 
     $type_labels = array(
         'event' => $event_label,
-        'media-news' => $media_label,
-        'post' => $media_label,
+        'media-news' => $blog_label,
+        'post' => $blog_label,
     );
 
-    // Strict: 3 newest by post creation date (post_date), across content types.
+    // Fetch extra candidates so Hebrew items can be skipped while still filling 3 cards.
     $query = new WP_Query(array(
         'post_type' => array('event', 'media-news', 'post'),
-        'posts_per_page' => 3,
+        'posts_per_page' => 20,
         'post_status' => 'publish',
         'orderby' => 'date',
         'order' => 'DESC',
@@ -282,7 +318,6 @@ $cards_from_wp = function () use (
         return $tb <=> $ta;
     });
 
-    $posts = array_slice($posts, 0, 3);
     $items = array();
 
     foreach ($posts as $post) {
@@ -290,13 +325,21 @@ $cards_from_wp = function () use (
             continue;
         }
 
-        $label = isset($type_labels[$post->post_type]) ? $type_labels[$post->post_type] : $media_label;
+        if ($slbl_is_hebrew_post($post)) {
+            continue;
+        }
+
+        $label = isset($type_labels[$post->post_type]) ? $type_labels[$post->post_type] : $blog_label;
 
         // Display the creation/publish date used for sorting (not event meta date).
         $card = $slbl_post_to_card($post, $label, get_the_date('j M Y', $post));
 
         if ($card !== null) {
             $items[] = $card;
+        }
+
+        if (count($items) >= 3) {
+            break;
         }
     }
 
