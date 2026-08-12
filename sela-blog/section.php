@@ -208,6 +208,8 @@ $slbl_post_to_card = function ($post, string $tag_label, string $date_override =
         'title' => $post->post_title,
         'date' => $date,
         'url' => $url,
+        'post_type' => $post->post_type,
+        'open_new_tab' => $post->post_type === 'media-news',
     );
 };
 
@@ -451,11 +453,14 @@ $uid = 'slbl-' . esc_attr($section['id'] ?? uniqid('sec', true));
                     $card_date = (string)($card['date'] ?? '');
                     $card_image = (string)($card['image'] ?? '');
                     $card_alt = (string)($card['image_alt'] ?? '');
+                    $open_new_tab = !empty($card['open_new_tab'])
+                        || (string)($card['post_type'] ?? '') === 'media-news'
+                        || strcasecmp($card_tag, 'Media and News') === 0;
                     ?>
 
                     <article class="blog__card">
                         <?php if ($card_url !== '') : ?>
-                            <a class="blog__card-link" href="<?php echo esc_url($card_url); ?>" target="_blank" rel="noopener noreferrer">
+                            <a class="blog__card-link" href="<?php echo esc_url($card_url); ?>"<?php echo $open_new_tab ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
                         <?php endif; ?>
 
                         <?php if ($card_image !== '') : ?>
