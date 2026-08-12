@@ -207,10 +207,10 @@ return array(
         array(
             'type' => 'testimonial-card',
             'settings' => array(
-                'logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-cta/media/testi-logo-nucleus.png',
+                'logo' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-cta/media/testi-logo-nucleus.png',
                 'logo_alt' => '',
                 'quote' => '"What sets Sela apart from other companies is the dedication and willingness to go the extra mile to help with our technical needs. Our relationship with 2bcloud has resulted in increased cloud cost savings, better reporting, and much faster and more direct enterprise support than before."',
-                'avatar' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-cta/media/testi-avatar-jeff.png',
+                'avatar' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-cta/media/testi-avatar-jeff.png',
                 'avatar_alt' => '',
                 'name' => 'Jeff Gouge, CISO, Nucleus Security',
             ),
@@ -218,10 +218,10 @@ return array(
         array(
             'type' => 'testimonial-card',
             'settings' => array(
-                'logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-cta/media/testi-logo-nucleus.png',
+                'logo' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-cta/media/testi-logo-nucleus.png',
                 'logo_alt' => '',
                 'quote' => '"Sela\'s engineering depth is unmatched. Their team helped us modernize our AWS infrastructure, cut cloud costs by 28%, and enabled us to ship features 3× faster. The 24/7 support is a game changer for a growing startup like ours."',
-                'avatar' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-cta/media/testi-avatar-jeff.png',
+                'avatar' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-cta/media/testi-avatar-jeff.png',
                 'avatar_alt' => '',
                 'name' => 'Dan Cohen, CISO, Wiz',
             ),
@@ -229,10 +229,10 @@ return array(
         array(
             'type' => 'testimonial-card',
             'settings' => array(
-                'logo' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-cta/media/testi-logo-nucleus.png',
+                'logo' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-cta/media/testi-logo-nucleus.png',
                 'logo_alt' => '',
                 'quote' => '"From cloud migration to GenAI adoption, Sela has been our trusted partner at every stage. Their FinOps expertise alone saved us hundreds of thousands of dollars annually while improving reliability across all our cloud workloads."',
-                'avatar' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-cta/media/testi-avatar-jeff.png',
+                'avatar' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-cta/media/testi-avatar-jeff.png',
                 'avatar_alt' => '',
                 'name' => 'Michael Brown, CTO, Island',
             ),

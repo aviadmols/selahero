@@ -12,7 +12,7 @@ if (($section['source'] ?? '') === 'uploads') {
 
 $default_icon = $media_base
     ? esc_url($media_base . 'product-icon-bag.svg')
-    : 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-products/media/product-icon-bag.svg';
+    : 'https://selacloud.com/wp-content/uploads/hero/sections/sela-products/media/product-icon-bag.svg';
 
 $resolve_icon = static function (string $icon) use ($default_icon): string {
     $icon = trim($icon);

@@ -282,7 +282,7 @@ return array(
         array(
             'type' => 'blog-card',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-blog/media/blog-img1.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-blog/media/blog-img1.jpg',
                 'image_alt' => 'Event',
                 'tag' => 'Next Event',
                 'title' => 'Driving Tomorrow\'s Success 2025',
@@ -293,7 +293,7 @@ return array(
         array(
             'type' => 'blog-card',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-blog/media/blog-img2.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-blog/media/blog-img2.jpg',
                 'image_alt' => 'SaaS Journey',
                 'tag' => 'Media and News',
                 'title' => 'From Code to Cloud: the SaaS Journey by Sela Cloud Experts',
@@ -304,7 +304,7 @@ return array(
         array(
             'type' => 'blog-card',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-blog/media/blog-img3.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-blog/media/blog-img3.jpg',
                 'image_alt' => 'Google Cloud',
                 'tag' => 'Next Event',
                 'title' => 'From Code to Cloud: the SaaS Journey by Sela and Google Cloud Experts',

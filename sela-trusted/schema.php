@@ -23,63 +23,63 @@ return array (
       'id' => 'logo_1',
       'type' => 'image',
       'label' => 'Logo 1',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner1.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner1.png',
     ),
     2 => 
     array (
       'id' => 'logo_2',
       'type' => 'image',
       'label' => 'Logo 2',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner2.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner2.png',
     ),
     3 => 
     array (
       'id' => 'logo_3',
       'type' => 'image',
       'label' => 'Logo 3',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner3.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner3.png',
     ),
     4 => 
     array (
       'id' => 'logo_4',
       'type' => 'image',
       'label' => 'Logo 4',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner4.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner4.png',
     ),
     5 => 
     array (
       'id' => 'logo_5',
       'type' => 'image',
       'label' => 'Logo 5',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner5.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner5.png',
     ),
     6 => 
     array (
       'id' => 'logo_6',
       'type' => 'image',
       'label' => 'Logo 6',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner6.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner6.png',
     ),
     7 => 
     array (
       'id' => 'logo_7',
       'type' => 'image',
       'label' => 'Logo 7',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner7.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner7.png',
     ),
     8 => 
     array (
       'id' => 'logo_8',
       'type' => 'image',
       'label' => 'Logo 8',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner8.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/logo-partner8.png',
     ),
     9 => 
     array (
       'id' => 'badge_aws',
       'type' => 'image',
       'label' => 'Badge — AWS',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/badge-aws.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/badge-aws.png',
     ),
     10 => 
     array (
@@ -93,7 +93,7 @@ return array (
       'id' => 'badge_google',
       'type' => 'image',
       'label' => 'Badge — Google',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/badge-google.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/badge-google.png',
     ),
     12 => 
     array (
@@ -107,7 +107,7 @@ return array (
       'id' => 'badge_azure',
       'type' => 'image',
       'label' => 'Badge — Azure',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-trusted/media/badge-azure.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-trusted/media/badge-azure.png',
     ),
     14 => 
     array (

@@ -35,7 +35,7 @@ $get_media = function (string $fallback) use ($media_base): string {
         return esc_url($media_base . ltrim($fallback, '/'));
     }
 
-    return esc_url('https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-engine/media/' . ltrim($fallback, '/'));
+    return esc_url('https://selacloud.com/wp-content/uploads/hero/sections/sela-engine/media/' . ltrim($fallback, '/'));
 };
 
 $get_experts_media = function (string $key, string $fallback) use ($settings): string {
@@ -45,7 +45,7 @@ $get_experts_media = function (string $key, string $fallback) use ($settings): s
         return esc_url($value);
     }
 
-    return esc_url('https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/' . ltrim($fallback, '/'));
+    return esc_url('https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/' . ltrim($fallback, '/'));
 };
 
 $parse_items = function (string $raw): array {

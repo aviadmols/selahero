@@ -44,14 +44,14 @@ return array (
       'id' => 'lottie_desktop',
       'type' => 'url',
       'label' => 'Lottie background — desktop (JSON URL)',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/lottie-desktop.json',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-hero/media/lottie-desktop.json',
     ),
     5 => 
     array (
       'id' => 'lottie_mobile',
       'type' => 'url',
       'label' => 'Lottie background — mobile (JSON URL)',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-hero/media/lottie-mobile.json',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-hero/media/lottie-mobile.json',
     ),
     6 => 
     array (

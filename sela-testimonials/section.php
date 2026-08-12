@@ -15,7 +15,7 @@ $get_media = function ( string $fallback ) use ( $media_base ): string {
     if ( $media_base !== '' ) {
         return esc_url( $media_base . ltrim( $fallback, '/' ) );
     }
-    return esc_url( 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-testimonials/media/' . ltrim( $fallback, '/' ) );
+    return esc_url( 'https://selacloud.com/wp-content/uploads/hero/sections/sela-testimonials/media/' . ltrim( $fallback, '/' ) );
 };
 
 $default_thumb = $get_img( 'image_video', 'testi-video.jpg' ) ?: $get_media( 'testi-video.jpg' );

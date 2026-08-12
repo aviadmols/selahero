@@ -51,7 +51,7 @@ return array (
       'id' => 'image',
       'type' => 'image',
       'label' => 'Image',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-case2/media/case2-photo.jpg',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-case2/media/case2-photo.jpg',
     ),
     6 => 
     array (

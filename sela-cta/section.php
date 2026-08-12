@@ -31,7 +31,7 @@ $get_media = function (string $fallback) use ($media_base): string {
         return esc_url($media_base . ltrim($fallback, '/'));
     }
 
-    return esc_url('https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-cta/media/' . ltrim($fallback, '/'));
+    return esc_url('https://selacloud.com/wp-content/uploads/hero/sections/sela-cta/media/' . ltrim($fallback, '/'));
 };
 
 $tag_t = function_exists('hero_pick_tag')
@@ -121,8 +121,8 @@ $uid = 'slct-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
 <section class="slct-section" id="<?php echo $uid; ?>">
 <div class="hero-clouds">
-    <img class="hero-clouds__item hero-clouds__item--back" src="https://selacloud.ussl.co/wp-content/uploads/2026/04/cloud-hero-2-7.svg" alt="">
-    <img class="hero-clouds__item hero-clouds__item--front" src="https://selacloud.ussl.co/wp-content/uploads/2026/04/cloud-hero-1-7.svg" alt="">
+    <img class="hero-clouds__item hero-clouds__item--back" src="https://selacloud.com/wp-content/uploads/2026/04/cloud-hero-2-7.svg" alt="">
+    <img class="hero-clouds__item hero-clouds__item--front" src="https://selacloud.com/wp-content/uploads/2026/04/cloud-hero-1-7.svg" alt="">
 </div>
     <div class="slct-wrap slct-inner">
         <<?php echo $tag_t; ?> class="slct-title"><?php echo wp_kses_post($title); ?></<?php echo $tag_t; ?>>

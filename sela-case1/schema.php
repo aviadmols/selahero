@@ -51,7 +51,7 @@ return array (
       'id' => 'image',
       'type' => 'image',
       'label' => 'Image',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-case1/media/case1-dashboard.png',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-case1/media/case1-dashboard.png',
     ),
     6 => 
     array (
@@ -65,14 +65,14 @@ return array (
       'id' => 'image_cloud_1',
       'type' => 'image',
       'label' => 'Decorative cloud 1',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-case1/media/cloud-outline-1.svg',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-case1/media/cloud-outline-1.svg',
     ),
     8 => 
     array (
       'id' => 'image_cloud_2',
       'type' => 'image',
       'label' => 'Decorative cloud 2',
-      'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-case1/media/cloud-outline-2.svg',
+      'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-case1/media/cloud-outline-2.svg',
     ),
     9 => 
     array (

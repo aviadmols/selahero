@@ -13,7 +13,7 @@ return array(
             'id' => 'image_logo',
             'type' => 'image',
             'label' => 'Footer logo',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/footer-logo.png',
+            'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/footer-logo.png',
         ),
         array(
             'id' => 'logo_alt',
@@ -25,7 +25,7 @@ return array(
             'id' => 'image_robot',
             'type' => 'image',
             'label' => 'Robot mascot',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/footer-robot.png',
+            'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/footer-robot.png',
         ),
         array(
             'id' => 'contact_email',
@@ -326,7 +326,7 @@ Security|#',
                     'id' => 'icon',
                     'type' => 'image',
                     'label' => 'Icon',
-                    'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/social-linkedin.svg',
+                    'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/social-linkedin.svg',
                 ),
                 array(
                     'id' => 'alt',
@@ -349,7 +349,7 @@ Security|#',
                     'id' => 'image',
                     'type' => 'image',
                     'label' => 'Badge image',
-                    'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/iso27001.png',
+                    'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/iso27001.png',
                 ),
                 array(
                     'id' => 'alt',
@@ -414,7 +414,7 @@ Contact|#',
         array(
             'type' => 'social-link',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/social-linkedin.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/social-linkedin.svg',
                 'alt' => 'LinkedIn',
                 'url' => '#',
             ),
@@ -422,7 +422,7 @@ Contact|#',
         array(
             'type' => 'social-link',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/social-twitter.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/social-twitter.svg',
                 'alt' => 'Twitter',
                 'url' => '#',
             ),
@@ -430,7 +430,7 @@ Contact|#',
         array(
             'type' => 'social-link',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/social-fb.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/social-fb.svg',
                 'alt' => 'Facebook',
                 'url' => '#',
             ),
@@ -438,7 +438,7 @@ Contact|#',
         array(
             'type' => 'social-link',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/social-yt.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/social-yt.svg',
                 'alt' => 'YouTube',
                 'url' => '#',
             ),
@@ -446,14 +446,14 @@ Contact|#',
         array(
             'type' => 'cert-badge',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/iso27001.png',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/iso27001.png',
                 'alt' => 'ISO 27001',
             ),
         ),
         array(
             'type' => 'cert-badge',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-footer/media/iso9001.png',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-footer/media/iso9001.png',
                 'alt' => 'ISO 9001',
             ),
         ),

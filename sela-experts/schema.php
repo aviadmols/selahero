@@ -67,7 +67,7 @@ return array(
             'id' => 'robot_image',
             'type' => 'image',
             'label' => 'Robot image',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-engine/media/engine-robot.png',
+            'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-engine/media/engine-robot.png',
         ),
         array(
             'tab' => 'style',
@@ -258,7 +258,7 @@ return array(
         array(
             'type' => 'expert-chip',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/icon-settings.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/icon-settings.svg',
                 'icon_alt' => '',
                 'text' => 'Migrations & Modernizations',
                 'color' => 'green',
@@ -267,7 +267,7 @@ return array(
         array(
             'type' => 'expert-chip',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/icon-database.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/icon-database.svg',
                 'icon_alt' => '',
                 'text' => 'Data',
                 'color' => 'cyan',
@@ -276,7 +276,7 @@ return array(
         array(
             'type' => 'expert-chip',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/icon-genai.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/icon-genai.svg',
                 'icon_alt' => '',
                 'text' => 'GenAI',
                 'color' => 'pink',
@@ -285,7 +285,7 @@ return array(
         array(
             'type' => 'expert-chip',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/icon-appeng.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/icon-appeng.svg',
                 'icon_alt' => '',
                 'text' => 'Application Engineering',
                 'color' => 'yellow',
@@ -294,7 +294,7 @@ return array(
         array(
             'type' => 'expert-chip',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/icon-devops.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/icon-devops.svg',
                 'icon_alt' => '',
                 'text' => 'DevOps',
                 'color' => 'blue-light',
@@ -303,7 +303,7 @@ return array(
         array(
             'type' => 'expert-chip',
             'settings' => array(
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/icon-shield.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/icon-shield.svg',
                 'icon_alt' => '',
                 'text' => 'Security',
                 'color' => 'gray',

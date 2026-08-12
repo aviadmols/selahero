@@ -19,7 +19,7 @@ return array (
             'id' => 'image_badge',
             'type' => 'image',
             'label' => 'Side badge image',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-stats/media/stats-badge.png',
+            'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-stats/media/stats-badge.png',
         ),
         2 => array (
             'id' => 'show_badge',

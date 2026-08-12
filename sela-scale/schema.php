@@ -174,7 +174,7 @@ return array(
                     'id' => 'image',
                     'type' => 'image',
                     'label' => 'Image',
-                    'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face1.jpg',
+                    'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face1.jpg',
                 ),
                 array(
                     'id' => 'alt',
@@ -209,7 +209,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face1.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face1.jpg',
                 'alt' => '',
                 'style' => 'default',
             ),
@@ -217,7 +217,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face2.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face2.jpg',
                 'alt' => '',
                 'style' => 'default',
             ),
@@ -225,7 +225,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face3.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face3.jpg',
                 'alt' => '',
                 'style' => 'default',
             ),
@@ -233,7 +233,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face4.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face4.jpg',
                 'alt' => '',
                 'style' => 'default',
             ),
@@ -241,7 +241,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face5.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face5.jpg',
                 'alt' => '',
                 'style' => 'default',
             ),
@@ -249,7 +249,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face6.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face6.jpg',
                 'alt' => '',
                 'style' => 'default',
             ),
@@ -257,7 +257,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face7.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face7.jpg',
                 'alt' => '',
                 'style' => 'default',
             ),
@@ -265,7 +265,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face8.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face8.jpg',
                 'alt' => '',
                 'style' => 'default',
             ),
@@ -273,7 +273,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face9.jpg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face9.jpg',
                 'alt' => '',
                 'style' => 'border',
             ),
@@ -281,7 +281,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face10.png',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face10.png',
                 'alt' => '',
                 'style' => 'default',
             ),
@@ -289,7 +289,7 @@ return array(
         array(
             'type' => 'scale-face',
             'settings' => array(
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-scale/media/scale-face11.png',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-scale/media/scale-face11.png',
                 'alt' => '',
                 'style' => 'wide',
             ),

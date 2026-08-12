@@ -26,7 +26,7 @@ $get_media = function ( string $fallback ) use ( $media_base ): string {
         return esc_url( $media_base . ltrim( $fallback, '/' ) );
     }
 
-    return esc_url( 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-stats/media/' . ltrim( $fallback, '/' ) );
+    return esc_url( 'https://selacloud.com/wp-content/uploads/hero/sections/sela-stats/media/' . ltrim( $fallback, '/' ) );
 };
 
 $sep_images = array(

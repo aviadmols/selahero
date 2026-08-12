@@ -22,7 +22,7 @@ $icon_size_options = array(
     array('value' => '120', 'label' => '120px'),
 );
 
-$default_icon = 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-products/media/product-icon-bag.svg';
+$default_icon = 'https://selacloud.com/wp-content/uploads/hero/sections/sela-products/media/product-icon-bag.svg';
 
 return array(
     'type' => 'sela-products',

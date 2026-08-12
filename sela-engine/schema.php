@@ -36,7 +36,7 @@ $get_media = function (string $fallback) use ($media_base): string {
         return esc_url($media_base . ltrim($fallback, '/'));
     }
 
-    return esc_url('https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-engine/media/' . ltrim($fallback, '/'));
+    return esc_url('https://selacloud.com/wp-content/uploads/hero/sections/sela-engine/media/' . ltrim($fallback, '/'));
 };
 
 $get_experts_img = function (string $key, string $fallback) use ($settings): string {
@@ -46,7 +46,7 @@ $get_experts_img = function (string $key, string $fallback) use ($settings): str
         return esc_url($value);
     }
 
-    return esc_url('https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/' . ltrim($fallback, '/'));
+    return esc_url('https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/' . ltrim($fallback, '/'));
 };
 
 $parse_items = function (string $raw): array {
@@ -518,13 +518,13 @@ return array(
             'id' => 'wave_image',
             'type' => 'image',
             'label' => 'Wave image',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-engine/media/cloud-wave.svg',
+            'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-engine/media/cloud-wave.svg',
         ),
         array(
             'id' => 'robot_image',
             'type' => 'image',
             'label' => 'Robot image',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-engine/media/engine-robot.png',
+            'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-engine/media/engine-robot.png',
         ),
         array(
             'id' => 'experts_title',
@@ -542,19 +542,19 @@ return array(
             'id' => 'experts_cloud_1',
             'type' => 'image',
             'label' => 'Experts cloud 1',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/cloud-hero-1.svg',
+            'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/cloud-hero-1.svg',
         ),
         array(
             'id' => 'experts_cloud_2',
             'type' => 'image',
             'label' => 'Experts cloud 2',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/cloud-hero-2.svg',
+            'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/cloud-hero-2.svg',
         ),
         array(
             'id' => 'experts_cloud_3',
             'type' => 'image',
             'label' => 'Experts cloud 3',
-            'default' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-experts/media/cloud-hero-1.svg',
+            'default' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-experts/media/cloud-hero-1.svg',
         ),
         array(
             'tab' => 'style',
@@ -855,7 +855,7 @@ GTM',
             'type' => 'engine-column',
             'settings' => array(
                 'side' => 'left',
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-engine/media/engine-row-left.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-engine/media/engine-row-left.svg',
                 'icon_alt' => '',
                 'title' => 'Commercial Add-ons',
                 'items' => 'FinOps & cost optimization
@@ -889,7 +889,7 @@ GTM',
             'settings' => array(
                 'type' => 'image',
                 'text' => '',
-                'image' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-engine/media/engine-cloud-logos.svg',
+                'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-engine/media/engine-cloud-logos.svg',
                 'image_alt' => 'AWS, Google Cloud, Azure',
                 'style' => 'cyan',
             ),
@@ -898,7 +898,7 @@ GTM',
             'type' => 'engine-column',
             'settings' => array(
                 'side' => 'right',
-                'icon' => 'https://selacloud.ussl.co/wp-content/uploads/hero/sections/sela-engine/media/engine-right-icon.svg',
+                'icon' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-engine/media/engine-right-icon.svg',
                 'icon_alt' => '',
                 'title' => 'Technological Add-ons',
                 'items' => 'Consulting & Professional Services
