@@ -455,7 +455,7 @@ $uid = 'slbl-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
                     <article class="blog__card">
                         <?php if ($card_url !== '') : ?>
-                            <a class="blog__card-link" href="<?php echo esc_url($card_url); ?>">
+                            <a class="blog__card-link" href="<?php echo esc_url($card_url); ?>" target="_blank" rel="noopener noreferrer">
                         <?php endif; ?>
 
                         <?php if ($card_image !== '') : ?>
