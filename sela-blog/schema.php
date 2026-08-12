@@ -72,26 +72,26 @@ return array(
         array(
             'id' => 'slot_2_tag',
             'type' => 'text',
-            'label' => 'Slot 2 (blog) — tag slug',
+            'label' => 'Slot 2 (post / Blog) — tag slug',
             'default' => '',
         ),
         array(
             'id' => 'slot_2_tag_label',
             'type' => 'text',
-            'label' => 'Slot 2 (blog) — tag label',
+            'label' => 'Slot 2 (post / Blog) — tag label',
             'default' => 'Blog',
         ),
         array(
             'id' => 'slot_3_tag',
             'type' => 'text',
-            'label' => 'Slot 3 (blog) — tag slug',
+            'label' => 'Slot 3 (media-news) — tag slug',
             'default' => '',
         ),
         array(
             'id' => 'slot_3_tag_label',
             'type' => 'text',
-            'label' => 'Slot 3 (blog) — tag label',
-            'default' => 'Blog',
+            'label' => 'Slot 3 (media-news) — tag label',
+            'default' => 'Media and News',
         ),
         array(
             'tab' => 'style',
@@ -306,7 +306,7 @@ return array(
             'settings' => array(
                 'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-blog/media/blog-img3.jpg',
                 'image_alt' => 'Google Cloud',
-                'tag' => 'Next Event',
+                'tag' => 'Media and News',
                 'title' => 'From Code to Cloud: the SaaS Journey by Sela and Google Cloud Experts',
                 'date' => '15 Jul 2025',
                 'url' => '#',

@@ -145,7 +145,31 @@ $slbl_get_event_display_date = function (int $post_id) use ($slbl_get_event_date
     return $slbl_format_ymd_date($slbl_get_event_date_ymd($post_id));
 };
 
-$slbl_post_to_card = function ($post, string $tag_label, string $date_override = '') use ($slbl_get_event_display_date) {
+$slbl_get_redirect_url = static function (int $post_id): string {
+    $raw = '';
+
+    if (function_exists('get_field')) {
+        $raw = get_field('url_to_redirect', $post_id);
+    }
+
+    if ($raw === '' || $raw === null || $raw === false) {
+        $raw = get_post_meta($post_id, 'url_to_redirect', true);
+    }
+
+    if (is_array($raw)) {
+        if (!empty($raw['url'])) {
+            $raw = $raw['url'];
+        } else {
+            $raw = reset($raw);
+        }
+    }
+
+    $raw = trim((string) $raw);
+
+    return $raw !== '' ? esc_url($raw) : '';
+};
+
+$slbl_post_to_card = function ($post, string $tag_label, string $date_override = '') use ($slbl_get_event_display_date, $slbl_get_redirect_url) {
     if (!$post instanceof WP_Post) {
         return null;
     }
@@ -167,13 +191,23 @@ $slbl_post_to_card = function ($post, string $tag_label, string $date_override =
         $date = get_the_date('j M Y', $post);
     }
 
+    $url = get_permalink($post);
+
+    if ($post->post_type === 'media-news') {
+        $redirect = $slbl_get_redirect_url((int) $post->ID);
+
+        if ($redirect !== '') {
+            $url = $redirect;
+        }
+    }
+
     return array(
         'image' => $image ? esc_url($image) : '',
         'image_alt' => $alt,
         'tag' => $tag_label,
         'title' => $post->post_title,
         'date' => $date,
-        'url' => get_permalink($post),
+        'url' => $url,
     );
 };
 
@@ -222,7 +256,7 @@ $demo_cards = function () use ($get_media): array {
         array(
             'image' => $get_media('blog-img3.jpg'),
             'image_alt' => 'Google Cloud',
-            'tag' => 'Blog',
+            'tag' => 'Media and News',
             'title' => 'From Code to Cloud: the SaaS Journey by Sela and Google Cloud Experts',
             'date' => '15 Jul 2025',
             'url' => '#',
@@ -272,15 +306,20 @@ $cards_from_wp = function () use (
 
     $event_label = (string)($settings['slot_1_tag_label'] ?? 'Next Event');
     $blog_label = (string)($settings['slot_2_tag_label'] ?? 'Blog');
+    $media_label = (string)($settings['slot_3_tag_label'] ?? 'Media and News');
 
     if (trim($blog_label) === '' || strcasecmp($blog_label, 'Media and News') === 0) {
         $blog_label = 'Blog';
     }
 
+    if (trim($media_label) === '') {
+        $media_label = 'Media and News';
+    }
+
     $type_labels = array(
         'event' => $event_label,
-        'media-news' => $blog_label,
         'post' => $blog_label,
+        'media-news' => $media_label,
     );
 
     // Fetch extra candidates so Hebrew items can be skipped while still filling 3 cards.
