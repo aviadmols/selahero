@@ -210,6 +210,9 @@ $slbl_post_to_card = function ($post, string $tag_label, string $date_override =
         'url' => $url,
         'post_type' => $post->post_type,
         'open_new_tab' => $post->post_type === 'media-news',
+        'tag_kind' => $post->post_type === 'media-news'
+            ? 'news'
+            : ($post->post_type === 'post' ? 'blog' : 'event'),
     );
 };
 
@@ -242,10 +245,11 @@ $demo_cards = function () use ($get_media): array {
         array(
             'image' => $get_media('blog-img1.jpg'),
             'image_alt' => 'Event',
-            'tag' => 'Next Event',
+            'tag' => 'Event',
             'title' => 'Driving Tomorrow\'s Success 2025',
             'date' => '15 Jul 2025',
             'url' => '#',
+            'tag_kind' => 'event',
         ),
         array(
             'image' => $get_media('blog-img2.jpg'),
@@ -254,6 +258,7 @@ $demo_cards = function () use ($get_media): array {
             'title' => 'From Code to Cloud: the SaaS Journey by Sela Cloud Experts',
             'date' => '15 Jul 2025',
             'url' => '#',
+            'tag_kind' => 'blog',
         ),
         array(
             'image' => $get_media('blog-img3.jpg'),
@@ -262,6 +267,7 @@ $demo_cards = function () use ($get_media): array {
             'title' => 'From Code to Cloud: the SaaS Journey by Sela and Google Cloud Experts',
             'date' => '15 Jul 2025',
             'url' => '#',
+            'tag_kind' => 'news',
         ),
     );
 };
@@ -306,9 +312,13 @@ $cards_from_wp = function () use (
         return array();
     }
 
-    $event_label = (string)($settings['slot_1_tag_label'] ?? 'Next Event');
+    $event_label = (string)($settings['slot_1_tag_label'] ?? 'Event');
     $blog_label = (string)($settings['slot_2_tag_label'] ?? 'Blog');
     $media_label = (string)($settings['slot_3_tag_label'] ?? 'Media and News');
+
+    if (trim($event_label) === '' || strcasecmp($event_label, 'Next Event') === 0) {
+        $event_label = 'Event';
+    }
 
     if (trim($blog_label) === '' || strcasecmp($blog_label, 'Media and News') === 0) {
         $blog_label = 'Blog';
@@ -456,6 +466,18 @@ $uid = 'slbl-' . esc_attr($section['id'] ?? uniqid('sec', true));
                     $open_new_tab = !empty($card['open_new_tab'])
                         || (string)($card['post_type'] ?? '') === 'media-news'
                         || strcasecmp($card_tag, 'Media and News') === 0;
+
+                    $tag_kind = sanitize_html_class((string)($card['tag_kind'] ?? ''));
+
+                    if ($tag_kind === '') {
+                        if ((string)($card['post_type'] ?? '') === 'media-news' || strcasecmp($card_tag, 'Media and News') === 0) {
+                            $tag_kind = 'news';
+                        } elseif ((string)($card['post_type'] ?? '') === 'post' || strcasecmp($card_tag, 'Blog') === 0) {
+                            $tag_kind = 'blog';
+                        } else {
+                            $tag_kind = 'event';
+                        }
+                    }
                     ?>
 
                     <article class="blog__card">
@@ -471,7 +493,7 @@ $uid = 'slbl-' . esc_attr($section['id'] ?? uniqid('sec', true));
 
                         <div class="blog__card-body">
                             <?php if ($card_tag !== '') : ?>
-                                <span class="blog__tag"><?php echo esc_html($card_tag); ?></span>
+                                <span class="blog__tag blog__tag--<?php echo esc_attr($tag_kind); ?>"><?php echo esc_html($card_tag); ?></span>
                             <?php endif; ?>
 
                             <?php if ($card_title !== '') : ?>

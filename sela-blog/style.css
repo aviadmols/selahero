@@ -91,6 +91,18 @@
     flex-shrink: 0;
 }
 
+.blog__tag--event::before {
+    background: #00DBE9;
+}
+
+.blog__tag--blog::before {
+    background: #0071F6;
+}
+
+.blog__tag--news::before {
+    background: #F191A1;
+}
+
 .blog__card-title {
     font-size: 18px;
     font-weight: 400;

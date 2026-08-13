@@ -67,7 +67,7 @@ return array(
             'id' => 'slot_1_tag_label',
             'type' => 'text',
             'label' => 'Slot 1 (event) — tag label',
-            'default' => 'Next Event',
+            'default' => 'Event',
         ),
         array(
             'id' => 'slot_2_tag',
@@ -255,7 +255,7 @@ return array(
                     'id' => 'tag',
                     'type' => 'text',
                     'label' => 'Tag',
-                    'default' => 'Next Event',
+                    'default' => 'Event',
                 ),
                 array(
                     'id' => 'title',
@@ -284,7 +284,7 @@ return array(
             'settings' => array(
                 'image' => 'https://selacloud.com/wp-content/uploads/hero/sections/sela-blog/media/blog-img1.jpg',
                 'image_alt' => 'Event',
-                'tag' => 'Next Event',
+                'tag' => 'Event',
                 'title' => 'Driving Tomorrow\'s Success 2025',
                 'date' => '15 Jul 2025',
                 'url' => '#',
