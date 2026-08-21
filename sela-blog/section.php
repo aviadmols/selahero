@@ -306,7 +306,9 @@ $slbl_is_hebrew_post = static function ($post): bool {
 $cards_from_wp = function () use (
     $settings,
     $slbl_post_to_card,
-    $slbl_is_hebrew_post
+    $slbl_is_hebrew_post,
+    $slbl_get_event_date_ymd,
+    $slbl_get_event_display_date
 ): array {
     if (!function_exists('wp_date')) {
         return array();
@@ -334,9 +336,106 @@ $cards_from_wp = function () use (
         'media-news' => $media_label,
     );
 
-    // Fetch extra candidates so Hebrew items can be skipped while still filling 3 cards.
-    $query = new WP_Query(array(
-        'post_type' => array('event', 'media-news', 'post'),
+    $build_cards = static function (array $posts, int $limit) use (
+        $type_labels,
+        $blog_label,
+        $slbl_post_to_card,
+        $slbl_is_hebrew_post,
+        $slbl_get_event_display_date
+    ): array {
+        $items = array();
+
+        foreach ($posts as $post) {
+            if (!$post instanceof WP_Post) {
+                continue;
+            }
+
+            if ($slbl_is_hebrew_post($post)) {
+                continue;
+            }
+
+            $label = isset($type_labels[$post->post_type]) ? $type_labels[$post->post_type] : $blog_label;
+            $date_override = $post->post_type === 'event'
+                ? $slbl_get_event_display_date((int) $post->ID)
+                : get_the_date('j M Y', $post);
+
+            $card = $slbl_post_to_card($post, $label, $date_override);
+
+            if ($card !== null) {
+                $items[] = $card;
+            }
+
+            if (count($items) >= $limit) {
+                break;
+            }
+        }
+
+        return $items;
+    };
+
+    $today_ymd = wp_date('Ymd');
+
+    // 1) Prefer upcoming events by ACF date_of_event (soonest first).
+    $event_query = new WP_Query(array(
+        'post_type' => 'event',
+        'posts_per_page' => 20,
+        'post_status' => 'publish',
+        'meta_key' => 'date_of_event',
+        'orderby' => 'meta_value_num',
+        'order' => 'ASC',
+        'ignore_sticky_posts' => true,
+        'suppress_filters' => true,
+        'no_found_rows' => true,
+        'meta_query' => array(
+            array(
+                'key' => 'date_of_event',
+                'value' => $today_ymd,
+                'compare' => '>=',
+                'type' => 'NUMERIC',
+            ),
+        ),
+    ));
+
+    $event_posts = $event_query->have_posts() ? $event_query->posts : array();
+    wp_reset_postdata();
+
+    // Soft-validate Ymd in case meta formatting differs from pure numeric.
+    $upcoming_events = array();
+
+    foreach ($event_posts as $post) {
+        if (!$post instanceof WP_Post) {
+            continue;
+        }
+
+        $ymd = $slbl_get_event_date_ymd((int) $post->ID);
+
+        if ($ymd === '' || $ymd < $today_ymd) {
+            continue;
+        }
+
+        $upcoming_events[] = $post;
+    }
+
+    usort($upcoming_events, static function ($a, $b) use ($slbl_get_event_date_ymd): int {
+        $ya = $slbl_get_event_date_ymd((int) $a->ID);
+        $yb = $slbl_get_event_date_ymd((int) $b->ID);
+
+        if ($ya === $yb) {
+            return ((int) $a->ID) <=> ((int) $b->ID);
+        }
+
+        return strcmp($ya, $yb);
+    });
+
+    $event_cards = $build_cards($upcoming_events, 3);
+
+    if (!empty($event_cards)) {
+        return $event_cards;
+    }
+
+    // 2) Fallback: newest media-news + blog posts by creation date.
+    $news_query = new WP_Query(array(
+        'post_type' => array('media-news', 'post'),
         'posts_per_page' => 20,
         'post_status' => 'publish',
         'orderby' => 'date',
@@ -346,16 +445,10 @@ $cards_from_wp = function () use (
         'no_found_rows' => true,
     ));
 
-    if (!$query->have_posts()) {
-        wp_reset_postdata();
-
-        return array();
-    }
-
-    $posts = $query->posts;
+    $news_posts = $news_query->have_posts() ? $news_query->posts : array();
     wp_reset_postdata();
 
-    usort($posts, static function ($a, $b): int {
+    usort($news_posts, static function ($a, $b): int {
         $ta = ($a instanceof WP_Post) ? strtotime((string) $a->post_date_gmt) : 0;
         $tb = ($b instanceof WP_Post) ? strtotime((string) $b->post_date_gmt) : 0;
 
@@ -369,32 +462,7 @@ $cards_from_wp = function () use (
         return $tb <=> $ta;
     });
 
-    $items = array();
-
-    foreach ($posts as $post) {
-        if (!$post instanceof WP_Post) {
-            continue;
-        }
-
-        if ($slbl_is_hebrew_post($post)) {
-            continue;
-        }
-
-        $label = isset($type_labels[$post->post_type]) ? $type_labels[$post->post_type] : $blog_label;
-
-        // Display the creation/publish date used for sorting (not event meta date).
-        $card = $slbl_post_to_card($post, $label, get_the_date('j M Y', $post));
-
-        if ($card !== null) {
-            $items[] = $card;
-        }
-
-        if (count($items) >= 3) {
-            break;
-        }
-    }
-
-    return $items;
+    return $build_cards($news_posts, 3);
 };
 
 $cards = array();
@@ -405,7 +473,7 @@ if ($source_mode === 'manual') {
     $blog_source = 'manual';
 } else {
     $cards = $cards_from_wp();
-    $blog_source = empty($cards) ? 'auto-empty' : 'post_date';
+    $blog_source = empty($cards) ? 'auto-empty' : 'auto';
 
     // Do not fall back to stale manual/demo cards when auto mode is on —
     // an empty result should stay empty so deploy/query issues are visible.
