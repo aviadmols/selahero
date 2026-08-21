@@ -428,12 +428,13 @@ $cards_from_wp = function () use (
     });
 
     $event_cards = $build_cards($upcoming_events, 3);
+    $remaining = 3 - count($event_cards);
 
-    if (!empty($event_cards)) {
+    if ($remaining <= 0) {
         return $event_cards;
     }
 
-    // 2) Fallback: newest media-news + blog posts by creation date.
+    // Fill remaining slots with newest media-news + blog posts by creation date.
     $news_query = new WP_Query(array(
         'post_type' => array('media-news', 'post'),
         'posts_per_page' => 20,
@@ -462,7 +463,9 @@ $cards_from_wp = function () use (
         return $tb <=> $ta;
     });
 
-    return $build_cards($news_posts, 3);
+    $news_cards = $build_cards($news_posts, $remaining);
+
+    return array_merge($event_cards, $news_cards);
 };
 
 $cards = array();
